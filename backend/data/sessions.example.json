@@ -1,0 +1,11 @@
+{
+  "sessions": [
+    {
+      "tokenHash": "sha256_token_hash_example",
+      "userId": "usr_example",
+      "openid": "openid_example",
+      "createdAt": "2026-06-23T00:00:00.000Z",
+      "expiresAt": "2026-06-30T00:00:00.000Z"
+    }
+  ]
+}

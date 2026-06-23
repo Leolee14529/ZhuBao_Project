@@ -1,14 +1,20 @@
 # 五行定制后端
 
-这是一个独立的 Node.js + Express 后端，只提供五行定制相关接口。
+这是一个独立的 Node.js + Express 后端，当前提供五行定制接口和微信登录 MVP 接口。
 
-本项目没有登录、没有经期日历、没有第三方 API 调用，四柱八字和五行计算全部在本地完成。
+四柱八字和五行计算全部在本地完成。微信登录只用于通过 `wx.login` 的 code 换取 openid，并创建本地 MVP 用户与 session。
 
 ## 安装步骤
 
 ```bash
 npm install
 npm run dev
+```
+
+微信登录接口需要通过 shell 注入环境变量。本阶段不使用 `dotenv`，不要把真实 AppSecret 写入任何文件：
+
+```bash
+WECHAT_APPID=xxx WECHAT_SECRET=xxx npm run dev
 ```
 
 服务默认地址：
@@ -23,14 +29,123 @@ http://localhost:3000
 backend/
 ├─ server.js
 ├─ package.json
+├─ middlewares/
+│  └─ authMiddleware.js
 ├─ routes/
+│  ├─ auth.js
+│  ├─ users.js
 │  └─ wuxing.js
 ├─ services/
+│  ├─ sessionStore.js
+│  ├─ userStore.js
+│  ├─ wechatService.js
 │  └─ baziService.js
 ├─ data/
+│  ├─ sessions.example.json
+│  ├─ users.example.json
 │  └─ wuxing.json
 └─ README.md
 ```
+
+## 认证接口
+
+### 1. 微信登录
+
+`POST /api/auth/wechat-login`
+
+请求示例：
+
+```json
+{
+  "code": "wx.login 返回的 code"
+}
+```
+
+成功返回：
+
+```json
+{
+  "success": true,
+  "data": {
+    "token": "opaque-session-token",
+    "user": {
+      "id": "usr_xxx",
+      "openid": "openid_xxx",
+      "unionid": null,
+      "nickname": null,
+      "avatarUrl": null,
+      "createdAt": "2026-06-23T00:00:00.000Z",
+      "updatedAt": "2026-06-23T00:00:00.000Z"
+    }
+  }
+}
+```
+
+说明：
+
+- 登录成功只依赖 openid，不强制昵称或头像授权。
+- `session_key` 只允许后端保存，不返回前端。
+- 前端拿到的是 opaque token，后端只保存 `sha256` 后的 `tokenHash`。
+
+### 2. 当前用户
+
+`GET /api/users/me`
+
+请求头：
+
+```text
+Authorization: Bearer <token>
+```
+
+成功返回：
+
+```json
+{
+  "success": true,
+  "data": {
+    "user": {
+      "id": "usr_xxx",
+      "openid": "openid_xxx",
+      "unionid": null,
+      "nickname": null,
+      "avatarUrl": null,
+      "createdAt": "2026-06-23T00:00:00.000Z",
+      "updatedAt": "2026-06-23T00:00:00.000Z"
+    }
+  }
+}
+```
+
+## 认证错误格式
+
+新增认证接口统一返回下面的错误格式：
+
+```json
+{
+  "success": false,
+  "message": "错误信息",
+  "code": "ERROR_CODE"
+}
+```
+
+当前错误码包括：
+
+- `AUTH_CODE_REQUIRED`
+- `WECHAT_CONFIG_MISSING`
+- `WECHAT_CODE2SESSION_FAILED`
+- `WECHAT_OPENID_MISSING`
+- `AUTH_TOKEN_REQUIRED`
+- `AUTH_TOKEN_INVALID`
+- `AUTH_TOKEN_EXPIRED`
+- `USER_NOT_FOUND`
+- `INTERNAL_ERROR`
+
+## 本地 MVP 数据存储
+
+- `data/users.json` 和 `data/sessions.json` 只允许本地运行时生成，不提交 Git。
+- 如需查看结构，只参考 `data/users.example.json` 和 `data/sessions.example.json`。
+- 路由文件不得直接读写 JSON，用户和 session 读写集中在 `services/userStore.js` 与 `services/sessionStore.js`。
+- JSON 文件不能作为生产数据库。后续切换 MySQL/PostgreSQL/SQLite 时，应尽量只替换 store 层。
 
 ## 计算说明
 

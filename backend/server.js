@@ -1,5 +1,7 @@
 const express = require("express");
 const cors = require("cors");
+const authRouter = require("./routes/auth");
+const usersRouter = require("./routes/users");
 const wuxingRouter = require("./routes/wuxing");
 
 const app = express();
@@ -14,6 +16,8 @@ app.get("/", (req, res) => {
   });
 });
 
+app.use("/api/auth", authRouter);
+app.use("/api/users", usersRouter);
 app.use("/api/wuxing", wuxingRouter);
 
 app.use((err, req, res, next) => {
