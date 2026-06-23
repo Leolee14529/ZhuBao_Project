@@ -1,0 +1,126 @@
+﻿<view class="data-page">
+  <scroll-view class="data-scroll" scroll-y="true">
+    <view class="page-body">
+      <view class="page-top-spacer" style="height: {{topSpacer}}px;"></view>
+      <view class="page-header">
+        <text class="page-title">健康监测</text>
+        <text class="page-subtitle">今日生理指数</text>
+      </view>
+
+      <view class="score-card">
+        <view class="score-copy">
+          <view class="score-label-row">
+            <view class="score-dot"></view>
+            <text class="score-label">今日测评</text>
+          </view>
+          <text class="score-value">88 <text class="score-unit">/ 100</text></text>
+          <text class="score-text">身心状态极佳，气场稳定，适合进行重要决策或创造性工作。</text>
+        </view>
+        <view class="score-ring">
+          <view class="score-ring-inner">
+            <text>→</text>
+          </view>
+        </view>
+      </view>
+
+      <view class="period-entry" bindtap="openPeriodCalendar">
+        <text class="period-entry-title">智能经期日历</text>
+        <text class="period-entry-arrow">›</text>
+      </view>
+
+      <view class="key-stats">
+        <view class="key-stat key-stat-left">
+          <view class="key-stat-icon icon-rose">♥</view>
+          <view class="key-stat-copy">
+            <text class="key-stat-value">68 <text class="small-unit">bpm</text></text>
+            <text class="key-stat-label">静息心率</text>
+          </view>
+        </view>
+        <view class="key-stat key-stat-right">
+          <view class="key-stat-icon icon-green">●</view>
+          <view class="key-stat-copy">
+            <text class="key-stat-value">92 <text class="small-unit">%</text></text>
+            <text class="key-stat-label">HRV 指数</text>
+          </view>
+        </view>
+      </view>
+
+      <view class="panel">
+        <text class="panel-title">心率趋势</text>
+        <text class="panel-subtitle">24小时心率波动</text>
+        <view class="chart-area">
+          <view class="chart-line chart-line-top"></view>
+          <view class="chart-line chart-line-mid"></view>
+          <view class="chart-bars">
+            <view class="bar bar-1"></view>
+            <view class="bar bar-2"></view>
+            <view class="bar bar-3"></view>
+            <view class="bar bar-4"></view>
+            <view class="bar bar-5"></view>
+            <view class="bar bar-6"></view>
+            <view class="bar bar-7"></view>
+          </view>
+        </view>
+      </view>
+
+      <view class="panel">
+        <text class="panel-title">睡眠结构</text>
+        <text class="panel-subtitle">总时长 8小时 12分</text>
+        <view class="sleep-cards">
+          <block wx:for="{{sleep}}" wx:key="name">
+            <view class="sleep-card {{item.cardClass}}">
+              <view class="sleep-top-line" style="background-color: {{item.color}};"></view>
+              <text class="sleep-name">{{item.name}}</text>
+              <text class="sleep-value">{{item.value}}<text class="sleep-unit">小时</text></text>
+            </view>
+          </block>
+        </view>
+        <view class="sleep-bar">
+          <block wx:for="{{sleep}}" wx:key="name">
+            <view class="sleep-segment" style="width: {{item.width}}; background-color: {{item.color}};"></view>
+          </block>
+        </view>
+      </view>
+
+      <view class="energy-card">
+        <view class="energy-icon">✦</view>
+        <view class="energy-copy">
+          <text class="energy-title">身体能量</text>
+          <text class="energy-desc">状态良好，适合运动</text>
+        </view>
+        <text class="energy-value">85<text class="small-unit">/100</text></text>
+      </view>
+
+      <view class="panel">
+        <text class="panel-title">五行玉石适配</text>
+        <text class="panel-subtitle">基于您八字的佩戴建议</text>
+        <view class="element-ring">
+          <view class="element-ring-core">
+            <text class="ring-small">主推</text>
+            <text class="ring-main">{{focusElement}}</text>
+          </view>
+        </view>
+        <view class="element-list">
+          <block wx:for="{{elements}}" wx:key="name">
+            <view class="element-row {{item.rowClass}}">
+              <view class="element-left">
+                <view class="element-dot" style="background-color: {{item.color}};"></view>
+                <view class="element-copy">
+                  <text class="element-name">{{item.name}}</text>
+                  <text class="element-jade">{{item.jade}}</text>
+                </view>
+              </view>
+              <text class="element-suitable">{{item.suitable}}</text>
+            </view>
+          </block>
+        </view>
+      </view>
+
+      <element-radar-card values="{{radarValues}}" note="{{radarNote}}"></element-radar-card>
+
+      <view class="bottom-space"></view>
+    </view>
+  </scroll-view>
+
+  <bottom-nav active="data"></bottom-nav>
+</view>

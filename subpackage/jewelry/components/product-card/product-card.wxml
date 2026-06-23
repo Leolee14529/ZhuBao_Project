@@ -1,0 +1,11 @@
+<view class="product-card">
+  <view class="image-wrap">
+    <image class="product-image" src="{{image}}" mode="aspectFill"></image>
+    <view class="shade"></view>
+    <text wx:if="{{isNew}}" class="tag">新品</text>
+  </view>
+  <view class="product-meta">
+    <view><text class="name">{{name}}</text><text class="type">{{type}}</text></view>
+    <text class="price">{{price}}</text>
+  </view>
+</view>

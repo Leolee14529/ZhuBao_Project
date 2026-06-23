@@ -1,0 +1,14 @@
+.element-radar-card{position:relative;margin-bottom:28rpx;padding:34rpx 34rpx 42rpx;border-radius:30rpx;border:1rpx solid rgba(255,255,255,.07);background-color:#171920;overflow:hidden}
+.radar-aura{position:absolute;left:50%;top:116rpx;width:410rpx;height:280rpx;margin-left:-205rpx;border-radius:205rpx;background-color:rgba(46,70,84,.08);opacity:.72}
+.radar-header{position:relative;z-index:2}
+.radar-title{display:block;font-size:30rpx;line-height:1.25;color:#ffffff}
+.radar-subtitle{display:block;margin-top:10rpx;font-size:20rpx;color:rgba(255,255,255,.43)}
+.radar-stage{position:relative;z-index:2;width:430rpx;height:310rpx;margin:4rpx auto 0}
+.radar-canvas{position:absolute;left:0;top:0;width:430rpx;height:310rpx}
+.radar-label{position:absolute;z-index:4;width:36rpx;height:36rpx;font-size:24rpx;font-weight:600;line-height:36rpx;text-align:center}
+.label-wood{left:197rpx;top:24rpx;color:#34d399}
+.label-fire{left:309rpx;top:106rpx;color:#ff6b7e}
+.label-earth{left:266rpx;top:237rpx;color:#f59e0b}
+.label-metal{left:128rpx;top:237rpx;color:#ffffff}
+.label-water{left:85rpx;top:106rpx;color:#60a5fa}
+.radar-status{position:relative;z-index:3;display:block;margin-top:12rpx;font-size:22rpx;line-height:1.5;text-align:center;color:rgba(255,255,255,.48)}

@@ -1,0 +1,40 @@
+page {
+  min-height: 100%;
+  background: #050505;
+  background-color: #050505;
+  color: #ffffff;
+}
+
+view,
+text,
+button,
+input,
+textarea,
+picker,
+label,
+navigator,
+scroll-view,
+swiper,
+swiper-item {
+  box-sizing: border-box;
+  font-family: "SimHei", "STHeiti", "Heiti SC", "PingFang SC", "Microsoft YaHei", sans-serif !important;
+}
+
+image { box-sizing: border-box; }
+button { padding: 0; margin: 0; border: 0; background: transparent; line-height: inherit; font: inherit; }
+button::after { border: 0; }
+.screen-shell {
+  min-height: 100vh;
+  background: #050505;
+  background-color: #050505;
+  color: #ffffff;
+  overflow: hidden;
+}
+.page-scroll { height: 100vh; }
+.glass-card {
+  background: rgba(255, 255, 255, 0.055);
+  border: 1rpx solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 26rpx 70rpx rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(24rpx);
+}
+.safe-bottom-space { height: 150rpx; }

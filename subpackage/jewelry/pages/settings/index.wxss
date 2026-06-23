@@ -1,0 +1,445 @@
+.settings-page {
+  position: relative;
+  min-height: 100vh;
+  background-color: #040505;
+  color: #ffffff;
+}
+
+.scroll-container {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 146rpx;
+}
+
+.settings-scroll {
+  height: 100%;
+  background-color: #040505;
+}
+
+.page-body {
+  padding: 52rpx 20rpx 228rpx;
+}
+
+.page-top-spacer {
+  width: 100%;
+}
+
+.profile-head {
+  overflow: hidden;
+  margin-bottom: 64rpx;
+}
+
+.profile-avatar {
+  float: left;
+  width: 132rpx;
+  height: 132rpx;
+  border-radius: 66rpx;
+  border: 1rpx solid rgba(0, 212, 148, 0.46);
+  background-color: #05231c;
+}
+
+.avatar-letter {
+  display: block;
+  line-height: 132rpx;
+  text-align: center;
+  font-size: 54rpx;
+  font-weight: 300;
+  color: #00d494;
+}
+
+.profile-copy {
+  float: left;
+  margin-left: 30rpx;
+  padding-top: 18rpx;
+}
+
+.profile-title {
+  display: block;
+  font-size: 42rpx;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.profile-subtitle-row {
+  overflow: hidden;
+  margin-top: 16rpx;
+}
+
+.profile-subtitle {
+  float: left;
+  font-size: 24rpx;
+  font-weight: 600;
+  color: #00c58b;
+}
+
+.profile-subtitle-dot {
+  float: left;
+  width: 8rpx;
+  height: 8rpx;
+  margin: 14rpx 12rpx 0;
+  border-radius: 4rpx;
+  background-color: #00c58b;
+}
+
+.section {
+  margin-bottom: 42rpx;
+}
+
+.section-title {
+  display: block;
+  margin: 0 0 18rpx 24rpx;
+  font-size: 18rpx;
+  font-weight: 700;
+  letter-spacing: 2rpx;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.section-card {
+  overflow: hidden;
+  border-radius: 32rpx;
+  background-color: #111212;
+  border: 1rpx solid rgba(255, 255, 255, 0.06);
+}
+
+.setting-row {
+  overflow: hidden;
+  min-height: 112rpx;
+  padding: 32rpx 24rpx;
+  border-bottom: 1rpx solid rgba(255, 255, 255, 0.05);
+}
+
+.setting-row-last {
+  border-bottom: 0;
+}
+
+.setting-row-language-open {
+  border-bottom: 1rpx solid rgba(255, 255, 255, 0.05);
+}
+
+.settings-empty-state {
+  display: block;
+  margin: 0 24rpx 18rpx;
+}
+
+.settings-empty-state--language {
+  margin-top: 0;
+}
+
+.row-left {
+  float: left;
+}
+
+.row-label {
+  display: block;
+  line-height: 48rpx;
+  font-size: 26rpx;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.94);
+}
+
+.row-right {
+  float: right;
+}
+
+.row-value {
+  float: left;
+  line-height: 74rpx;
+  font-size: 24rpx;
+  color: rgba(255, 255, 255, 0.42);
+}
+
+.row-value-shifted {
+  margin-right: 20rpx;
+}
+
+.row-arrow {
+  float: left;
+  margin-left: 18rpx;
+  line-height: 74rpx;
+  font-size: 32rpx;
+  color: rgba(255, 255, 255, 0.2);
+}
+
+.language-options {
+  padding: 0 24rpx 12rpx;
+}
+
+.language-option {
+  overflow: hidden;
+  min-height: 88rpx;
+  padding: 22rpx 0;
+  border-bottom: 1rpx solid rgba(255, 255, 255, 0.05);
+}
+
+.language-option-last {
+  border-bottom: 0;
+}
+
+.language-option__text {
+  float: left;
+  font-size: 24rpx;
+  color: rgba(255, 255, 255, 0.88);
+  line-height: 44rpx;
+}
+
+.language-option__check {
+  float: right;
+  font-size: 24rpx;
+  color: #00c58b;
+  line-height: 44rpx;
+}
+
+.toggle {
+  position: relative;
+  float: left;
+  width: 78rpx;
+  height: 46rpx;
+  margin-top: 14rpx;
+  border-radius: 23rpx;
+  background-color: #2d2d2d;
+}
+
+.toggle-knob {
+  position: absolute;
+  top: 5rpx;
+  width: 36rpx;
+  height: 36rpx;
+  border-radius: 18rpx;
+  background-color: #ffffff;
+}
+
+.toggle-on {
+  background-color: #00c58b;
+}
+
+.toggle-on .toggle-knob {
+  left: 37rpx;
+}
+
+.toggle-off .toggle-knob {
+  left: 5rpx;
+}
+
+.logout-btn {
+  width: 100%;
+  height: 112rpx;
+  margin-top: 12rpx;
+  border-radius: 32rpx;
+  background-color: #32080c;
+  color: #ff6f6f;
+  text-align: center;
+}
+
+.logout-inner {
+  display: inline-block;
+  overflow: hidden;
+  margin-top: 32rpx;
+}
+
+.logout-icon {
+  position: relative;
+  float: left;
+  width: 36rpx;
+  height: 36rpx;
+  margin-right: 16rpx;
+}
+
+.logout-door {
+  position: absolute;
+  left: 2rpx;
+  top: 4rpx;
+  width: 18rpx;
+  height: 26rpx;
+  border: 3rpx solid #ff6f6f;
+  border-right: 0;
+  border-radius: 7rpx 0 0 7rpx;
+}
+
+.logout-arrow {
+  position: absolute;
+  right: 2rpx;
+  top: 15rpx;
+  width: 16rpx;
+  height: 3rpx;
+  background-color: #ff6f6f;
+}
+
+.logout-arrow-head {
+  position: absolute;
+  right: 2rpx;
+  top: 12rpx;
+  width: 8rpx;
+  height: 8rpx;
+  border-top: 3rpx solid #ff6f6f;
+  border-right: 3rpx solid #ff6f6f;
+  transform: rotate(45deg);
+}
+
+.logout-text {
+  float: left;
+  line-height: 36rpx;
+  font-size: 30rpx;
+  color: #ff6f6f;
+}
+
+.version-text {
+  display: block;
+  margin-top: 46rpx;
+  font-size: 20rpx;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.2);
+}
+
+.bottom-space {
+  height: 72rpx;
+}
+
+.tabbar {
+  position: fixed;
+  left: 18rpx;
+  right: 18rpx;
+  bottom: 16rpx;
+  height: 116rpx;
+  padding-top: 14rpx;
+  border-radius: 32rpx;
+  background-color: rgba(7, 7, 8, 0.98);
+  border: 1rpx solid rgba(255, 255, 255, 0.08);
+}
+
+.tab-indicator {
+  position: absolute;
+  left: 566rpx;
+  top: -2rpx;
+  width: 60rpx;
+  height: 8rpx;
+  border-radius: 999rpx;
+  background-color: #00d494;
+}
+
+.tab-item {
+  float: left;
+  width: 238rpx;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.tab-item-active {
+  color: #00d494;
+}
+
+.tab-icon {
+  position: relative;
+  width: 44rpx;
+  height: 44rpx;
+  margin: 2rpx auto 0;
+}
+
+.tab-text {
+  display: block;
+  margin-top: 10rpx;
+  font-size: 18rpx;
+  font-weight: 600;
+}
+
+.tab-text-muted {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.tab-icon-home .home-roof {
+  position: absolute;
+  left: 7rpx;
+  top: 4rpx;
+  width: 30rpx;
+  height: 30rpx;
+  border-left: 4rpx solid currentColor;
+  border-top: 4rpx solid currentColor;
+  transform: rotate(45deg);
+}
+
+.tab-icon-home .home-body {
+  position: absolute;
+  left: 11rpx;
+  bottom: 5rpx;
+  width: 22rpx;
+  height: 18rpx;
+  border: 3rpx solid currentColor;
+  border-top: 0;
+  border-radius: 0 0 6rpx 6rpx;
+}
+
+.tab-icon-wave .wave-line {
+  position: absolute;
+  bottom: 16rpx;
+  width: 10rpx;
+  border-bottom: 3rpx solid currentColor;
+  border-radius: 0 0 10rpx 10rpx;
+}
+
+.tab-icon-wave .wave-left {
+  left: 5rpx;
+  height: 8rpx;
+}
+
+.tab-icon-wave .wave-mid {
+  left: 17rpx;
+  height: 14rpx;
+}
+
+.tab-icon-wave .wave-right {
+  left: 29rpx;
+  height: 8rpx;
+}
+
+.tab-icon-gear {
+  box-sizing: border-box;
+  border: 3rpx solid currentColor;
+  border-radius: 22rpx;
+}
+
+.gear-core {
+  position: absolute;
+  left: 13rpx;
+  top: 13rpx;
+  width: 12rpx;
+  height: 12rpx;
+  border: 3rpx solid currentColor;
+  border-radius: 50%;
+}
+
+.gear-tooth {
+  position: absolute;
+  background-color: currentColor;
+  border-radius: 2rpx;
+}
+
+.gear-top,
+.gear-bottom {
+  left: 19rpx;
+  width: 6rpx;
+  height: 8rpx;
+}
+
+.gear-left,
+.gear-right {
+  top: 19rpx;
+  width: 8rpx;
+  height: 6rpx;
+}
+
+.gear-top {
+  top: -4rpx;
+}
+
+.gear-bottom {
+  bottom: -4rpx;
+}
+
+.gear-left {
+  left: -4rpx;
+}
+
+.gear-right {
+  right: -4rpx;
+}

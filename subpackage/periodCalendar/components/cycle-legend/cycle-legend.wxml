@@ -1,0 +1,8 @@
+<view class="legend-row">
+  <block wx:for="{{items}}" wx:key="key">
+    <view class="legend-item">
+      <view class="legend-mark {{'legend-' + item.key}}"></view>
+      <text class="legend-label">{{item.label}}</text>
+    </view>
+  </block>
+</view>

@@ -1,0 +1,59 @@
+<view class="customize-page">
+  <scroll-view class="customize-scroll" scroll-y="true">
+    <view class="page-body">
+      <view class="page-top-spacer" style="height: {{topSpacer}}px;"></view>
+
+      <view class="topbar">
+        <view class="back-button" bindtap="goBack">
+          <text class="back-arrow">‹</text>
+        </view>
+        <text class="topbar-title">五行定制</text>
+      </view>
+
+      <view class="intro-card">
+        <text class="intro-title">输入出生时间</text>
+        <text class="intro-desc">保存后会根据你的出生日期和时刻，刷新五行定制与能量分布结果。</text>
+      </view>
+
+      <view class="form-card">
+        <picker mode="date" value="{{birthDate}}" start="1950-01-01" end="2035-12-31" bindchange="onDateChange">
+          <view class="field-row">
+            <view class="field-copy">
+              <text class="field-label">出生日期</text>
+              <text class="field-value">{{birthDate}}</text>
+            </view>
+            <text class="field-arrow">›</text>
+          </view>
+        </picker>
+
+        <picker mode="time" value="{{birthTime}}" bindchange="onTimeChange">
+          <view class="field-row field-row-last">
+            <view class="field-copy">
+              <text class="field-label">出生时间</text>
+              <text class="field-value">{{birthTime}}</text>
+            </view>
+            <text class="field-arrow">›</text>
+          </view>
+        </picker>
+      </view>
+
+      <view class="preview-card">
+        <text class="preview-title">当前推演结果</text>
+        <text class="preview-focus">主势：{{focusElement}}</text>
+        <text class="preview-desc">{{destinyLine}}</text>
+        <view class="tags">
+          <block wx:for="{{previewTags}}" wx:key="key">
+            <view class="tag-item" style="border-color: {{item.color}}; color: {{item.color}};">
+              <text>{{item.label}}</text>
+            </view>
+          </block>
+        </view>
+      </view>
+
+      <view class="save-button-row">
+        <button class="save-button" bindtap="saveBirthProfile">保存并更新五行</button>
+      </view>
+      <view class="bottom-space"></view>
+    </view>
+  </scroll-view>
+</view>

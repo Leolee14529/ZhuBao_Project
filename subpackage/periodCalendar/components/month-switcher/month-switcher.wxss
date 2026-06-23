@@ -1,0 +1,83 @@
+.month-switcher {
+  margin-top: 34rpx;
+}
+
+.month-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.month-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  text-align: center;
+}
+
+
+.nav-circle,
+.today-button {
+  padding: 0;
+  border: 0;
+}
+
+.nav-circle::after,
+.today-button::after,
+.switch::after {
+  border: 0;
+}
+
+.nav-circle {
+  width: 28rpx;
+  height: 62rpx;
+  line-height: 58rpx;
+  border-radius: 50%;
+  background: transparent;
+  color: #ffffff;
+  font-size: 40rpx;
+  font-weight: 300;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.month-prev,
+.month-next {
+  box-shadow: none;
+}
+
+.month-label {
+  display: inline-block;
+  margin: 0 0rpx;
+  font-size: 38rpx;
+  font-weight: 600;
+  color: #ffffff;
+  white-space: nowrap;
+  line-height: 1;
+  text-align: center;
+  letter-spacing: 1rpx;
+}
+
+.reminder-bar {
+  margin-top: 24rpx;
+  padding: 0 20rpx 0 30rpx;
+  height: 88rpx;
+  border-radius: 24rpx;
+  background: rgba(255, 255, 255, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.reminder-text {
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.92);
+  white-space: nowrap;
+}
+
+.reminder-actions {
+  display: flex;
+  align-items: center;
+}

@@ -1,0 +1,105 @@
+<view class="calendar-page" style="padding-top: {{statusBarHeight}}px;">
+  <calendar-topbar
+    topbar-height="{{topbarHeight}}"
+    back-button-top="{{backButtonTop}}"
+    bind:back="onBackTap"
+    bind:capsule="onCapsuleTap"
+  />
+
+  <view class="page-content">
+    <text class="page-title">智能经期日历</text>
+
+    <month-switcher
+      month-label="{{monthLabel}}"
+      period-started-today="{{cycleProfile.todayPeriodStartEnabled}}"
+      bind:prev="onPrevMonth"
+      bind:next="onNextMonth"
+      bind:today="onGoToday"
+      bind:toggle="onToggleTodayPeriod"
+    />
+
+    <view wx:if="{{!hasCycleData}}" class="cycle-empty-state">
+      <view class="cycle-empty-state__icon-wrap">
+        <view class="cycle-empty-state__icon-bg">
+          <view class="cycle-empty-state__icon-ring"></view>
+          <view class="cycle-empty-state__icon-pulse"></view>
+          <view class="cycle-empty-state__icon-dot"></view>
+        </view>
+      </view>
+      <text class="cycle-empty-state__title">还没有周期记录</text>
+      <text class="cycle-empty-state__desc">先设置你的经期信息，系统会生成预测日历</text>
+      <view class="cycle-empty-state__button" bindtap="onSetupCycle">去设置周期</view>
+    </view>
+
+    <block wx:else>
+      <cycle-calendar-grid weeks="{{weeks}}" bind:selectday="onSelectDay" />
+
+      <cycle-legend items="{{legendItems}}" />
+
+      <view wx:if="{{selectedDetail}}" class="detail-card">
+        <text class="detail-date">{{selectedDetail.fullDate}}</text>
+        <view class="detail-row">
+          <text class="detail-label">状态：</text>
+          <text class="detail-value">{{selectedDetail.statusLabel}}</text>
+        </view>
+        <view class="detail-row">
+          <text class="detail-label">备注：</text>
+          <text class="detail-value">{{selectedDetail.remark}}</text>
+        </view>
+      </view>
+
+      <view class="summary-block">
+        <text class="summary-title">距离下次经期还有</text>
+        <text class="summary-value">{{summaryDays}}天</text>
+        <text class="summary-note">{{summaryNextStart}}</text>
+        <view class="summary-action" bindtap="onSetupCycle">调整经期周期</view>
+      </view>
+    </block>
+  </view>
+
+  <view wx:if="{{showCycleSetup}}" class="cycle-setup-mask" catchtap="onCloseCycleSetup">
+    <view class="cycle-setup-sheet" catchtap="noop">
+      <view class="cycle-setup-sheet__handle"></view>
+      <text class="cycle-setup-sheet__title">设置周期</text>
+      <text class="cycle-setup-sheet__desc">只做前端保存，设置完成后会直接显示预测日历与倒计时结果。</text>
+
+      <view class="cycle-field">
+        <text class="cycle-field__label">上次经期开始日期</text>
+        <picker mode="date" end="{{todayDateKey}}" value="{{cycleProfile.lastPeriodDate}}" bindchange="onCycleDateChange">
+          <view class="cycle-field__picker">{{cycleProfile.lastPeriodDate}}</view>
+        </picker>
+      </view>
+
+      <view class="cycle-field">
+        <text class="cycle-field__label">平均周期</text>
+        <input
+          class="cycle-field__input"
+          type="number"
+          maxlength="2"
+          value="{{cycleProfile.cycleLength}}"
+          placeholder="例：28"
+          placeholder-class="cycle-field__placeholder"
+          bindinput="onCycleLengthInput"
+        />
+      </view>
+
+      <view class="cycle-field">
+        <text class="cycle-field__label">经期持续天数</text>
+        <input
+          class="cycle-field__input"
+          type="number"
+          maxlength="2"
+          value="{{cycleProfile.periodLength}}"
+          placeholder="例：5"
+          placeholder-class="cycle-field__placeholder"
+          bindinput="onPeriodLengthInput"
+        />
+      </view>
+
+      <view class="cycle-setup-sheet__actions">
+        <view class="cycle-setup-sheet__button cycle-setup-sheet__button--ghost" bindtap="onCloseCycleSetup">取消</view>
+        <view class="cycle-setup-sheet__button cycle-setup-sheet__button--primary" bindtap="onSaveCycleSetup">保存并查看日历</view>
+      </view>
+    </view>
+  </view>
+</view>

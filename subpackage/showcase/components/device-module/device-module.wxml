@@ -1,0 +1,34 @@
+<view class="device-card" bindtap="onTapModule">
+  <view class="device-top">
+    <view class="device-copy-main">
+      <text class="device-eyebrow">设备模块</text>
+      <text class="device-name">{{device.name}}</text>
+    </view>
+    <view class="device-status">
+      <view class="device-status-dot"></view>
+      <text class="device-status-text">{{device.status}}</text>
+    </view>
+  </view>
+
+  <view class="device-core">
+    <view class="device-ring">
+      <view class="device-ring-middle">
+        <view class="device-ring-inner"></view>
+      </view>
+    </view>
+    <view class="device-copy">
+      <text class="device-copy-title">实时连接中</text>
+      <text class="device-copy-desc">{{device.sync}}</text>
+      <text class="device-copy-battery">电量 {{device.battery}}</text>
+    </view>
+  </view>
+
+  <view class="device-metrics">
+    <block wx:for="{{device.metrics}}" wx:key="label">
+      <view class="metric-item">
+        <text class="metric-label">{{item.label}}</text>
+        <text class="metric-value">{{item.value}}</text>
+      </view>
+    </block>
+  </view>
+</view>

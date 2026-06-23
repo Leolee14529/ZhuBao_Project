@@ -1,0 +1,1 @@
+Component({properties:{image:String,name:String,price:String,type:String,isNew:{type:Boolean,value:false}}});

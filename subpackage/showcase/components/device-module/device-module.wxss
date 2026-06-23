@@ -1,0 +1,146 @@
+.device-card {
+  padding: 26rpx 24rpx;
+  border-radius: 30rpx;
+  background:
+    linear-gradient(180deg, rgba(12, 18, 16, 0.96), rgba(16, 23, 21, 0.92)),
+    radial-gradient(circle at right top, rgba(57, 213, 140, 0.12), transparent 42%);
+  border: 1px solid rgba(58, 208, 141, 0.14);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.02),
+    0 18rpx 48rpx rgba(0, 0, 0, 0.18);
+}
+
+.device-top {
+  overflow: hidden;
+}
+
+.device-copy-main {
+  float: left;
+}
+
+.device-status {
+  float: right;
+  overflow: hidden;
+  padding: 10rpx 16rpx;
+  border-radius: 999rpx;
+  background: rgba(18, 63, 45, 0.72);
+}
+
+.device-status-dot {
+  float: left;
+  width: 12rpx;
+  height: 12rpx;
+  margin-top: 9rpx;
+  border-radius: 50%;
+  background: #39d58d;
+  box-shadow: 0 0 14rpx rgba(57, 213, 141, 0.72);
+}
+
+.device-status-text {
+  float: left;
+  margin-left: 10rpx;
+  font-size: 22rpx;
+  color: #92f0ba;
+}
+
+.device-eyebrow,
+.device-name,
+.device-copy-title,
+.device-copy-desc,
+.device-copy-battery,
+.metric-label,
+.metric-value {
+  display: block;
+}
+
+.device-eyebrow {
+  font-size: 22rpx;
+  color: #3ddd8d;
+}
+
+.device-name {
+  margin-top: 12rpx;
+  font-size: 34rpx;
+  font-weight: 700;
+}
+
+.device-core {
+  overflow: hidden;
+  margin-top: 26rpx;
+}
+
+.device-ring {
+  float: left;
+  width: 126rpx;
+  height: 126rpx;
+  border-radius: 50%;
+  border: 2rpx solid rgba(57, 213, 141, 0.18);
+}
+
+.device-ring-middle {
+  width: 92rpx;
+  height: 92rpx;
+  margin: 15rpx auto 0;
+  border-radius: 50%;
+  border: 4rpx solid rgba(57, 213, 141, 0.92);
+  box-shadow: 0 0 28rpx rgba(57, 213, 141, 0.22);
+}
+
+.device-ring-inner {
+  width: 52rpx;
+  height: 52rpx;
+  margin: 16rpx auto 0;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(64, 225, 152, 0.82), rgba(19, 79, 53, 0.5));
+}
+
+.device-copy {
+  margin-left: 150rpx;
+  padding-top: 10rpx;
+}
+
+.device-copy-title {
+  font-size: 30rpx;
+  font-weight: 600;
+}
+
+.device-copy-desc {
+  margin-top: 12rpx;
+  font-size: 22rpx;
+  color: rgba(226, 233, 229, 0.56);
+}
+
+.device-copy-battery {
+  margin-top: 16rpx;
+  font-size: 24rpx;
+  color: #aff3ca;
+}
+
+.device-metrics {
+  overflow: hidden;
+  margin-top: 28rpx;
+}
+
+.metric-item {
+  float: left;
+  width: 210rpx;
+  padding: 18rpx 16rpx;
+  border-radius: 20rpx;
+  background: rgba(255, 255, 255, 0.03);
+  box-sizing: border-box;
+}
+
+.metric-item:nth-child(2) {
+  margin: 0 11rpx;
+}
+
+.metric-label {
+  font-size: 20rpx;
+  color: rgba(220, 227, 223, 0.48);
+}
+
+.metric-value {
+  margin-top: 12rpx;
+  font-size: 28rpx;
+  font-weight: 600;
+}

@@ -1,0 +1,7 @@
+{
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "bottom-nav": "/subpackage/jewelry/components/bottom-nav/bottom-nav",
+    "empty-state": "/components/empty-state/empty-state"
+  }
+}

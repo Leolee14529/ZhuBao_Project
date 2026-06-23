@@ -1,0 +1,21 @@
+.bottom-nav { position: fixed; left: 18rpx; right: 18rpx; bottom: 16rpx; z-index: 80; height: 116rpx; display: flex; align-items: center; justify-content: space-around; border-radius: 32rpx; border: 1rpx solid rgba(255,255,255,0.08); background: rgba(7,7,8,0.96); box-shadow: 0 18rpx 48rpx rgba(0,0,0,0.42); backdrop-filter: blur(20rpx); }
+.nav-item { position: relative; width: 238rpx; height: 116rpx; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0; background: transparent; border: 0; color: rgba(255,255,255,0.4); line-height: 1; }
+.nav-item::after { border: 0; }
+.nav-top { position: absolute; top: -2rpx; width: 60rpx; height: 8rpx; border-radius: 999rpx; background: transparent; }
+.nav-icon { position: relative; width: 44rpx; height: 44rpx; margin: 2rpx auto 0; }
+.nav-label { margin-top: 10rpx; font-size: 18rpx; font-weight: 600; }
+.nav-item.active { color: #00d494; }
+.nav-item.active .nav-top { background: #00d494; box-shadow: 0 0 18rpx rgba(0,212,148,0.6); }
+.icon-home .home-roof { position: absolute; left: 7rpx; top: 4rpx; width: 30rpx; height: 30rpx; border-left: 4rpx solid currentColor; border-top: 4rpx solid currentColor; transform: rotate(45deg); }
+.icon-home .home-body { position: absolute; left: 11rpx; bottom: 5rpx; width: 22rpx; height: 18rpx; border: 3rpx solid currentColor; border-top: 0; border-radius: 0 0 6rpx 6rpx; }
+.icon-wave .wave-line { position: absolute; bottom: 16rpx; width: 10rpx; border-bottom: 3rpx solid currentColor; border-radius: 0 0 10rpx 10rpx; }
+.icon-wave .wave-left { left: 5rpx; height: 8rpx; }
+.icon-wave .wave-mid { left: 17rpx; height: 14rpx; }
+.icon-wave .wave-right { left: 29rpx; height: 8rpx; }
+.icon-gear { border: 3rpx solid currentColor; border-radius: 50%; box-sizing: border-box; }
+.icon-gear .gear-core { position: absolute; left: 50%; top: 50%; width: 10rpx; height: 10rpx; margin-left: -5rpx; margin-top: -5rpx; border-radius: 50%; background: currentColor; }
+.icon-gear .gear-tooth { position: absolute; left: 50%; top: 50%; width: 4rpx; height: 10rpx; margin-left: -2rpx; margin-top: -21rpx; border-radius: 999rpx; background: currentColor; transform-origin: center 21rpx; }
+.icon-gear .gear-top { transform: rotate(0deg); }
+.icon-gear .gear-right { transform: rotate(90deg); }
+.icon-gear .gear-bottom { transform: rotate(180deg); }
+.icon-gear .gear-left { transform: rotate(270deg); }

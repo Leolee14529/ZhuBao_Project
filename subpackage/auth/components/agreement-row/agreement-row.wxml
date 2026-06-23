@@ -1,0 +1,6 @@
+<view class="agreement-row" bindtap="onToggle">
+  <view class="agreement-row__check {{checked ? 'agreement-row__check--on' : ''}}">
+    <text wx:if="{{checked}}" class="agreement-row__tick">✓</text>
+  </view>
+  <text class="agreement-row__text">我已阅读并同意《用户协议》与《隐私政策》</text>
+</view>

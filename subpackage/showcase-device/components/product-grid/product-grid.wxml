@@ -1,0 +1,8 @@
+<view class="product-grid">
+  <block wx:for="{{products}}" wx:key="image">
+    <view class="product-card">
+      <image class="product-image" src="{{item.image}}" mode="aspectFill"></image>
+      <text wx:if="{{item.tag}}" class="product-tag">{{item.tag}}</text>
+    </view>
+  </block>
+</view>

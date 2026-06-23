@@ -1,0 +1,94 @@
+.calendar-grid {
+  margin-top: 28rpx;
+}
+
+.week-header,
+.week-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.week-header {
+  padding: 0 12rpx;
+}
+
+.week-label {
+  width: 88rpx;
+  text-align: center;
+  font-size: 20rpx;
+  color: rgba(255, 255, 255, 0.68);
+}
+
+.week-row {
+  margin-top: 18rpx;
+  padding: 0 12rpx;
+}
+
+.day-cell {
+  position: relative;
+  width: 88rpx;
+  height: 90rpx;
+}
+
+.day-ring {
+  position: relative;
+  width: 58rpx;
+  height: 58rpx;
+  margin: 0 auto;
+  border-radius: 50%;
+  border: 2rpx solid transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.status-period {
+  background: #ff3d71;
+}
+
+.status-periodForecast {
+  border-color: #ff3d71;
+}
+
+.status-ovulation {
+  border-color: #9f59ff;
+}
+
+.status-fertile {
+  border-color: #11de71;
+}
+
+.day-ring-today {
+  box-shadow: 0 0 16rpx rgba(17, 222, 113, 0.55);
+}
+
+.day-text {
+  position: relative;
+  z-index: 2;
+  font-size: 22rpx;
+  color: #ffffff;
+}
+
+.day-muted {
+  color: rgba(255, 255, 255, 0.34);
+}
+
+.day-safe-dot {
+  position: absolute;
+  left: 50%;
+  bottom: 8rpx;
+  width: 10rpx;
+  height: 10rpx;
+  margin-left: -5rpx;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.day-marker {
+  width: 4rpx;
+  height: 18rpx;
+  margin: 8rpx auto 0;
+  border-radius: 999rpx;
+  background: linear-gradient(180deg, rgba(17, 222, 113, 0.1) 0%, #ffffff 100%);
+  opacity: 0.84;
+}

@@ -1,0 +1,10 @@
+{
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "device-topbar": "/subpackage/device13/components/device-topbar/device-topbar",
+    "device-section-card": "/subpackage/device13/components/device-section-card/device-section-card",
+    "connecting-hero": "/subpackage/device13/components/connecting-hero/connecting-hero",
+    "outline-button": "/subpackage/device13/components/outline-button/outline-button",
+    "empty-state": "/components/empty-state/empty-state"
+  }
+}

@@ -1,0 +1,9 @@
+<view class="status-bar">
+  <text class="status-time">{{time}}</text>
+  <view class="status-notch"></view>
+  <view class="status-icons">
+    <view class="signal"><view></view><view></view><view></view></view>
+    <text class="wifi">WiFi</text>
+    <view class="battery"><view></view></view>
+  </view>
+</view>

@@ -1,0 +1,6 @@
+{
+  "component": true,
+  "usingComponents": {
+    "reference-switch": "/subpackage/periodCalendar/components/reference-switch/reference-switch"
+  }
+}

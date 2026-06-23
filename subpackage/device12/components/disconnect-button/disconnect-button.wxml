@@ -1,0 +1,1 @@
+<button class="disconnect-button" bindtap="onActionTap">{{text}}</button>

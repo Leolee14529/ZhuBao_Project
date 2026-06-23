@@ -1,0 +1,24 @@
+<view class="device-card" bindtap="onTapCard">
+  <view class="device-icon-wrap">
+    <image class="device-icon-image" src="/subpackage/jewelry/assets/device-bluetooth.png" mode="aspectFill"></image>
+  </view>
+
+  <view class="device-main">
+    <subparagraph text="{{info.title}}"></subparagraph>
+    <text class="device-name">{{info.name}}</text>
+  </view>
+
+  <view class="device-side">
+    <view class="device-status-row">
+      <view class="device-status-dot"></view>
+      <text class="device-status">{{info.status}}</text>
+    </view>
+    <view class="device-battery-row">
+      <view class="battery-icon">
+        <view class="battery-cap"></view>
+        <view class="battery-level"></view>
+      </view>
+      <text class="device-battery">{{info.battery}}</text>
+    </view>
+  </view>
+</view>

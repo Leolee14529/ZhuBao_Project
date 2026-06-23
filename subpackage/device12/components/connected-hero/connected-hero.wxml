@@ -1,0 +1,12 @@
+<view class="hero">
+  <image class="hero-image" src="{{imageSrc}}" mode="widthFix"></image>
+  <text class="hero-name">{{ringName}}</text>
+  <text class="hero-status">{{statusText}}</text>
+  <view class="battery-row">
+    <text class="battery-text">{{batteryText}}</text>
+    <view class="battery-icon">
+      <view class="battery-level"></view>
+      <view class="battery-cap"></view>
+    </view>
+  </view>
+</view>

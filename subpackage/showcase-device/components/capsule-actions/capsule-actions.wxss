@@ -1,0 +1,67 @@
+.capsule-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10rpx;
+}
+
+.capsule-main,
+.capsule-sub {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid rgba(227, 232, 230, 0.28);
+  background: rgba(6, 10, 9, 0.72);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+}
+
+.capsule-main {
+  gap: 16rpx;
+  padding: 12rpx 18rpx;
+  border-radius: 999rpx;
+}
+
+.capsule-sub {
+  gap: 10rpx;
+  padding: 8rpx 16rpx;
+  border-radius: 999rpx;
+}
+
+.dot-group {
+  display: flex;
+  gap: 8rpx;
+}
+
+.dot {
+  width: 10rpx;
+  height: 10rpx;
+  border-radius: 50%;
+  background: #ffffff;
+  opacity: 0.95;
+}
+
+.muted {
+  opacity: 0.28;
+}
+
+.capsule-divider {
+  width: 1px;
+  height: 28rpx;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.capsule-ring {
+  width: 34rpx;
+  height: 34rpx;
+  border-radius: 50%;
+  border: 1px solid #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.capsule-ring-core {
+  width: 14rpx;
+  height: 14rpx;
+  border-radius: 50%;
+  border: 1px solid #ffffff;
+}

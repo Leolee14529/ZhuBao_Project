@@ -1,0 +1,4 @@
+<view class="auth-intro">
+  <text class="auth-intro__title">{{title}}</text>
+  <text class="auth-intro__subtitle">{{subtitle}}</text>
+</view>

@@ -1,0 +1,20 @@
+<view class="section-card">
+  <text class="section-title">{{title}}</text>
+
+  <block wx:for="{{rows}}" wx:key="label">
+    <view class="row {{item.arrow ? 'row-clickable' : ''}}" data-item="{{item}}" bindtap="onRowTap">
+      <view class="row-content">
+        <view class="row-left">
+          <image wx:if="{{item.icon}}" class="row-icon" src="{{item.icon}}" mode="aspectFit"></image>
+          <text class="row-label">{{item.label}}</text>
+        </view>
+        <view class="row-right {{item.valueAlign === 'right' ? 'row-right-align-right' : ''}}">
+          <text class="row-value {{item.danger ? 'row-value-danger' : ''}} {{item.brand ? 'row-value-brand' : ''}}">{{item.value}}</text>
+          <view wx:if="{{item.noteDot}}" class="row-note-dot"></view>
+          <view wx:if="{{item.loading}}" class="row-spinner"></view>
+          <text wx:if="{{item.arrow}}" class="row-arrow">›</text>
+        </view>
+      </view>
+    </view>
+  </block>
+</view>

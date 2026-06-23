@@ -1,0 +1,53 @@
+{
+  "pages": ["pages/login/index"],
+  "subPackages": [
+    {
+      "root": "subpackage/jewelry",
+      "name": "jewelry",
+      "pages": ["pages/home/index", "pages/data/index", "pages/settings/index", "pages/five-elements/index"]
+    },
+    {
+      "root": "subpackage/showcase",
+      "name": "showcase",
+      "pages": ["pages/home/index"]
+    },
+    {
+      "root": "subpackage/showcase-device",
+      "name": "showcaseDevice",
+      "pages": ["pages/home/index"]
+    },
+    {
+      "root": "subpackage/periodCalendar",
+      "name": "periodCalendar",
+      "pages": ["pages/calendar/index"]
+    },
+    {
+      "root": "subpackage/auth",
+      "name": "auth",
+      "pages": ["pages/email/index", "pages/password/index"]
+    },
+    {
+      "root": "subpackage/device12",
+      "name": "device12",
+      "pages": ["pages/connected/index"]
+    },
+    {
+      "root": "subpackage/device13",
+      "name": "device13",
+      "pages": ["pages/pairing/index"]
+    },
+    {
+      "root": "subpackage/device17",
+      "name": "device17",
+      "pages": ["pages/unconnected-detail/index"]
+    }
+  ],
+  "window": {
+    "navigationStyle": "custom",
+    "backgroundColor": "#050505",
+    "backgroundTextStyle": "light"
+  },
+  "style": "v2",
+  "lazyCodeLoading": "requiredComponents",
+  "sitemapLocation": "sitemap.json"
+}

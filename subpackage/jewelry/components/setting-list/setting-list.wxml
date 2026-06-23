@@ -1,0 +1,13 @@
+<block wx:for="{{viewGroups}}" wx:key="title">
+  <view class="setting-section">
+    <text class="setting-title">{{item.title}}</text>
+    <view class="setting-card">
+      <block wx:for="{{item.items}}" wx:for-item="row" wx:key="label">
+        <view class="setting-row">
+          <view class="row-left"><view class="row-icon">{{row.icon}}</view><text class="row-label">{{row.label}}</text></view>
+          <view class="row-right"><text wx:if="{{row.value}}" class="row-value">{{row.value}}</text><view wx:if="{{row.hasToggle}}" class="toggle {{row.toggleClass}}"><view></view></view><text wx:else class="arrow">›</text></view>
+        </view>
+      </block>
+    </view>
+  </view>
+</block>

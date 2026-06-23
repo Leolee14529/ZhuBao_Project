@@ -1,0 +1,7 @@
+{
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "device-card": "/subpackage/jewelry/components/device-card/device-card",
+    "bottom-nav": "/subpackage/jewelry/components/bottom-nav/bottom-nav"
+  }
+}

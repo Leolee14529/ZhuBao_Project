@@ -1,0 +1,1 @@
+Component({options:{multipleSlots:true},properties:{title:String,subtitle:String}});

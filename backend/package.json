@@ -1,0 +1,21 @@
+{
+  "name": "wuxing-backend",
+  "version": "1.0.0",
+  "description": "WeChat mini program backend for Bazi and Wuxing calculation",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "express",
+    "bazi",
+    "wuxing"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2"
+  }
+}

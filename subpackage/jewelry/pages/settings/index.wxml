@@ -1,0 +1,75 @@
+﻿<view class="settings-page">
+  <view class="scroll-container">
+    <scroll-view class="settings-scroll" scroll-y="true">
+      <view class="page-body">
+        <view class="page-top-spacer" style="height: {{topSpacer}}px;"></view>
+
+        <view class="profile-head">
+          <view class="profile-avatar">
+            <text class="avatar-letter">T</text>
+          </view>
+          <view class="profile-copy">
+            <text class="profile-title">Ting's Ring</text>
+            <view class="profile-subtitle-row">
+              <text class="profile-subtitle">Pro Model</text>
+              <view class="profile-subtitle-dot"></view>
+              <text class="profile-subtitle">Jade Edition</text>
+            </view>
+          </view>
+        </view>
+
+        <block wx:for="{{sections}}" wx:key="title">
+          <view class="section">
+            <text class="section-title">{{item.title}}</text>
+            <view class="section-card">
+              <block wx:for="{{item.items}}" wx:key="label">
+                <view
+                  class="setting-row {{item.rowClass}}"
+                  data-is-language="{{item.isLanguage}}"
+                  data-is-ring="{{item.isRing}}"
+                  bindtap="onSettingRowTap"
+                >
+                  <view class="row-left">
+                    <text class="row-label">{{item.label}}</text>
+                  </view>
+                  <view class="row-right">
+                    <text wx:if="{{item.isLanguage}}" class="row-value {{item.valueClass}}">{{currentLanguage}}</text>
+                    <text wx:elif="{{item.isRing}}" class="row-value {{item.valueClass}}">{{isDeviceBound ? '已连接' : '未连接'}}</text>
+                    <text wx:elif="{{item.value}}" class="row-value {{item.valueClass}}">{{item.value}}</text>
+                    <view
+                      wx:if="{{item.toggle}}"
+                      class="toggle {{item.isSleep ? (sleepEnabled ? 'toggle-on' : 'toggle-off') : ''}}{{item.isBell ? (notificationsEnabled ? ' toggle-on' : ' toggle-off') : ''}}"
+                      data-key="{{item.isSleep ? 'sleepEnabled' : (item.isBell ? 'notificationsEnabled' : '')}}"
+                      catchtap="onToggleTap"
+                      bindtouchstart="onToggleTouchStart"
+                      bindtouchend="onToggleTouchEnd"
+                    >
+                      <view class="toggle-knob"></view>
+                    </view>
+                    <text wx:if="{{item.arrow}}" class="row-arrow">></text>
+                  </view>
+                </view>
+              </block>
+            </view>
+          </view>
+        </block>
+
+        <button class="logout-btn" bindtap="logout">
+          <view class="logout-inner">
+            <view class="logout-icon">
+              <view class="logout-door"></view>
+              <view class="logout-arrow"></view>
+              <view class="logout-arrow-head"></view>
+            </view>
+            <text class="logout-text">退出登录</text>
+          </view>
+        </button>
+
+        <text class="version-text">Version 2.4.0 (Build 1024)</text>
+        <view class="bottom-space"></view>
+      </view>
+    </scroll-view>
+  </view>
+
+  <bottom-nav active="settings"></bottom-nav>
+</view>

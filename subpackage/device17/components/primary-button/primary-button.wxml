@@ -1,0 +1,3 @@
+<view class="primary-button-wrap">
+  <button class="primary-button" bindtap="onActionTap">{{text}}</button>
+</view>

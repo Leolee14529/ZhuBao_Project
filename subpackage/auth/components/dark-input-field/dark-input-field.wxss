@@ -1,0 +1,35 @@
+.dark-input {
+  display: flex;
+  align-items: center;
+  height: 96rpx;
+  margin-bottom: 22rpx;
+  padding: 0 28rpx;
+  border: 1rpx solid rgba(255, 255, 255, 0.08);
+  border-radius: 22rpx;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.dark-input__icon {
+  width: 44rpx;
+  color: rgba(255, 255, 255, 0.42);
+  font-size: 28rpx;
+  text-align: center;
+}
+
+.dark-input__field {
+  height: 96rpx;
+  flex: 1;
+  color: #ffffff;
+  font-size: 28rpx;
+}
+
+.dark-input__toggle {
+  padding-left: 24rpx;
+  color: rgba(255, 255, 255, 0.42);
+  font-size: 24rpx;
+  line-height: 1;
+}
+
+.dark-input__placeholder {
+  color: rgba(255, 255, 255, 0.3);
+}

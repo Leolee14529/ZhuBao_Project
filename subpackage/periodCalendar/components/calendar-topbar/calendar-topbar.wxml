@@ -1,0 +1,5 @@
+<view class="topbar" style="height: {{topbarHeight}}px;">
+  <view class="back-button" style="top: {{backButtonTop}}px;" bindtap="onBackTap">
+    <view class="back-arrow"></view>
+  </view>
+</view>
