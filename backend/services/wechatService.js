@@ -49,7 +49,7 @@ function requestJson(url) {
 
 async function code2Session(code) {
   const appid = process.env.WECHAT_APPID;
-  const secret = process.env.WECHAT_SECRET;
+  const secret = process.env.WECHAT_SECRET || process.env.WECHAT_APP_SECRET;
 
   if (!appid || !secret) {
     throw createServiceError(500, "WECHAT_CONFIG_MISSING", "WeChat appid or secret is not configured");

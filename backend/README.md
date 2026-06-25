@@ -11,10 +11,16 @@ npm install
 npm run dev
 ```
 
-微信登录接口需要通过 shell 注入环境变量。本阶段不使用 `dotenv`，不要把真实 AppSecret 写入任何文件：
+微信登录接口需要通过 shell 注入环境变量。本阶段不使用 `dotenv`，不要把真实 AppSecret 写入任何文件。本地启动可以使用：
 
 ```bash
 WECHAT_APPID=xxx WECHAT_SECRET=xxx npm run dev
+```
+
+或：
+
+```bash
+WECHAT_APPID=xxx WECHAT_APP_SECRET=xxx npm run dev
 ```
 
 服务默认地址：
