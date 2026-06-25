@@ -20,3 +20,6 @@ pnpm-debug.log*
 .cache/
 dist/
 build/
+
+.env.*
+backend/.env.*
