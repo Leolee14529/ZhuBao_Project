@@ -5,19 +5,8 @@ const DEFAULT_LOGIN_ERROR = "登录暂时不可用，请稍后再试";
 
 Page({
   data: {
-    showPassword: false,
-    passwordMode: true,
-    eyeText: "显示",
     serviceError: "",
     isLoggingIn: false
-  },
-  togglePassword() {
-    const showPassword = !this.data.showPassword;
-    this.setData({
-      showPassword,
-      passwordMode: !showPassword,
-      eyeText: showPassword ? "隐藏" : "显示"
-    });
   },
   login() {
     if (this.data.isLoggingIn) {
@@ -87,10 +76,5 @@ Page({
   },
   retryLogin() {
     this.login();
-  },
-  openRegister() {
-    wx.navigateTo({
-      url: "/subpackage/auth/pages/email/index"
-    });
   }
 });

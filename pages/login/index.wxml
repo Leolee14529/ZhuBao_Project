@@ -1,6 +1,6 @@
 <view class="login-page">
   <view class="login-backdrop">
-    <image class="login-bg" src="/subpackage/jewelry/assets/bg-login.webp" mode="aspectFill"></image>
+    <image class="login-bg" src="/assets/auth/bg-login.webp" mode="aspectFill"></image>
     <view class="login-shade"></view>
   </view>
   <status-bar></status-bar>
@@ -20,10 +20,7 @@
         compact="{{true}}"
         bind:action="retryLogin"
       ></empty-state>
-      <view class="field"><text class="field-icon">ID</text><input placeholder="邮箱 / 手机号" placeholder-class="placeholder" /></view>
-      <view class="field"><input password="{{passwordMode}}" placeholder="密码" placeholder-class="placeholder" /><view class="eye" bindtap="togglePassword">{{eyeText}}</view></view>
-      <button class="primary" bindtap="login" hover-class="primary-hover"><text>登录</text></button>
-      <view class="link-row"><text bindtap="openRegister">注册账号</text><text>忘记密码?</text></view>
+      <button class="primary" bindtap="login" hover-class="primary-hover"><text>微信一键登录</text></button>
     </view>
   </view>
   <view class="home-indicator"></view>
