@@ -1,25 +1,28 @@
 var fiveElements = require("../../utils/five-elements");
+var request = require("../../../../utils/request");
+var auth = require("../../../../utils/auth");
 
 Page({
   data: {
     topSpacer: 40,
-    focusElement: "木",
-    radarValues: [0.88, 0.82, 0.76, 0.72, 0.8],
-    radarNote: "当前状态：五行能量分布均衡，身心状态稳定。",
+    focusElement: "无",
+    radarValues: [0, 0, 0, 0, 0],
+    radarNote: "暂无真实五行数据。",
     sleep: [
-      { name: "深睡", value: "2.5", width: "30%", color: "#10b981", cardClass: "sleep-card-left" },
-      { name: "浅睡", value: "4.2", width: "51%", color: "#34d399", cardClass: "sleep-card-mid" },
-      { name: "REM", value: "1.5", width: "19%", color: "#6ee7b7", cardClass: "sleep-card-right" }
+      { name: "深睡", value: "0", width: "0%", color: "#10b981", cardClass: "sleep-card-left" },
+      { name: "浅睡", value: "0", width: "0%", color: "#34d399", cardClass: "sleep-card-mid" },
+      { name: "REM", value: "0", width: "0%", color: "#6ee7b7", cardClass: "sleep-card-right" }
     ],
     elements: [
-      { name: "木 (Wood)", jade: "翠绿/碧玉", suitable: "精力旺盛、需疏导者", color: "#10b981", rowClass: "" },
-      { name: "水 (Water)", jade: "墨翠/蓝水", suitable: "智谋深远、需沉静者", color: "#3b82f6", rowClass: "" },
-      { name: "火 (Fire)", jade: "红翡/紫罗兰", suitable: "热情、需平衡躁动者", color: "#f43f5e", rowClass: "" },
-      { name: "金 (Metal)", jade: "冰种/白底青", suitable: "果决、需柔和气场者", color: "#e2e8f0", rowClass: "" },
-      { name: "土 (Earth)", jade: "黄翡/蜜糖", suitable: "稳重、需增强灵动者", color: "#d97706", rowClass: "element-row-last" }
+      { name: "木 (Wood)", jade: "暂无真实数据", suitable: "0% · 暂无真实数据", color: "#10b981", rowClass: "" },
+      { name: "水 (Water)", jade: "暂无真实数据", suitable: "0% · 暂无真实数据", color: "#3b82f6", rowClass: "" },
+      { name: "火 (Fire)", jade: "暂无真实数据", suitable: "0% · 暂无真实数据", color: "#f43f5e", rowClass: "" },
+      { name: "金 (Metal)", jade: "暂无真实数据", suitable: "0% · 暂无真实数据", color: "#e2e8f0", rowClass: "" },
+      { name: "土 (Earth)", jade: "暂无真实数据", suitable: "0% · 暂无真实数据", color: "#d97706", rowClass: "element-row-last" }
     ]
   },
   onLoad() {
+    if (!auth.requireLogin({ source: "/subpackage/jewelry/pages/data/index" })) return;
     const app = getApp();
     const navLayout = app.getNavLayout ? app.getNavLayout() : app.globalData.navLayout;
     if (navLayout && navLayout.contentOffset) {
@@ -30,30 +33,47 @@ Page({
     this.applyBirthProfile();
   },
   onShow() {
+    if (!auth.requireLogin({ source: "/subpackage/jewelry/pages/data/index" })) return;
     this.applyBirthProfile();
+    this.refreshLatestResult();
   },
   goHome() {
+    console.warn("[ROUTE]", "from subpackage/jewelry/pages/data/index.js/goHome", "to", "/subpackage/jewelry/pages/home/index", "reason", "tab home");
     wx.redirectTo({
       url: "/subpackage/jewelry/pages/home/index"
     });
   },
   goSettings() {
+    console.warn("[ROUTE]", "from subpackage/jewelry/pages/data/index.js/goSettings", "to", "/subpackage/jewelry/pages/settings/index", "reason", "tab settings");
     wx.redirectTo({
       url: "/subpackage/jewelry/pages/settings/index"
     });
   },
   openPeriodCalendar() {
+    if (!auth.requireLogin({ source: "/subpackage/periodCalendar/pages/calendar/index" })) return;
     wx.navigateTo({
       url: "/subpackage/periodCalendar/pages/calendar/index"
     });
   },
   applyBirthProfile() {
-    var profile = fiveElements.buildProfile(fiveElements.getSavedBirthInput());
+    var profile = fiveElements.buildCurrentProfile();
     this.setData({
       focusElement: profile.focusElement,
       radarValues: profile.radarValues,
       radarNote: profile.radarNote,
       elements: profile.elements
     });
+  },
+  refreshLatestResult() {
+    request.get("/api/wuxing/latest")
+      .then(function (data) {
+        fiveElements.saveWuxingResult(data.result);
+        this.applyBirthProfile();
+      }.bind(this))
+      .catch(function (error) {
+        if (error && error.code !== "WUXING_RESULT_NOT_FOUND") {
+          console.error("load latest wuxing result failed", error);
+        }
+      });
   }
 });

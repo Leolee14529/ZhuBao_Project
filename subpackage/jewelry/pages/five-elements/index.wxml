@@ -27,10 +27,20 @@
         </picker>
 
         <picker mode="time" value="{{birthTime}}" bindchange="onTimeChange">
-          <view class="field-row field-row-last">
+          <view class="field-row">
             <view class="field-copy">
               <text class="field-label">出生时间</text>
               <text class="field-value">{{birthTime}}</text>
+            </view>
+            <text class="field-arrow">›</text>
+          </view>
+        </picker>
+
+        <picker value="{{genderIndex}}" range="{{genderOptions}}" bindchange="onGenderChange">
+          <view class="field-row field-row-last">
+            <view class="field-copy">
+              <text class="field-label">性别</text>
+              <text class="field-value">{{genderOptions[genderIndex]}}</text>
             </view>
             <text class="field-arrow">›</text>
           </view>
@@ -51,7 +61,12 @@
       </view>
 
       <view class="save-button-row">
-        <button class="save-button" bindtap="saveBirthProfile">保存并更新五行</button>
+        <button
+          class="save-button"
+          bindtap="saveBirthProfile"
+          loading="{{isSaving}}"
+          disabled="{{isSaving}}"
+        >{{isSaving ? '保存中' : '保存并更新五行'}}</button>
       </view>
       <view class="bottom-space"></view>
     </view>

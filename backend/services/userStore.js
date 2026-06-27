@@ -1,8 +1,8 @@
 const fs = require("fs");
-const path = require("path");
 const crypto = require("crypto");
+const { getDataFile } = require("./runtimeDataDir");
 
-const DATA_FILE = path.join(__dirname, "../data/users.json");
+const DATA_FILE = getDataFile("users.json");
 
 function createInitialData() {
   return {
@@ -86,8 +86,17 @@ function findOrCreateByWechatProfile(profile) {
   return toPublicUser(user);
 }
 
+function deleteUserById(userId) {
+  const data = readData();
+  const before = data.users.length;
+  data.users = data.users.filter((user) => user.id !== userId);
+  writeData(data);
+  return data.users.length < before;
+}
+
 module.exports = {
   findUserById,
   findOrCreateByWechatProfile,
+  deleteUserById,
   toPublicUser
 };

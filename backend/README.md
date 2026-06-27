@@ -1,175 +1,118 @@
-# 五行定制后端
+# ZhuBao 后端
 
-这是一个独立的 Node.js + Express 后端，当前提供五行定制接口和微信登录 MVP 接口。
+Node.js + Express 后端，提供微信登录、用户会话和五行计算服务。
 
-四柱八字和五行计算全部在本地完成。微信登录只用于通过 `wx.login` 的 code 换取 openid，并创建本地 MVP 用户与 session。
+## 运行要求
 
-## 安装步骤
+- Node.js 24 LTS
+- pnpm 10
+- PostgreSQL 17 或兼容版本
 
-```bash
-npm install
-npm run dev
-```
-
-微信登录接口需要通过 shell 注入环境变量。本阶段不使用 `dotenv`，不要把真实 AppSecret 写入任何文件。本地启动可以使用：
+## 本地启动
 
 ```bash
-WECHAT_APPID=xxx WECHAT_SECRET=xxx npm run dev
+cd backend
+cp .env.example .env
+pnpm install --frozen-lockfile
 ```
 
-或：
+当前项目不自动加载 `.env`，开发时通过 shell 注入：
 
 ```bash
-WECHAT_APPID=xxx WECHAT_APP_SECRET=xxx npm run dev
+DATABASE_URL=postgresql:///zhubao_dev pnpm run db:migrate
+DATABASE_URL=postgresql:///zhubao_dev pnpm run dev
 ```
 
-服务默认地址：
+未配置 `DATABASE_URL` 时，非生产环境使用临时 JSON 存储。JSON 模式只用于本地调试，不允许用于生产。
 
-```text
-http://localhost:3000
+## 生产环境变量
+
+| 变量 | 必填 | 说明 |
+|---|---:|---|
+| `NODE_ENV=production` | 是 | 启用生产校验 |
+| `PORT` | 否 | 默认 `3000` |
+| `DATABASE_URL` | 是 | PostgreSQL 连接地址 |
+| `DATABASE_SSL` | 否 | 托管数据库需要时设为 `true` |
+| `WECHAT_APPID` | 是 | 微信小程序 AppID |
+| `WECHAT_SECRET` | 是 | 微信 AppSecret |
+| `CORS_ORIGINS` | 否 | 浏览器来源白名单，逗号分隔 |
+
+生产启动会拒绝缺少数据库或微信密钥的配置。真实密钥不得写入仓库。
+
+## 数据库
+
+执行迁移：
+
+```bash
+DATABASE_URL=postgresql://user:password@host:5432/zhubao pnpm run db:migrate
 ```
 
-## 目录结构
+当前表：
 
-```text
-backend/
-├─ server.js
-├─ package.json
-├─ middlewares/
-│  └─ authMiddleware.js
-├─ routes/
-│  ├─ auth.js
-│  ├─ users.js
-│  └─ wuxing.js
-├─ services/
-│  ├─ sessionStore.js
-│  ├─ userStore.js
-│  ├─ wechatService.js
-│  └─ baziService.js
-├─ data/
-│  ├─ sessions.example.json
-│  ├─ users.example.json
-│  └─ wuxing.json
-└─ README.md
-```
+- `users`
+- `auth_sessions`
+- `birth_profiles`
+- `wuxing_results`
+- `schema_migrations`
 
-## 认证接口
+五行结果记录 `algorithm_version`，便于算法升级后的结果追踪。删除用户时，其 session、出生资料和结果通过外键级联删除。
 
-### 1. 微信登录
+## API
 
-`POST /api/auth/wechat-login`
-
-请求示例：
-
-```json
-{
-  "code": "wx.login 返回的 code"
-}
-```
-
-成功返回：
+所有接口统一响应：
 
 ```json
 {
   "success": true,
-  "data": {
-    "token": "opaque-session-token",
-    "user": {
-      "id": "usr_xxx",
-      "openid": "openid_xxx",
-      "unionid": null,
-      "nickname": null,
-      "avatarUrl": null,
-      "createdAt": "2026-06-23T00:00:00.000Z",
-      "updatedAt": "2026-06-23T00:00:00.000Z"
-    }
-  }
+  "data": {}
 }
 ```
 
-说明：
-
-- 登录成功只依赖 openid，不强制昵称或头像授权。
-- `session_key` 只允许后端保存，不返回前端。
-- 前端拿到的是 opaque token，后端只保存 `sha256` 后的 `tokenHash`。
-
-### 2. 当前用户
-
-`GET /api/users/me`
-
-请求头：
-
-```text
-Authorization: Bearer <token>
-```
-
-成功返回：
-
-```json
-{
-  "success": true,
-  "data": {
-    "user": {
-      "id": "usr_xxx",
-      "openid": "openid_xxx",
-      "unionid": null,
-      "nickname": null,
-      "avatarUrl": null,
-      "createdAt": "2026-06-23T00:00:00.000Z",
-      "updatedAt": "2026-06-23T00:00:00.000Z"
-    }
-  }
-}
-```
-
-## 认证错误格式
-
-新增认证接口统一返回下面的错误格式：
+错误：
 
 ```json
 {
   "success": false,
   "message": "错误信息",
-  "code": "ERROR_CODE"
+  "code": "ERROR_CODE",
+  "requestId": "请求追踪 ID"
 }
 ```
 
-当前错误码包括：
+### 健康检查
 
-- `AUTH_CODE_REQUIRED`
-- `WECHAT_CONFIG_MISSING`
-- `WECHAT_CODE2SESSION_FAILED`
-- `WECHAT_OPENID_MISSING`
-- `AUTH_TOKEN_REQUIRED`
-- `AUTH_TOKEN_INVALID`
-- `AUTH_TOKEN_EXPIRED`
-- `USER_NOT_FOUND`
-- `INTERNAL_ERROR`
+- `GET /health/live`
+- `GET /health/ready`
 
-## 本地 MVP 数据存储
+### 认证
 
-- `data/users.json` 和 `data/sessions.json` 只允许本地运行时生成，不提交 Git。
-- 如需查看结构，只参考 `data/users.example.json` 和 `data/sessions.example.json`。
-- 路由文件不得直接读写 JSON，用户和 session 读写集中在 `services/userStore.js` 与 `services/sessionStore.js`。
-- JSON 文件不能作为生产数据库。后续切换 MySQL/PostgreSQL/SQLite 时，应尽量只替换 store 层。
+- `POST /api/auth/wechat-login`
+- `POST /api/auth/logout`
+- `GET /api/users/me`
 
-## 计算说明
+除登录外，认证接口使用：
 
-- 参考 `junglesta/BAZI` 的本地四柱算法
-- 使用太阳黄经和节气索引计算年柱、月柱
-- 使用儒略日计算日柱
-- 使用日干推时干，计算时柱
-- 再统计四柱天干地支对应的五行
-- `elements` 返回五行占比，百分比总和固定为 `100`
-- 当前接口默认按中国时区 `UTC+8` 计算
+```text
+Authorization: Bearer <token>
+```
 
-## 接口说明
+token 只以 SHA-256 哈希形式存储。退出登录会撤销当前 session。
 
-### 1. 计算五行
+### 灵签
 
-`POST /api/wuxing/calculate`
+- `GET /api/fortunes/random`
 
-请求示例：
+当前从后端灵签池随机返回一条，支持 `previousId` 查询参数避免连续重复。后续可在 `backend/services/fortuneService.js` 内替换为数据库或运营配置来源。
+
+### 五行
+
+- `POST /api/wuxing/calculate`
+- `POST /api/wuxing/save`
+- `GET /api/wuxing/latest`
+
+三个接口均要求登录。服务器只使用 token 对应的 `userId`，忽略客户端提交或查询的 `userId`。
+
+请求体：
 
 ```json
 {
@@ -179,116 +122,25 @@ Authorization: Bearer <token>
 }
 ```
 
-返回示例：
+## 验证
 
-```json
-{
-  "userId": "default",
-  "birthDate": "2003-12-09",
-  "birthTime": "10:30",
-  "gender": "female",
-  "bazi": {
-    "year": "癸未",
-    "month": "壬子",
-    "day": "乙卯",
-    "hour": "辛巳"
-  },
-  "elements": {
-    "wood": 25,
-    "fire": 13,
-    "earth": 13,
-    "metal": 12,
-    "water": 37
-  },
-  "dominant": "水",
-  "analysis": "水元素偏强，整体感受力较细腻，适应变化能力较好，气质偏柔和流动。",
-  "suggestion": "适合蓝色、黑色系珠宝，可优先考虑海蓝宝、青金石、黑曜石等偏水属性搭配。",
-  "raw": {
-    "stems": [],
-    "branches": [],
-    "counts": {
-      "wood": 1,
-      "fire": 2,
-      "earth": 2,
-      "metal": 1,
-      "water": 2
-    },
-    "solarTerm": {
-      "index": 20,
-      "longitude": 255,
-      "name_cn": "大雪",
-      "name_en": "Major Snow",
-      "name_pinyin": "Daxue"
-    },
-    "sunLongitude": 256.251,
-    "julianDay": 2452982.271,
-    "timezone": "UTC+8"
-  }
-}
+```bash
+pnpm run check:syntax
+pnpm test
+pnpm run check:lines
+pnpm audit --prod
 ```
 
-### 2. 保存最近一次计算结果
+`check:lines` 会扫描项目的 JS、WXML、WXSS，单文件不得超过 300 行。
 
-`POST /api/wuxing/save`
+## 部署顺序
 
-请求示例：
+1. 配置 PostgreSQL 和备份策略。
+2. 注入生产环境变量。
+3. 执行 `pnpm install --frozen-lockfile`。
+4. 执行数据库迁移。
+5. 启动服务并检查 `/health/live`、`/health/ready`。
+6. 配置 HTTPS 反向代理和微信请求域名。
+7. 小流量验证登录、五行保存、读取、退出。
 
-```json
-{
-  "userId": "default",
-  "birthDate": "2003-12-09",
-  "birthTime": "10:30",
-  "gender": "female"
-}
-```
-
-说明：
-
-- 该接口会先重新计算一次，再把结果保存到 `data/wuxing.json`
-- 如果不传 `userId`，默认使用 `default`
-
-### 3. 读取最近一次计算结果
-
-`GET /api/wuxing/latest?userId=default`
-
-## PowerShell 测试示例
-
-### 计算五行
-
-```powershell
-Invoke-RestMethod -Method Post -Uri "http://localhost:3000/api/wuxing/calculate" `
-  -ContentType "application/json" `
-  -Body '{"birthDate":"2003-12-09","birthTime":"10:30","gender":"female"}'
-```
-
-### 保存最近一次结果
-
-```powershell
-Invoke-RestMethod -Method Post -Uri "http://localhost:3000/api/wuxing/save" `
-  -ContentType "application/json" `
-  -Body '{"userId":"default","birthDate":"2003-12-09","birthTime":"10:30","gender":"female"}'
-```
-
-### 读取最近一次结果
-
-```powershell
-Invoke-RestMethod -Method Get -Uri "http://localhost:3000/api/wuxing/latest?userId=default"
-```
-
-## 参数校验
-
-- 缺少 `birthDate` 返回 `400`
-- 缺少 `birthTime` 返回 `400`
-- 缺少 `gender` 返回 `400`
-- `birthDate` 必须使用 `YYYY-MM-DD`
-- `birthTime` 必须使用 `HH:mm`
-- `gender` 只能是 `male` 或 `female`
-
-## 微信小程序对接方式
-
-前端建议按下面顺序调用：
-
-1. 用户填写出生日期、出生时间、性别
-2. 调用 `POST /api/wuxing/calculate` 获取四柱、五行占比、分析文案和珠宝建议
-3. 如果用户点击“保存结果”，调用 `POST /api/wuxing/save`
-4. 页面再次打开时，调用 `GET /api/wuxing/latest?userId=default` 回显最近一次结果
+服务支持 `SIGTERM`、`SIGINT` 优雅关闭。生产环境应由容器平台或进程管理器负责重启与日志采集。

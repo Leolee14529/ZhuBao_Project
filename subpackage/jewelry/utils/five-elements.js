@@ -48,7 +48,8 @@ var ELEMENT_ORDER = ["wood", "fire", "earth", "metal", "water"];
 function getDefaultBirthInput() {
   return {
     date: "1998-08-08",
-    time: "08:30"
+    time: "08:30",
+    gender: "female"
   };
 }
 
@@ -57,11 +58,98 @@ function getSavedBirthInput() {
   if (!birthInput || !birthInput.date || !birthInput.time) {
     return getDefaultBirthInput();
   }
+  birthInput.gender = birthInput.gender === "male" ? "male" : "female";
   return birthInput;
 }
 
 function saveBirthInput(birthInput) {
   wx.setStorageSync(STORAGE_KEY, birthInput);
+}
+
+function saveWuxingResult(result) {
+  wx.setStorageSync("jewelryWuxingResult", result);
+}
+
+function getSavedWuxingResult() {
+  return wx.getStorageSync("jewelryWuxingResult") || null;
+}
+
+function buildEmptyElements() {
+  return ELEMENT_ORDER.map(function (key, index) {
+    var meta = ELEMENT_META[key];
+    return {
+      key: key,
+      name: meta.cn + " (" + meta.en + ")",
+      jade: "暂无真实数据",
+      suitable: "0% · 暂无真实数据",
+      color: meta.color,
+      rowClass: index === ELEMENT_ORDER.length - 1 ? "element-row-last" : ""
+    };
+  });
+}
+
+function buildEmptyProfile(birthInput) {
+  return {
+    birthInput: birthInput || getDefaultBirthInput(),
+    focusElement: "无",
+    focusKey: "",
+    destinyLine: "暂无真实五行数据",
+    summaryText: "暂无真实五行数据",
+    radarValues: [0, 0, 0, 0, 0],
+    radarNote: "暂无真实五行数据。",
+    elements: buildEmptyElements()
+  };
+}
+
+function buildProfileFromResult(result) {
+  if (!result || !result.elements) return null;
+
+  var ranked = ELEMENT_ORDER.map(function (key) {
+    return {
+      key: key,
+      score: Number(result.elements[key] || 0)
+    };
+  }).sort(function (left, right) {
+    return right.score - left.score;
+  });
+  var dominantKey = ranked[0].key;
+  var weakestKey = ranked[ranked.length - 1].key;
+  var dominantMeta = ELEMENT_META[dominantKey];
+  var weakestMeta = ELEMENT_META[weakestKey];
+  var elements = ranked.map(function (item, index) {
+    var meta = ELEMENT_META[item.key];
+    return {
+      key: item.key,
+      name: meta.cn + " (" + meta.en + ")",
+      jade: meta.jade,
+      suitable: item.score + "% · " + meta.suit,
+      color: meta.color,
+      rowClass: index === ranked.length - 1 ? "element-row-last" : ""
+    };
+  });
+  var radarValues = ELEMENT_ORDER.map(function (key) {
+    return Number((0.55 + Number(result.elements[key] || 0) * 0.004).toFixed(2));
+  });
+
+  return {
+    birthInput: {
+      date: result.birthDate,
+      time: result.birthTime,
+      gender: result.gender
+    },
+    focusElement: dominantMeta.cn,
+    focusKey: dominantKey,
+    destinyLine: dominantMeta.cn + "势偏强 · " + weakestMeta.cn + "需补足",
+    summaryText: result.analysis || "五行结果已由服务器计算",
+    radarValues: radarValues,
+    radarNote: result.analysis || "",
+    elements: elements
+  };
+}
+
+function buildCurrentProfile() {
+  return buildProfileFromResult(getSavedWuxingResult()) ||
+    buildProfile(getSavedBirthInput());
 }
 
 function buildProfile(birthInput) {
@@ -169,5 +257,10 @@ module.exports = {
   getDefaultBirthInput: getDefaultBirthInput,
   getSavedBirthInput: getSavedBirthInput,
   saveBirthInput: saveBirthInput,
+  saveWuxingResult: saveWuxingResult,
+  getSavedWuxingResult: getSavedWuxingResult,
+  buildEmptyProfile: buildEmptyProfile,
+  buildProfileFromResult: buildProfileFromResult,
+  buildCurrentProfile: buildCurrentProfile,
   buildProfile: buildProfile
 };

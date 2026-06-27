@@ -5,8 +5,8 @@
 
       <view class="hero-row">
         <view class="hero-copy">
-          <text class="hero-title">你好, Ting</text>
-          <text class="hero-subtitle">金龙之命 · 阳土入格</text>
+          <text class="hero-title">你好</text>
+          <text class="hero-subtitle">暂无真实五行数据</text>
         </view>
         <capsule-actions></capsule-actions>
       </view>

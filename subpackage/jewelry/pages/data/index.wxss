@@ -37,7 +37,7 @@
 .chart-line-top{top:52rpx}.chart-line-mid{top:114rpx}
 .chart-bars{position:absolute;left:30rpx;right:30rpx;bottom:22rpx;height:150rpx}
 .bar{position:absolute;bottom:0;width:34rpx;border-radius:20rpx 20rpx 0 0;background-color:#10b981}
-.bar-1{left:0;height:72rpx}.bar-2{left:72rpx;height:54rpx}.bar-3{left:144rpx;height:126rpx}.bar-4{left:216rpx;height:154rpx}.bar-5{left:288rpx;height:138rpx}.bar-6{left:360rpx;height:98rpx}.bar-7{left:432rpx;height:76rpx}
+.bar-1{left:0;height:0}.bar-2{left:72rpx;height:0}.bar-3{left:144rpx;height:0}.bar-4{left:216rpx;height:0}.bar-5{left:288rpx;height:0}.bar-6{left:360rpx;height:0}.bar-7{left:432rpx;height:0}
 .sleep-cards{overflow:hidden;margin-top:22rpx}
 .sleep-card{position:relative;float:left;width:200rpx;min-height:118rpx;padding:18rpx 16rpx;border-radius:20rpx;background-color:#1c1f26}
 .sleep-card-left{float:left}

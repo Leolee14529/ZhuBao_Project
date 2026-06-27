@@ -1,39 +1,22 @@
-const express = require("express");
-const cors = require("cors");
-const authRouter = require("./routes/auth");
-const usersRouter = require("./routes/users");
-const wuxingRouter = require("./routes/wuxing");
+const createApp = require("./app");
+const { closePool } = require("./db/pool");
+const { loadConfig, validateProductionConfig } = require("./config/env");
 
-const app = express();
-const PORT = 3000;
+const config = loadConfig();
+validateProductionConfig(config);
 
-app.use(cors());
-app.use(express.json());
+const app = createApp(config);
+const server = app.listen(config.port, () => {
+  console.log(`ZhuBao backend listening on port ${config.port}`);
+});
 
-app.get("/", (req, res) => {
-  res.json({
-    message: "Wuxing backend is running."
+async function shutdown(signal) {
+  console.log(`Received ${signal}; shutting down`);
+  server.close(async (error) => {
+    await closePool();
+    process.exit(error ? 1 : 0);
   });
-});
+}
 
-app.use("/api/auth", authRouter);
-app.use("/api/users", usersRouter);
-app.use("/api/wuxing", wuxingRouter);
-
-app.use((err, req, res, next) => {
-  console.error(err);
-
-  if (err.status) {
-    return res.status(err.status).json({
-      message: err.message
-    });
-  }
-
-  return res.status(500).json({
-    message: "Internal server error"
-  });
-});
-
-app.listen(PORT, () => {
-  console.log(`Wuxing backend listening on port ${PORT}`);
-});
+process.on("SIGTERM", () => shutdown("SIGTERM"));
+process.on("SIGINT", () => shutdown("SIGINT"));

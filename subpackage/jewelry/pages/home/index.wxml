@@ -1,11 +1,11 @@
-﻿<view class="home-page">
+<view class="home-page">
   <view class="scroll-container">
     <scroll-view class="home-scroll" scroll-y="true" enhanced="true" bounces="true" show-scrollbar="false">
       <view class="page-body">
         <view class="page-top-spacer" style="height: {{topSpacer}}px;"></view>
         <view class="page-header">
           <view class="header-copy">
-            <text class="hello-line">你好, Ting</text>
+            <text class="hello-line">你好</text>
             <text class="destiny-line">{{destinyLine}}</text>
           </view>
           <view class="capsule-action">
@@ -15,47 +15,18 @@
           </view>
         </view>
 
-        <view class="divination-card {{divinationClass}}" bindtap="toggleDivination">
-          <view class="divination-front">
-            <view class="divination-grid"></view>
-            <view class="divination-head">
-              <view class="divination-label">
-                <view class="divination-dot"></view>
-                <text>每日灵签</text>
-              </view>
-              <text class="divination-no">NO.88</text>
-            </view>
-            <view class="divination-center">
-              <view class="divination-ring">
-                <view class="divination-ring-inner"></view>
-                <text class="divination-symbol">巽</text>
-              </view>
-              <text class="divination-title">中吉</text>
-              <text class="divination-subtitle">Wind / Wood</text>
-            </view>
-            <view class="divination-copy">
-              <text class="divination-quote">“</text>
-              <text class="divination-text">风行水上，自然成纹。今日灵感如风，宜顺势而为。指环监测显示心流状态极佳。</text>
-            </view>
-          </view>
-          <view class="divination-back">
-            <view class="divination-back-grid"></view>
-            <view class="divination-back-core"></view>
-            <text class="divination-back-title">COMPUTING POWER</text>
-            <text class="divination-back-tip">点击翻面</text>
-          </view>
-        </view>
+        <divination-card></divination-card>
 
         <view class="stats-row">
           <view class="stat-card stat-left">
             <text class="stat-caption">· 今日心情</text>
-            <text class="stat-value">平静</text>
-            <text class="stat-desc">心率平稳 · 68 bpm</text>
+            <text class="stat-value">暂无</text>
+            <text class="stat-desc">心率 · 0 bpm</text>
           </view>
           <view class="stat-card stat-right">
             <text class="stat-caption stat-pink">· 幸运元素</text>
-            <text class="stat-value">火 (Fire)</text>
-            <text class="stat-desc">宜穿红 / 紫色系</text>
+            <text class="stat-value">无</text>
+            <text class="stat-desc">暂无真实五行数据</text>
           </view>
         </view>
 

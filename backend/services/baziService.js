@@ -1,103 +1,31 @@
-const fs = require("fs");
-const path = require("path");
-
-const DATA_FILE = path.join(__dirname, "../data/wuxing.json");
 const DEFAULT_USER_ID = "default";
 const DEFAULT_TIMEZONE_OFFSET = 8;
 const DATE_REGEX = /^\d{4}-\d{2}-\d{2}$/;
 const TIME_REGEX = /^\d{2}:\d{2}$/;
 const SUPPORTED_GENDERS = new Set(["male", "female"]);
-
-// The solar-term and pillar formulas below are extracted and adapted from
-// junglesta/BAZI index.html so the same local algorithm can run in Node.js.
-const SOLAR_TERMS = [
-  { index: 0, longitude: 315, name_cn: "立春", name_en: "Start of Spring", name_pinyin: "Lichun" },
-  { index: 1, longitude: 330, name_cn: "雨水", name_en: "Rain Water", name_pinyin: "Yushui" },
-  { index: 2, longitude: 345, name_cn: "惊蛰", name_en: "Awakening of Insects", name_pinyin: "Jingzhe" },
-  { index: 3, longitude: 0, name_cn: "春分", name_en: "Spring Equinox", name_pinyin: "Chunfen" },
-  { index: 4, longitude: 15, name_cn: "清明", name_en: "Clear and Bright", name_pinyin: "Qingming" },
-  { index: 5, longitude: 30, name_cn: "谷雨", name_en: "Grain Rain", name_pinyin: "Guyu" },
-  { index: 6, longitude: 45, name_cn: "立夏", name_en: "Start of Summer", name_pinyin: "Lixia" },
-  { index: 7, longitude: 60, name_cn: "小满", name_en: "Grain Full", name_pinyin: "Xiaoman" },
-  { index: 8, longitude: 75, name_cn: "芒种", name_en: "Grain in Ear", name_pinyin: "Mangzhong" },
-  { index: 9, longitude: 90, name_cn: "夏至", name_en: "Summer Solstice", name_pinyin: "Xiazhi" },
-  { index: 10, longitude: 105, name_cn: "小暑", name_en: "Minor Heat", name_pinyin: "Xiaoshu" },
-  { index: 11, longitude: 120, name_cn: "大暑", name_en: "Major Heat", name_pinyin: "Dashu" },
-  { index: 12, longitude: 135, name_cn: "立秋", name_en: "Start of Autumn", name_pinyin: "Liqiu" },
-  { index: 13, longitude: 150, name_cn: "处暑", name_en: "End of Heat", name_pinyin: "Chushu" },
-  { index: 14, longitude: 165, name_cn: "白露", name_en: "White Dew", name_pinyin: "Bailu" },
-  { index: 15, longitude: 180, name_cn: "秋分", name_en: "Autumn Equinox", name_pinyin: "Qiufen" },
-  { index: 16, longitude: 195, name_cn: "寒露", name_en: "Cold Dew", name_pinyin: "Hanlu" },
-  { index: 17, longitude: 210, name_cn: "霜降", name_en: "Frost Descent", name_pinyin: "Shuangjiang" },
-  { index: 18, longitude: 225, name_cn: "立冬", name_en: "Start of Winter", name_pinyin: "Lidong" },
-  { index: 19, longitude: 240, name_cn: "小雪", name_en: "Minor Snow", name_pinyin: "Xiaoxue" },
-  { index: 20, longitude: 255, name_cn: "大雪", name_en: "Major Snow", name_pinyin: "Daxue" },
-  { index: 21, longitude: 270, name_cn: "冬至", name_en: "Winter Solstice", name_pinyin: "Dongzhi" },
-  { index: 22, longitude: 285, name_cn: "小寒", name_en: "Minor Cold", name_pinyin: "Xiaohan" },
-  { index: 23, longitude: 300, name_cn: "大寒", name_en: "Major Cold", name_pinyin: "Dahan" }
-];
-
-const HEAVENLY_STEMS = {
-  names: ["甲", "乙", "丙", "丁", "戊", "己", "庚", "辛", "壬", "癸"],
-  pinyin: ["Jia", "Yi", "Bing", "Ding", "Wu", "Ji", "Geng", "Xin", "Ren", "Gui"],
-  elements: ["Wood", "Wood", "Fire", "Fire", "Earth", "Earth", "Metal", "Metal", "Water", "Water"],
-  yinYang: ["Yang", "Yin", "Yang", "Yin", "Yang", "Yin", "Yang", "Yin", "Yang", "Yin"]
-};
-
-const EARTHLY_BRANCHES = {
-  names: ["子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"],
-  pinyin: ["Zi", "Chou", "Yin", "Mao", "Chen", "Si", "Wu", "Wei", "Shen", "You", "Xu", "Hai"],
-  animals: ["Rat", "Ox", "Tiger", "Rabbit", "Dragon", "Snake", "Horse", "Goat", "Monkey", "Rooster", "Dog", "Pig"]
-};
-
-const BRANCH_ELEMENTS = ["Water", "Earth", "Wood", "Wood", "Earth", "Fire", "Fire", "Earth", "Metal", "Metal", "Earth", "Water"];
-const ELEMENT_KEYS = ["wood", "fire", "earth", "metal", "water"];
-const ELEMENT_LABELS = {
-  wood: "木",
-  fire: "火",
-  earth: "土",
-  metal: "金",
-  water: "水"
-};
-
+const {
+  SOLAR_TERMS,
+  HEAVENLY_STEMS,
+  EARTHLY_BRANCHES,
+  BRANCH_ELEMENTS,
+  ELEMENT_KEYS,
+  ELEMENT_LABELS
+} = require("./bazi/constants");
+const {
+  gregorianToJulianDay,
+  sunLongitude,
+  getSolarTermIndex,
+  calculateYearPillar,
+  calculateMonthPillar,
+  calculateDayPillar,
+  calculateHourPillar,
+  pillarToText
+} = require("./bazi/pillars");
 function createBadRequestError(message) {
   const error = new Error(message);
   error.status = 400;
   return error;
 }
-
-function ensureDataFile() {
-  if (!fs.existsSync(DATA_FILE)) {
-    const initialData = {
-      users: {
-        [DEFAULT_USER_ID]: {
-          latest: null
-        }
-      }
-    };
-    fs.writeFileSync(DATA_FILE, JSON.stringify(initialData, null, 2), "utf8");
-  }
-}
-
-function readData() {
-  ensureDataFile();
-  return JSON.parse(fs.readFileSync(DATA_FILE, "utf8"));
-}
-
-function writeData(data) {
-  fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2), "utf8");
-}
-
-function ensureUser(data, userId) {
-  if (!data.users[userId]) {
-    data.users[userId] = {
-      latest: null
-    };
-  }
-
-  return data.users[userId];
-}
-
 function validateInput(input) {
   if (!input.birthDate) {
     throw createBadRequestError("birthDate is required");
@@ -169,129 +97,6 @@ function validateInput(input) {
     minute
   };
 }
-
-function gregorianToJulianDay(year, month, day, hour = 0, minute = 0, second = 0) {
-  let adjustedYear = year;
-  let adjustedMonth = month;
-
-  if (adjustedMonth <= 2) {
-    adjustedYear -= 1;
-    adjustedMonth += 12;
-  }
-
-  const century = Math.floor(adjustedYear / 100);
-  const correction = 2 - century + Math.floor(century / 4);
-
-  return (
-    Math.floor(365.25 * (adjustedYear + 4716)) +
-    Math.floor(30.6001 * (adjustedMonth + 1)) +
-    day +
-    correction -
-    1524.5 +
-    (hour + minute / 60 + second / 3600) / 24
-  );
-}
-
-function sunLongitude(julianDay) {
-  const centuries = (julianDay - 2451545.0) / 36525;
-  const meanLongitude = 280.46646 + 36000.76983 * centuries + 0.0003032 * centuries * centuries;
-  const meanAnomaly = 357.52911 + 35999.05029 * centuries - 0.0001537 * centuries * centuries;
-  const meanAnomalyRadians = (meanAnomaly * Math.PI) / 180;
-
-  const equationCenter =
-    (1.914602 - 0.004817 * centuries - 0.000014 * centuries * centuries) * Math.sin(meanAnomalyRadians) +
-    (0.019993 - 0.000101 * centuries) * Math.sin(2 * meanAnomalyRadians) +
-    0.000289 * Math.sin(3 * meanAnomalyRadians);
-
-  let longitude = meanLongitude + equationCenter;
-  longitude -= 0.00569;
-  longitude %= 360;
-
-  if (longitude < 0) {
-    longitude += 360;
-  }
-
-  return longitude;
-}
-
-function getSolarTermIndex(longitude) {
-  const normalized = Math.round(((longitude + 360) % 360) * 100) / 100;
-
-  for (let index = 0; index < SOLAR_TERMS.length; index += 1) {
-    const termStart = SOLAR_TERMS[index].longitude;
-    const termEnd = (termStart + 15) % 360;
-
-    if (termStart > termEnd) {
-      if (normalized >= termStart || normalized < termEnd) {
-        return index;
-      }
-    } else if (normalized >= termStart && normalized < termEnd) {
-      return index;
-    }
-  }
-
-  return 0;
-}
-
-function calculateYearPillar(year, month, solarTermIndex) {
-  let effectiveYear = year;
-
-  if (month <= 2 && solarTermIndex >= 21) {
-    effectiveYear -= 1;
-  }
-
-  const stemIndex = (effectiveYear - 4) % 10;
-  const branchIndex = (effectiveYear - 4) % 12;
-
-  return {
-    stem: (stemIndex + 10) % 10,
-    branch: (branchIndex + 12) % 12
-  };
-}
-
-function calculateMonthPillar(year, month, solarTermIndex) {
-  const monthBranch = (Math.floor(solarTermIndex / 2) + 2) % 12;
-  let effectiveYear = year;
-
-  if (month <= 2 && solarTermIndex >= 21) {
-    effectiveYear -= 1;
-  }
-
-  const yearStem = (((effectiveYear - 4) % 10) + 10) % 10;
-  const monthStem = (yearStem * 2 + monthBranch) % 10;
-
-  return {
-    stem: (monthStem + 10) % 10,
-    branch: (monthBranch + 12) % 12
-  };
-}
-
-function calculateDayPillar(julianDay) {
-  const referenceJulianDay = gregorianToJulianDay(1900, 1, 1, 0, 0, 0);
-  const daysSinceReference = Math.floor(julianDay - referenceJulianDay);
-  const stemIndex = daysSinceReference % 10;
-  const branchIndex = (10 + daysSinceReference) % 12;
-
-  return {
-    stem: (stemIndex + 10) % 10,
-    branch: (branchIndex + 12) % 12
-  };
-}
-
-function calculateHourPillar(hour, dayStem) {
-  const hourBranch = Math.floor((hour + 1) / 2) % 12;
-  const hourStem = (dayStem * 2 + hourBranch) % 10;
-
-  return {
-    stem: (hourStem + 10) % 10,
-    branch: (hourBranch + 12) % 12
-  };
-}
-
-function pillarToText(pillar) {
-  return `${HEAVENLY_STEMS.names[pillar.stem]}${EARTHLY_BRANCHES.names[pillar.branch]}`;
-}
-
 function buildRawItem(type, pillar, source) {
   const stemElement = HEAVENLY_STEMS.elements[pillar.stem];
   const branchElement = BRANCH_ELEMENTS[pillar.branch];
@@ -309,11 +114,9 @@ function buildRawItem(type, pillar, source) {
     animal: EARTHLY_BRANCHES.animals[pillar.branch]
   };
 }
-
 function toElementKey(elementName) {
   return elementName.toLowerCase();
 }
-
 function calculatePercentages(counts) {
   const total = ELEMENT_KEYS.reduce((sum, key) => sum + counts[key], 0);
   const rawPercentages = ELEMENT_KEYS.map((key) => ({
@@ -491,44 +294,6 @@ function calculateWuxing(input) {
   };
 }
 
-function saveLatestResult(input) {
-  const result = calculateWuxing(input);
-  const data = readData();
-  const user = ensureUser(data, result.userId);
-
-  user.latest = {
-    savedAt: new Date().toISOString(),
-    result
-  };
-
-  writeData(data);
-
-  return {
-    message: "Latest wuxing result saved successfully",
-    userId: result.userId,
-    savedAt: user.latest.savedAt,
-    result
-  };
-}
-
-function getLatestResult(userId) {
-  const data = readData();
-  const normalizedUserId = userId || DEFAULT_USER_ID;
-  const user = ensureUser(data, normalizedUserId);
-
-  if (!user.latest) {
-    throw createBadRequestError("No saved wuxing result found for this user");
-  }
-
-  return {
-    userId: normalizedUserId,
-    savedAt: user.latest.savedAt,
-    result: user.latest.result
-  };
-}
-
 module.exports = {
-  calculateWuxing,
-  saveLatestResult,
-  getLatestResult
+  calculateWuxing
 };

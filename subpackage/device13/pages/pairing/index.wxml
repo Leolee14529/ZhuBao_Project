@@ -17,7 +17,7 @@
     <block wx:else>
     <connecting-hero
       image-src="/subpackage/device13/assets/ring-connecting.png"
-      ring-name="Ting's Ring"
+      ring-name="暂无设备"
       status-text="正在连接..."
       helper-text="请将设备靠近手机"
     />

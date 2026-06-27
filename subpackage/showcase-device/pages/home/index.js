@@ -7,34 +7,34 @@ Page({
       {
         accent: "#87a9ff",
         title: "今日心情",
-        value: "平静",
-        desc: "心率平稳 · 68 bpm"
+        value: "暂无",
+        desc: "心率 · 0 bpm"
       },
       {
         accent: "#ff7aa8",
         title: "幸运元素",
-        value: "火 (Fire)",
-        desc: "宜穿红/紫色系"
+        value: "无",
+        desc: "暂无真实五行数据"
       }
     ],
     device: {
-      name: "Ting's Ring S1",
-      status: "已连接",
-      battery: "82%",
-      sync: "2 分钟前同步",
+      name: "暂无设备",
+      status: "未连接",
+      battery: "0%",
+      sync: "暂无同步数据",
       metrics: [
-        { label: "体温", value: "36.5°C" },
-        { label: "步数", value: "8,621" },
-        { label: "睡眠", value: "8.2 h" }
+        { label: "体温", value: "0°C" },
+        { label: "步数", value: "0" },
+        { label: "睡眠", value: "0 h" }
       ]
     },
     products: [
       {
-        image: "/subpackage/jewelry/assets/product-1.webp",
+        image: "/subpackage/jewelry/assets/product-1.jpg",
         tag: "新品"
       },
       {
-        image: "/subpackage/jewelry/assets/product-2.webp",
+        image: "/subpackage/jewelry/assets/product-2.jpg",
         tag: ""
       }
     ]

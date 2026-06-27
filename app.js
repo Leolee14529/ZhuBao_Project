@@ -1,5 +1,8 @@
+const routeDebug = require("./utils/route-debug");
+
 App({
   onLaunch() {
+    routeDebug.installRouteDebug();
     this.globalData.navLayout = this.getNavLayout();
   },
   getNavLayout() {
@@ -8,7 +11,7 @@ App({
       menuTop: 6,
       menuHeight: 32,
       menuBottom: 52,
-      contentOffset: 40
+      contentOffset: 64
     };
 
     try {
@@ -25,7 +28,7 @@ App({
         menuTop: menuButton.top,
         menuHeight: menuButton.height,
         menuBottom: menuButton.bottom,
-        contentOffset: Math.max(menuButton.bottom - statusBarHeight + 8, 40)
+        contentOffset: Math.max(menuButton.bottom + 8, statusBarHeight + 44)
       };
     } catch (error) {
       return fallback;

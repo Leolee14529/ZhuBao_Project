@@ -17,6 +17,7 @@ Page({
   onBackTap() {
     wx.navigateBack({
       fail: () => {
+        console.warn("[ROUTE]", "from subpackage/auth/pages/email/index.js/onBackTap", "to", "/pages/login/index", "reason", "navigateBack fail");
         wx.redirectTo({
           url: "/pages/login/index"
         });

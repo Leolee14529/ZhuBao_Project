@@ -1,6 +1,6 @@
 <view class="login-page">
   <view class="login-backdrop">
-    <image class="login-bg" src="/assets/auth/bg-login.webp" mode="aspectFill"></image>
+    <image class="login-bg" src="/assets/auth/bg-login.jpg" mode="aspectFill"></image>
     <view class="login-shade"></view>
   </view>
   <status-bar></status-bar>
@@ -20,7 +20,22 @@
         compact="{{true}}"
         bind:action="retryLogin"
       ></empty-state>
-      <button class="primary" bindtap="login" hover-class="primary-hover"><text>微信一键登录</text></button>
+      <button class="primary" bindtap="login" loading="{{isLoggingIn}}" disabled="{{isLoggingIn}}" hover-class="primary-hover"><text>微信登录</text></button>
+      <view class="agreement-row" bindtap="toggleAgreement">
+        <view class="agreement-check {{agreed ? 'agreement-check-on' : ''}}">
+          <text wx:if="{{agreed}}">✓</text>
+        </view>
+        <view class="agreement-copy">
+          <text>我已阅读并同意</text>
+          <text class="agreement-link" catchtap="openAgreement">《用户协议》</text>
+          <text>和</text>
+          <text class="agreement-link" catchtap="openPrivacy">《隐私政策》</text>
+        </view>
+      </view>
+      <view class="link-row">
+        <text bindtap="openWechatPrivacy">微信隐私保护指引</text>
+        <text bindtap="enterGuest">暂不登录，浏览首页</text>
+      </view>
     </view>
   </view>
   <view class="home-indicator"></view>

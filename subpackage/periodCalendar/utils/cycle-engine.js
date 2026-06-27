@@ -1,57 +1,12 @@
-var DAY_MS = 24 * 60 * 60 * 1000;
-
-function pad(value) {
-  return value < 10 ? "0" + value : String(value);
-}
-
-function createLocalDate(year, month, day) {
-  return new Date(year, month - 1, day, 12, 0, 0, 0);
-}
-
-function parseDateKey(dateKey) {
-  if (!dateKey) return null;
-  var parts = dateKey.split("-").map(function (item) {
-    return Number(item);
-  });
-  return createLocalDate(parts[0], parts[1], parts[2]);
-}
-
-function formatDateKey(date) {
-  return [
-    date.getFullYear(),
-    pad(date.getMonth() + 1),
-    pad(date.getDate())
-  ].join("-");
-}
-
-function formatMonthLabel(year, month) {
-  return year + "年" + month + "月";
-}
-
-function formatFullDate(date) {
-  return date.getFullYear() + "年" + (date.getMonth() + 1) + "月" + date.getDate() + "日";
-}
-
-function addDays(date, days) {
-  return new Date(date.getTime() + days * DAY_MS);
-}
-
-function diffDays(startDate, endDate) {
-  return Math.floor((endDate.getTime() - startDate.getTime()) / DAY_MS);
-}
-
-function sameDate(left, right) {
-  return (
-    left.getFullYear() === right.getFullYear() &&
-    left.getMonth() === right.getMonth() &&
-    left.getDate() === right.getDate()
-  );
-}
-
-function getTodayDate() {
-  var now = new Date();
-  return createLocalDate(now.getFullYear(), now.getMonth() + 1, now.getDate());
-}
+var dates = require("./date-utils");
+var summary = require("./cycle-summary");
+var addDays = dates.addDays;
+var createLocalDate = dates.createLocalDate;
+var diffDays = dates.diffDays;
+var formatDateKey = dates.formatDateKey;
+var getTodayDate = dates.getTodayDate;
+var parseDateKey = dates.parseDateKey;
+var sameDate = dates.sameDate;
 
 function normalizeProfile(profile) {
   var todayKey = formatDateKey(getTodayDate());
@@ -248,93 +203,16 @@ function buildWeeks(profile, year, month, selectedDateKey) {
   };
 }
 
-function flattenWeeks(weeks) {
-  var days = [];
-  weeks.forEach(function (week) {
-    week.forEach(function (item) {
-      days.push(item);
-    });
-  });
-  return days;
-}
-
-function buildSelectedDetail(weeks, selectedDateKey, todayDate) {
-  if (!selectedDateKey) return null;
-  var matched = null;
-
-  flattenWeeks(weeks).forEach(function (item) {
-    if (item.dateKey === selectedDateKey) {
-      matched = item;
-    }
-  });
-
-  if (!matched) return null;
-
-  var selectedDate = parseDateKey(matched.dateKey);
-  var canAdjust = diffDays(todayDate, selectedDate) > 0 && matched.status !== "period";
-
-  return {
-    dateKey: matched.dateKey,
-    fullDate: formatFullDate(selectedDate),
-    status: matched.status,
-    statusLabel: matched.statusLabel,
-    remark: matched.remark,
-    canAdjust: canAdjust,
-    cycleIndex: matched.cycleIndex,
-    cycleStartDateKey: matched.cycleStartDateKey
-  };
-}
-
-function buildSummary(cycleStarts, todayDate) {
-  var nextStart = null;
-
-  cycleStarts.forEach(function (cycle) {
-    if (cycle.cycleIndex > 0 && !nextStart && diffDays(todayDate, cycle.startDate) >= 0) {
-      nextStart = cycle.startDate;
-    }
-  });
-
-  if (!nextStart) {
-    return {
-      daysUntil: "--",
-      nextStartLabel: "暂无预测结果"
-    };
-  }
-
-  return {
-    daysUntil: String(diffDays(todayDate, nextStart)),
-    nextStartLabel: "预计" + formatDateKey(nextStart) + "开始"
-  };
-}
-
-function getNearestFutureCycleIndex(cycleStarts, targetDate, todayDate) {
-  var matchedIndex = null;
-  var smallestGap = Infinity;
-
-  cycleStarts.forEach(function (cycle) {
-    if (cycle.cycleIndex <= 0) return;
-    if (diffDays(todayDate, cycle.startDate) < 0) return;
-
-    var currentGap = Math.abs(diffDays(targetDate, cycle.startDate));
-    if (currentGap < smallestGap) {
-      smallestGap = currentGap;
-      matchedIndex = cycle.cycleIndex;
-    }
-  });
-
-  return matchedIndex;
-}
-
 module.exports = {
   addDays: addDays,
-  buildSelectedDetail: buildSelectedDetail,
-  buildSummary: buildSummary,
+  buildSelectedDetail: summary.buildSelectedDetail,
+  buildSummary: summary.buildSummary,
   buildWeeks: buildWeeks,
   createLocalDate: createLocalDate,
   diffDays: diffDays,
   formatDateKey: formatDateKey,
-  formatMonthLabel: formatMonthLabel,
-  getNearestFutureCycleIndex: getNearestFutureCycleIndex,
+  formatMonthLabel: dates.formatMonthLabel,
+  getNearestFutureCycleIndex: summary.getNearestFutureCycleIndex,
   getTodayDate: getTodayDate,
   normalizeProfile: normalizeProfile,
   parseDateKey: parseDateKey

@@ -17,9 +17,9 @@
     <block wx:else>
     <connected-hero
       image-src="/subpackage/device12/assets/ring-connected.png"
-      ring-name="Ting's Ring"
-      status-text="已连接"
-      battery-text="电量 78%"
+      ring-name="暂无设备"
+      status-text="未连接"
+      battery-text="电量 0%"
     />
 
     <device-section-card

@@ -1,51 +1,42 @@
 const express = require("express");
 const wechatService = require("../services/wechatService");
-const userStore = require("../services/userStore");
-const sessionStore = require("../services/sessionStore");
+const userRepository = require("../repositories/userRepository");
+const sessionRepository = require("../repositories/sessionRepository");
+const authMiddleware = require("../middlewares/authMiddleware");
+const { sendSuccess, sendError } = require("../http/responses");
 
 const router = express.Router();
 
-function sendSuccess(res, data) {
-  return res.json({
-    success: true,
-    data
-  });
-}
-
-function sendError(res, status, code, message) {
-  return res.status(status).json({
-    success: false,
-    message,
-    code
-  });
-}
-
-router.post("/wechat-login", async (req, res) => {
+router.post("/wechat-login", async (req, res, next) => {
   try {
     const code = req.body && typeof req.body.code === "string" ? req.body.code.trim() : "";
 
     if (!code) {
-      return sendError(res, 400, "AUTH_CODE_REQUIRED", "code is required");
+      return sendError(res, 400, "AUTH_CODE_REQUIRED", "code is required", req.requestId);
     }
 
     const wechatSession = await wechatService.code2Session(code);
-    const user = userStore.findOrCreateByWechatProfile({
+    const user = await userRepository.findOrCreateByWechatProfile({
       openid: wechatSession.openid,
       unionid: wechatSession.unionid
     });
-    const session = sessionStore.createSession(user);
+    const session = await sessionRepository.createSession(user);
 
     return sendSuccess(res, {
       token: session.token,
-      user
+      user: userRepository.toClientUser(user)
     });
   } catch (error) {
-    const status = error.status || 500;
-    const code = error.code || "INTERNAL_ERROR";
-    const message = error.code ? error.message : "Internal server error";
+    return next(error);
+  }
+});
 
-    console.error("wechat login failed", error);
-    return sendError(res, status, code, message);
+router.post("/logout", authMiddleware, async (req, res, next) => {
+  try {
+    await sessionRepository.revokeSessionByToken(req.authToken);
+    return sendSuccess(res, { loggedOut: true });
+  } catch (error) {
+    return next(error);
   }
 });
 

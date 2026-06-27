@@ -1,37 +1,38 @@
 var fiveElements = require("../../utils/five-elements");
+var auth = require("../../../../utils/auth");
 
 Page({
   data: {
     topSpacer: 40,
-    divinationClass: "",
-    destinyLine: "金龙之命 · 阳土入格",
-    customDesc: "基于您的命理专属打造",
+    destinyLine: "暂无真实五行数据",
+    customDesc: "暂无真实五行数据",
     device: {
       title: "设备",
-      name: "Ting's Ring",
-      status: "已连接",
-      battery: "78%"
+      name: "暂无设备",
+      status: "未连接",
+      battery: "0%",
+      batteryWidth: "0%"
     },
     leftProducts: [
       {
-        image: "/subpackage/jewelry/assets/product-1.webp",
+        image: "/subpackage/jewelry/assets/product-1.jpg",
         tag: "新品",
         cardClass: "product-card-tall"
       },
       {
-        image: "/subpackage/jewelry/assets/product-3.webp",
+        image: "/subpackage/jewelry/assets/product-3.jpg",
         tag: "",
         cardClass: "product-card-tall"
       }
     ],
     rightProducts: [
       {
-        image: "/subpackage/jewelry/assets/product-2.webp",
+        image: "/subpackage/jewelry/assets/product-2.jpg",
         tag: "",
         cardClass: "product-card-tall"
       },
       {
-        image: "/subpackage/jewelry/assets/product-4.webp",
+        image: "/subpackage/jewelry/assets/product-4.jpg",
         tag: "",
         cardClass: "product-card-tall"
       }
@@ -50,37 +51,32 @@ Page({
   onShow() {
     this.applyBirthProfile();
   },
-  toggleDivination() {
-    let nextClass = "divination-card-flipped";
-    if (this.data.divinationClass) {
-      nextClass = "";
-    }
-    this.setData({
-      divinationClass: nextClass
-    });
-  },
   goData() {
+    if (!auth.requireLogin({ source: "/subpackage/jewelry/pages/data/index" })) return;
     wx.redirectTo({
       url: "/subpackage/jewelry/pages/data/index"
     });
   },
   goSettings() {
+    if (!auth.requireLogin({ source: "/subpackage/jewelry/pages/settings/index" })) return;
     wx.redirectTo({
       url: "/subpackage/jewelry/pages/settings/index"
     });
   },
   openDevice() {
-    wx.navigateTo({
-      url: "/subpackage/device17/pages/unconnected-detail/index"
+    wx.showToast({
+      title: "功能暂未开放",
+      icon: "none"
     });
   },
   openFiveElementCustomizer() {
+    if (!auth.requireLogin({ source: "/subpackage/jewelry/pages/five-elements/index" })) return;
     wx.navigateTo({
       url: "/subpackage/jewelry/pages/five-elements/index"
     });
   },
   applyBirthProfile() {
-    var profile = fiveElements.buildProfile(fiveElements.getSavedBirthInput());
+    var profile = fiveElements.buildCurrentProfile();
     this.setData({
       destinyLine: profile.destinyLine,
       customDesc: profile.summaryText

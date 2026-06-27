@@ -6,7 +6,7 @@
 
     <device-hero
       image-src="/subpackage/device17/assets/ring-status.png"
-      ring-name="Ting's Ring"
+      ring-name="暂无设备"
       status-text="未连接"
       helper-text="请先连接设备"
     />

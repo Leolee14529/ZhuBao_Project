@@ -1,13 +1,6 @@
-const sessionStore = require("../services/sessionStore");
-const userStore = require("../services/userStore");
-
-function sendError(res, status, code, message) {
-  return res.status(status).json({
-    success: false,
-    message,
-    code
-  });
-}
+const sessionRepository = require("../repositories/sessionRepository");
+const userRepository = require("../repositories/userRepository");
+const { sendError } = require("../http/responses");
 
 function getBearerToken(authorizationHeader) {
   if (!authorizationHeader || typeof authorizationHeader !== "string") {
@@ -22,34 +15,58 @@ function getBearerToken(authorizationHeader) {
   return parts[1];
 }
 
-function authMiddleware(req, res, next) {
+async function authMiddleware(req, res, next) {
   try {
     const token = getBearerToken(req.get("authorization"));
 
     if (!token) {
-      return sendError(res, 401, "AUTH_TOKEN_REQUIRED", "Authorization token is required");
+      return sendError(
+        res,
+        401,
+        "AUTH_TOKEN_REQUIRED",
+        "Authorization token is required",
+        req.requestId
+      );
     }
 
-    const session = sessionStore.findSessionByToken(token);
+    const session = await sessionRepository.findSessionByToken(token);
     if (!session) {
-      return sendError(res, 401, "AUTH_TOKEN_INVALID", "Authorization token is invalid");
+      return sendError(
+        res,
+        401,
+        "AUTH_TOKEN_INVALID",
+        "Authorization token is invalid",
+        req.requestId
+      );
     }
 
-    if (sessionStore.isSessionExpired(session)) {
-      return sendError(res, 401, "AUTH_TOKEN_EXPIRED", "Authorization token is expired");
+    if (sessionRepository.isSessionExpired(session)) {
+      return sendError(
+        res,
+        401,
+        "AUTH_TOKEN_EXPIRED",
+        "Authorization token is expired",
+        req.requestId
+      );
     }
 
-    const user = userStore.findUserById(session.userId);
+    const user = await userRepository.findUserById(session.userId);
     if (!user) {
-      return sendError(res, 401, "USER_NOT_FOUND", "User was not found");
+      return sendError(
+        res,
+        401,
+        "USER_NOT_FOUND",
+        "User was not found",
+        req.requestId
+      );
     }
 
     req.user = user;
     req.session = session;
+    req.authToken = token;
     return next();
   } catch (error) {
-    console.error("auth middleware failed", error);
-    return sendError(res, 500, "INTERNAL_ERROR", "Internal server error");
+    return next(error);
   }
 }
 

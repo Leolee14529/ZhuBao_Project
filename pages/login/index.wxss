@@ -18,4 +18,9 @@
 .primary{position:relative;z-index:7;width:100%;height:106rpx;margin-top:34rpx;display:flex;align-items:center;justify-content:center;gap:18rpx;border-radius:30rpx;color:#fff;font-size:31rpx;font-weight:600;letter-spacing:1rpx;background:linear-gradient(90deg,#059669,#0f766e);box-shadow:0 20rpx 44rpx rgba(6,95,70,.28)}
 .primary-hover{opacity:.92;transform:scale(.99)}
 .link-row{display:flex;align-items:center;justify-content:space-between;padding:28rpx 16rpx 4rpx;color:rgba(209,250,229,.42);font-size:24rpx}
+.agreement-row{display:flex;align-items:flex-start;gap:18rpx;padding:26rpx 12rpx 0;color:rgba(255,255,255,.72)}
+.agreement-check{flex:0 0 auto;width:34rpx;height:34rpx;margin-top:3rpx;border-radius:8rpx;border:1rpx solid rgba(209,250,229,.55);text-align:center;line-height:34rpx;font-size:22rpx;color:#fff}
+.agreement-check-on{background:#059669;border-color:#34d399}
+.agreement-copy{flex:1;font-size:23rpx;line-height:1.55}
+.agreement-link{color:#6ee7b7}
 .home-indicator{position:fixed;z-index:4;left:50%;bottom:14rpx;width:240rpx;height:9rpx;transform:translateX(-50%);border-radius:999rpx;background:rgba(255,255,255,.22)}

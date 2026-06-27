@@ -1,13 +1,30 @@
-<view class="divination {{cardClass}}" bindtap="toggle">
-  <view class="face front">
-    <view class="pattern"></view><view class="glow"></view>
-    <view class="top-line"><view class="label"><view></view><text>每日灵签</text></view><text class="number">NO.88</text></view>
-    <view class="center-mark"><view class="ring"><view class="spin-ring"></view><text>巽</text></view><text class="fortune">中吉</text><text class="element">Wind / Wood</text></view>
-    <view class="interpretation"><text class="quote">“</text><subparagraph text="风行水上，自然成纹。今日灵感如风，宜顺势而为。指环监测显示心流状态极佳。"></subparagraph></view>
+<view class="divination-card {{cardClass}}" bindtap="toggle">
+  <view class="divination-front">
+    <view class="divination-grid"></view>
+    <view class="divination-head">
+      <view class="divination-label">
+        <view class="divination-dot"></view>
+        <text>每日灵签</text>
+      </view>
+      <text class="divination-no">{{fortune.no}}</text>
+    </view>
+    <view class="divination-center">
+      <view class="divination-ring">
+        <view class="divination-ring-inner"></view>
+        <text class="divination-symbol">{{fortune.symbol}}</text>
+      </view>
+      <text class="divination-title">{{fortune.title}}</text>
+      <text class="divination-subtitle">{{fortune.subtitle}}</text>
+    </view>
+    <view class="divination-copy">
+      <text class="divination-quote">“</text>
+      <text class="divination-text">{{fortune.text}}</text>
+    </view>
   </view>
-  <view class="face back">
-    <view class="grid"></view>
-    <view class="diamond"><view></view><text>COMPUTING</text><text>POWER</text></view>
-    <view class="hint">Tap to Flip</view>
+  <view class="divination-back">
+    <view class="divination-back-grid"></view>
+    <view class="divination-back-core"></view>
+    <text class="divination-back-title">COMPUTING POWER</text>
+    <text class="divination-back-tip">点击翻面</text>
   </view>
 </view>

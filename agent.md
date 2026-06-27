@@ -1,5 +1,10 @@
 # ZhuBao Project Agent Plan
 
+## Current workspace path
+
+- Windows path: `D:\30_Projects_项目工程\ZhuBao_Project`
+- Note: the previous working path `C:\Users\MEAL1\Documents\ZhuBao_Project` is not the active project copy for this work.
+
 ## 1. 项目现状
 
 - 项目路径：`/Users/leeyiscon/Documents/ZhuBao_Project`

@@ -17,7 +17,7 @@
       </view>
     </view>
     <view class="device-copy">
-      <text class="device-copy-title">实时连接中</text>
+      <text class="device-copy-title">暂无连接数据</text>
       <text class="device-copy-desc">{{device.sync}}</text>
       <text class="device-copy-battery">电量 {{device.battery}}</text>
     </view>

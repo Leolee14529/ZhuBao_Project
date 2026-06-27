@@ -10,13 +10,13 @@
 
   <view class="device-side">
     <view class="device-status-row">
-      <view class="device-status-dot"></view>
-      <text class="device-status">{{info.status}}</text>
+      <view class="device-status-dot {{info.statusClass}}"></view>
+      <text class="device-status {{info.statusClass}}">{{info.status}}</text>
     </view>
     <view class="device-battery-row">
       <view class="battery-icon">
         <view class="battery-cap"></view>
-        <view class="battery-level"></view>
+        <view class="battery-level" style="width: {{info.batteryWidth || '0%'}};"></view>
       </view>
       <text class="device-battery">{{info.battery}}</text>
     </view>

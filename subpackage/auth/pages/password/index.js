@@ -75,6 +75,7 @@ Page({
       });
       return;
     }
+    console.warn("[ROUTE]", "from subpackage/auth/pages/password/index.js/submitPassword", "to", "/subpackage/jewelry/pages/home/index", "reason", "password submit success");
     wx.reLaunch({
       url: "/subpackage/jewelry/pages/home/index",
       fail: () => {

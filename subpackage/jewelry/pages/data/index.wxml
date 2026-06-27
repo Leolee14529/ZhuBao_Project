@@ -13,8 +13,8 @@
             <view class="score-dot"></view>
             <text class="score-label">今日测评</text>
           </view>
-          <text class="score-value">88 <text class="score-unit">/ 100</text></text>
-          <text class="score-text">身心状态极佳，气场稳定，适合进行重要决策或创造性工作。</text>
+          <text class="score-value">0 <text class="score-unit">/ 100</text></text>
+          <text class="score-text">暂无真实健康数据。</text>
         </view>
         <view class="score-ring">
           <view class="score-ring-inner">
@@ -32,14 +32,14 @@
         <view class="key-stat key-stat-left">
           <view class="key-stat-icon icon-rose">♥</view>
           <view class="key-stat-copy">
-            <text class="key-stat-value">68 <text class="small-unit">bpm</text></text>
+            <text class="key-stat-value">0 <text class="small-unit">bpm</text></text>
             <text class="key-stat-label">静息心率</text>
           </view>
         </view>
         <view class="key-stat key-stat-right">
           <view class="key-stat-icon icon-green">●</view>
           <view class="key-stat-copy">
-            <text class="key-stat-value">92 <text class="small-unit">%</text></text>
+            <text class="key-stat-value">0 <text class="small-unit">%</text></text>
             <text class="key-stat-label">HRV 指数</text>
           </view>
         </view>
@@ -65,7 +65,7 @@
 
       <view class="panel">
         <text class="panel-title">睡眠结构</text>
-        <text class="panel-subtitle">总时长 8小时 12分</text>
+        <text class="panel-subtitle">总时长 0小时 0分</text>
         <view class="sleep-cards">
           <block wx:for="{{sleep}}" wx:key="name">
             <view class="sleep-card {{item.cardClass}}">
@@ -86,9 +86,9 @@
         <view class="energy-icon">✦</view>
         <view class="energy-copy">
           <text class="energy-title">身体能量</text>
-          <text class="energy-desc">状态良好，适合运动</text>
+          <text class="energy-desc">暂无真实能量数据</text>
         </view>
-        <text class="energy-value">85<text class="small-unit">/100</text></text>
+        <text class="energy-value">0<text class="small-unit">/100</text></text>
       </view>
 
       <view class="panel">

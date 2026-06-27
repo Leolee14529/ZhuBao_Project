@@ -1,3 +1,5 @@
+const auth = require("../../../../utils/auth");
+
 const routes = {
   home: "/subpackage/jewelry/pages/home/index",
   data: "/subpackage/jewelry/pages/data/index",
@@ -41,6 +43,13 @@ Component({
     switchTab(e) {
       const tab = e.currentTarget.dataset.tab;
       if (!tab || tab === this.data.active) return;
+      if (tab !== "home" && !auth.requireLogin({
+        source: routes[tab],
+        reason: "请先登录后使用"
+      })) {
+        return;
+      }
+      console.warn("[ROUTE]", "from subpackage/jewelry/components/bottom-nav/bottom-nav.js/switchTab", "to", routes[tab], "reason", "bottom nav switch");
       wx.redirectTo({ url: routes[tab] });
     }
   }

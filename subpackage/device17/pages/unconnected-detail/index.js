@@ -3,8 +3,8 @@ Page({
     statusBarHeight: 47,
     deviceStatus: "unconnected",
     infoRows: [
-      { label: "设备名称", value: "Ting's Ring", arrow: true },
-      { label: "设备型号", value: "Pro Model · Jade Edition", arrow: true },
+      { label: "设备名称", value: "暂无设备", arrow: true },
+      { label: "设备型号", value: "--", arrow: true },
       { label: "固件版本", value: "--", arrow: false },
       { label: "序列号", value: "--", arrow: false }
     ],
@@ -32,6 +32,7 @@ Page({
   },
 
   onBackTap() {
+    console.warn("[ROUTE]", "from subpackage/device17/pages/unconnected-detail/index.js/onBackTap", "to", "/subpackage/jewelry/pages/home/index", "reason", "back to home");
     wx.reLaunch({
       url: "/subpackage/jewelry/pages/home/index"
     });

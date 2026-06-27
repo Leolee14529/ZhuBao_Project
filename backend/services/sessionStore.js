@@ -1,8 +1,8 @@
 const fs = require("fs");
-const path = require("path");
 const crypto = require("crypto");
+const { getDataFile } = require("./runtimeDataDir");
 
-const DATA_FILE = path.join(__dirname, "../data/sessions.json");
+const DATA_FILE = getDataFile("sessions.json");
 const SESSION_TTL_MS = 7 * 24 * 60 * 60 * 1000;
 
 function createInitialData() {
@@ -69,12 +69,50 @@ function createSession(user) {
 function findSessionByToken(token) {
   const data = readData();
   const tokenHash = hashToken(token);
-  return data.sessions.find((session) => session.tokenHash === tokenHash) || null;
+  return data.sessions.find((session) => (
+    session.tokenHash === tokenHash && !session.revokedAt
+  )) || null;
+}
+
+function revokeSessionByToken(token) {
+  const data = readData();
+  const tokenHash = hashToken(token);
+  const session = data.sessions.find((item) => (
+    item.tokenHash === tokenHash && !item.revokedAt
+  ));
+
+  if (!session) {
+    return false;
+  }
+
+  session.revokedAt = new Date().toISOString();
+  writeData(data);
+  return true;
+}
+
+function revokeSessionsByUserId(userId) {
+  const data = readData();
+  const now = new Date().toISOString();
+  let count = 0;
+
+  data.sessions.forEach((session) => {
+    if (session.userId === userId && !session.revokedAt) {
+      session.revokedAt = now;
+      count += 1;
+    }
+  });
+
+  if (count > 0) {
+    writeData(data);
+  }
+  return count;
 }
 
 module.exports = {
   createSession,
   findSessionByToken,
+  revokeSessionByToken,
+  revokeSessionsByUserId,
   isSessionExpired,
   hashToken
 };

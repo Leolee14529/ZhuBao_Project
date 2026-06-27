@@ -1,16 +1,24 @@
 var fiveElements = require("../../utils/five-elements");
+var request = require("../../../../utils/request");
+var auth = require("../../../../utils/auth");
+var privacy = require("../../../../utils/privacy");
 
 Page({
   data: {
     topSpacer: 40,
     birthDate: "",
     birthTime: "",
+    gender: "female",
+    genderOptions: ["女", "男"],
+    genderIndex: 0,
+    isSaving: false,
     focusElement: "木",
     destinyLine: "",
     previewTags: []
   },
 
   onLoad: function () {
+    if (!auth.requireLogin({ source: "/subpackage/jewelry/pages/five-elements/index" })) return;
     var app = getApp();
     var navLayout = app.getNavLayout ? app.getNavLayout() : app.globalData.navLayout;
     var birthInput = fiveElements.getSavedBirthInput();
@@ -23,9 +31,14 @@ Page({
 
     this.setData({
       birthDate: birthInput.date,
-      birthTime: birthInput.time
+      birthTime: birthInput.time,
+      gender: birthInput.gender,
+      genderIndex: birthInput.gender === "male" ? 1 : 0
     });
     this.refreshPreview();
+  },
+  onShow: function () {
+    auth.requireLogin({ source: "/subpackage/jewelry/pages/five-elements/index" });
   },
 
   onDateChange: function (event) {
@@ -40,6 +53,14 @@ Page({
       birthTime: event.detail.value
     });
     this.refreshPreview();
+  },
+
+  onGenderChange: function (event) {
+    var genderIndex = Number(event.detail.value) || 0;
+    this.setData({
+      genderIndex: genderIndex,
+      gender: genderIndex === 1 ? "male" : "female"
+    });
   },
 
   refreshPreview: function () {
@@ -62,26 +83,75 @@ Page({
   },
 
   saveBirthProfile: function () {
-    fiveElements.saveBirthInput({
-      date: this.data.birthDate,
-      time: this.data.birthTime
-    });
-    wx.showToast({
-      title: "已更新五行",
-      icon: "success"
-    });
+    if (this.data.isSaving) {
+      return;
+    }
 
-    setTimeout(function () {
-      if (getCurrentPages().length > 1) {
-        wx.navigateBack({
-          delta: 1
+    var birthInput = {
+      date: this.data.birthDate,
+      time: this.data.birthTime,
+      gender: this.data.gender
+    };
+    privacy.checkWechatPrivacyReady({ action: "birthProfile" })
+      .then(function () {
+        return this.confirmBirthProfileNotice();
+      }.bind(this))
+      .then(function () {
+        this.setData({ isSaving: true });
+        return request.post("/api/wuxing/save", {
+      birthDate: birthInput.date,
+      birthTime: birthInput.time,
+      gender: birthInput.gender
         });
-        return;
-      }
-      wx.redirectTo({
-        url: "/subpackage/jewelry/pages/data/index"
+      }.bind(this))
+      .then(function (data) {
+      fiveElements.saveBirthInput(birthInput);
+      fiveElements.saveWuxingResult(data.result);
+      wx.showToast({
+        title: "已更新五行",
+        icon: "success"
       });
-    }, 450);
+      setTimeout(function () {
+        if (getCurrentPages().length > 1) {
+          wx.navigateBack({ delta: 1 });
+          return;
+        }
+        wx.redirectTo({
+          url: "/subpackage/jewelry/pages/data/index"
+        });
+      }, 450);
+    }).catch(function (error) {
+      wx.showToast({
+        title: error && error.message ? error.message : "保存失败，请重试",
+        icon: "none"
+      });
+    }).then(function () {
+      this.setData({ isSaving: false });
+    }.bind(this));
+  },
+  confirmBirthProfileNotice: function () {
+    if (wx.getStorageSync(auth.BIRTH_NOTICE_KEY)) {
+      return Promise.resolve(true);
+    }
+    return new Promise(function (resolve, reject) {
+      wx.showModal({
+        title: "出生资料用途说明",
+        content: "将保存出生日期、出生时间、性别，用于五行计算和饰品风格推荐；可在设置中删除；不构成命理、健康或功效承诺。",
+        confirmText: "同意保存",
+        cancelText: "取消",
+        success: function (res) {
+          if (!res.confirm) {
+            reject(new Error("已取消保存"));
+            return;
+          }
+          wx.setStorageSync(auth.BIRTH_NOTICE_KEY, true);
+          resolve(true);
+        },
+        fail: function () {
+          reject(new Error("暂时无法保存，请稍后重试"));
+        }
+      });
+    });
   },
 
   goBack: function () {
@@ -91,6 +161,7 @@ Page({
       });
       return;
     }
+    console.warn("[ROUTE]", "from subpackage/jewelry/pages/five-elements/index.js/goBack", "to", "/subpackage/jewelry/pages/home/index", "reason", "fallback back");
     wx.redirectTo({
       url: "/subpackage/jewelry/pages/home/index"
     });

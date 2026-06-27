@@ -1,7 +1,7 @@
 const config = require("./config");
+const auth = require("./auth");
 
 const DEFAULT_ERROR_MESSAGE = "请求失败，请稍后再试";
-
 function createRequestError(message, code, statusCode, data) {
   const error = new Error(message || DEFAULT_ERROR_MESSAGE);
   error.code = code || "REQUEST_FAILED";
@@ -23,11 +23,7 @@ function normalizePath(path) {
 }
 
 function getToken() {
-  try {
-    return wx.getStorageSync("token");
-  } catch (error) {
-    return "";
-  }
+  return auth.getToken();
 }
 
 function buildHeader(header) {
@@ -45,24 +41,42 @@ function buildHeader(header) {
   return nextHeader;
 }
 
+function clearAuthState() {
+  auth.clearAuthState();
+}
+
+function redirectToLogin() {
+  auth.redirectToLogin();
+}
+
 function request(options) {
   const requestOptions = options || {};
 
   return new Promise((resolve, reject) => {
     let path = "";
+    let baseUrl = "";
 
     try {
       path = normalizePath(requestOptions.url || requestOptions.path);
+      baseUrl = config.getApiBaseUrl();
+      if (!baseUrl) {
+        throw createRequestError(
+          "当前版本尚未配置服务器地址",
+          "API_BASE_URL_MISSING",
+          0
+        );
+      }
     } catch (error) {
       reject(error);
       return;
     }
 
     wx.request({
-      url: config.API_BASE_URL + path,
+      url: baseUrl + path,
       method: requestOptions.method || "GET",
       data: requestOptions.data || {},
       header: buildHeader(requestOptions.header),
+      timeout: requestOptions.timeout || 12000,
       success(response) {
         const statusCode = response.statusCode || 0;
         const body = response.data || {};
@@ -72,12 +86,16 @@ function request(options) {
           return;
         }
 
-        reject(createRequestError(
+        const requestError = createRequestError(
           body.message || DEFAULT_ERROR_MESSAGE,
           body.code || "REQUEST_FAILED",
           statusCode,
           body
-        ));
+        );
+        if (statusCode === 401 && path !== "/api/auth/wechat-login") {
+          redirectToLogin();
+        }
+        reject(requestError);
       },
       fail(error) {
         reject(createRequestError(
@@ -109,8 +127,20 @@ function post(path, data, header) {
   });
 }
 
+function del(path, data, header) {
+  return request({
+    url: path,
+    method: "DELETE",
+    data,
+    header
+  });
+}
+
 module.exports = {
   request,
   get,
-  post
+  post,
+  delete: del,
+  clearAuthState,
+  redirectToLogin
 };
