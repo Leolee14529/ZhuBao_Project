@@ -87,6 +87,8 @@ DATABASE_URL=postgresql://user:password@host:5432/zhubao pnpm run db:migrate
 ### 认证
 
 - `POST /api/auth/wechat-login`
+- `POST /api/auth/account-register`
+- `POST /api/auth/account-login`
 - `POST /api/auth/logout`
 - `GET /api/users/me`
 
@@ -97,6 +99,17 @@ Authorization: Bearer <token>
 ```
 
 token 只以 SHA-256 哈希形式存储。退出登录会撤销当前 session。
+
+账号密码登录使用同一套用户和 session 体系。注册和登录请求体一致：
+
+```json
+{
+  "accountName": "user@example.com",
+  "password": "Passw0rd!2026"
+}
+```
+
+后端只保存密码哈希，不保存明文密码；账号名会统一转为小写。
 
 ### 灵签
 

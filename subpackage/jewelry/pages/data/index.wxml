@@ -3,8 +3,8 @@
     <view class="page-body">
       <view class="page-top-spacer" style="height: {{topSpacer}}px;"></view>
       <view class="page-header">
-        <text class="page-title">健康监测</text>
-        <text class="page-subtitle">今日生理指数</text>
+        <text class="page-title">数据记录</text>
+        <text class="page-subtitle">今日记录</text>
       </view>
 
       <view class="score-card">
@@ -14,7 +14,7 @@
             <text class="score-label">今日测评</text>
           </view>
           <text class="score-value">0 <text class="score-unit">/ 100</text></text>
-          <text class="score-text">暂无真实健康数据。</text>
+          <text class="score-text">暂无真实记录数据。</text>
         </view>
         <view class="score-ring">
           <view class="score-ring-inner">

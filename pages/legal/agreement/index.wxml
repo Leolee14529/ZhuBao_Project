@@ -1,6 +1,5 @@
 <view class="legal-page">
-  <view class="legal-header">
-    <button class="back-btn" bindtap="goBack">返回</button>
+  <view class="legal-header" style="padding-top: {{headerTop}}px;">
     <text class="legal-title">用户协议</text>
   </view>
   <scroll-view scroll-y="true" class="legal-scroll">
@@ -15,4 +14,7 @@
       <text class="legal-p">如需联系我们，请发送邮件至 qq13238367306@163.com。</text>
     </view>
   </scroll-view>
+  <view class="legal-footer">
+    <button class="back-btn" bindtap="goBack">返回</button>
+  </view>
 </view>

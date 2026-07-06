@@ -1,5 +1,6 @@
 const express = require("express");
 const wechatService = require("../services/wechatService");
+const passwordService = require("../services/passwordService");
 const userRepository = require("../repositories/userRepository");
 const sessionRepository = require("../repositories/sessionRepository");
 const authMiddleware = require("../middlewares/authMiddleware");
@@ -22,6 +23,53 @@ router.post("/wechat-login", async (req, res, next) => {
     });
     const session = await sessionRepository.createSession(user);
 
+    return sendSuccess(res, {
+      token: session.token,
+      user: userRepository.toClientUser(user)
+    });
+  } catch (error) {
+    return next(error);
+  }
+});
+
+router.post("/account-register", async (req, res, next) => {
+  try {
+    const accountName = passwordService.validateAccountName(req.body && req.body.accountName);
+    const password = passwordService.validatePassword(req.body && req.body.password);
+    const existing = await userRepository.findUserByAccountName(accountName);
+
+    if (existing) {
+      return sendError(res, 409, "ACCOUNT_EXISTS", "账号已存在", req.requestId);
+    }
+
+    const passwordHash = await passwordService.hashPassword(password);
+    const user = await userRepository.createAccountUser(accountName, passwordHash);
+    if (!user) {
+      return sendError(res, 409, "ACCOUNT_EXISTS", "账号已存在", req.requestId);
+    }
+    const session = await sessionRepository.createSession(user);
+
+    return sendSuccess(res, {
+      token: session.token,
+      user: userRepository.toClientUser(user)
+    });
+  } catch (error) {
+    return next(error);
+  }
+});
+
+router.post("/account-login", async (req, res, next) => {
+  try {
+    const accountName = passwordService.validateAccountName(req.body && req.body.accountName);
+    const password = String(req.body && req.body.password || "");
+    const user = await userRepository.findUserByAccountName(accountName);
+    const isValid = user && await passwordService.verifyPassword(password, user.passwordHash);
+
+    if (!isValid) {
+      return sendError(res, 401, "ACCOUNT_LOGIN_FAILED", "账号或密码错误", req.requestId);
+    }
+
+    const session = await sessionRepository.createSession(user);
     return sendSuccess(res, {
       token: session.token,
       user: userRepository.toClientUser(user)

@@ -96,6 +96,10 @@ function createApp(config = loadConfig()) {
     "/api/auth/wechat-login",
     createRateLimiter(20, "Too many login attempts")
   );
+  app.use(
+    ["/api/auth/account-login", "/api/auth/account-register"],
+    createRateLimiter(20, "Too many account attempts")
+  );
   app.use("/api/auth", authRouter);
   app.use("/api/fortunes", fortunesRouter);
   app.use("/api/users", usersRouter);
