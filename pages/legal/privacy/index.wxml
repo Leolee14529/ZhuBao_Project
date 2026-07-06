@@ -1,6 +1,5 @@
 <view class="legal-page">
-  <view class="legal-header">
-    <button class="back-btn" bindtap="goBack">返回</button>
+  <view class="legal-header" style="padding-top: {{headerTop}}px;">
     <text class="legal-title">隐私政策</text>
   </view>
   <scroll-view scroll-y="true" class="legal-scroll">
@@ -18,4 +17,7 @@
       <text class="legal-p">五行、珠宝、经期内容仅作生活记录、娱乐参考和饰品风格推荐，不构成医疗建议、诊断、避孕、生育建议、健康建议或功效承诺。</text>
     </view>
   </scroll-view>
+  <view class="legal-footer">
+    <button class="back-btn" bindtap="goBack">返回</button>
+  </view>
 </view>
