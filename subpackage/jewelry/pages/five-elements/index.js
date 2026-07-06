@@ -61,14 +61,32 @@ Page({
       genderIndex: genderIndex,
       gender: genderIndex === 1 ? "male" : "female"
     });
+    this.refreshPreview();
   },
 
   refreshPreview: function () {
-    var profile = fiveElements.buildProfile({
-      date: this.data.birthDate,
-      time: this.data.birthTime
+    var birthInput = this.getCurrentBirthInput();
+    var savedResult = fiveElements.getSavedWuxingResult();
+    var profile = fiveElements.buildProfileForInput(birthInput, {
+      result: savedResult,
+      allowLocalFallback: false
     });
 
+    this.applyPreviewProfile(profile);
+    if (!fiveElements.isResultForBirthInput(savedResult, birthInput)) {
+      this.calculatePreview(birthInput);
+    }
+  },
+
+  getCurrentBirthInput: function () {
+    return fiveElements.normalizeBirthInput({
+      date: this.data.birthDate,
+      time: this.data.birthTime,
+      gender: this.data.gender
+    });
+  },
+
+  applyPreviewProfile: function (profile) {
     this.setData({
       focusElement: profile.focusElement,
       destinyLine: profile.destinyLine,
@@ -79,6 +97,26 @@ Page({
           color: item.color
         };
       })
+    });
+  },
+
+  calculatePreview: function (birthInput) {
+    this.previewRequestId = (this.previewRequestId || 0) + 1;
+    var requestId = this.previewRequestId;
+
+    request.post("/api/wuxing/calculate", {
+      birthDate: birthInput.date,
+      birthTime: birthInput.time,
+      gender: birthInput.gender
+    }).then(function (result) {
+      if (requestId !== this.previewRequestId) return;
+      var profile = fiveElements.buildProfileFromResult(result);
+      if (profile) {
+        this.applyPreviewProfile(profile);
+      }
+    }.bind(this)).catch(function (error) {
+      if (error && error.statusCode === 401) return;
+      console.error("calculate wuxing preview failed", error);
     });
   },
 

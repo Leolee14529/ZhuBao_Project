@@ -53,13 +53,25 @@ function getDefaultBirthInput() {
   };
 }
 
+function normalizeGender(gender) {
+  return gender === "male" ? "male" : "female";
+}
+
+function normalizeBirthInput(birthInput) {
+  var safeInput = birthInput && birthInput.date && birthInput.time ? birthInput : getDefaultBirthInput();
+  return {
+    date: safeInput.date,
+    time: safeInput.time,
+    gender: normalizeGender(safeInput.gender)
+  };
+}
+
 function getSavedBirthInput() {
   var birthInput = wx.getStorageSync(STORAGE_KEY);
   if (!birthInput || !birthInput.date || !birthInput.time) {
     return getDefaultBirthInput();
   }
-  birthInput.gender = birthInput.gender === "male" ? "male" : "female";
-  return birthInput;
+  return normalizeBirthInput(birthInput);
 }
 
 function saveBirthInput(birthInput) {
@@ -145,6 +157,29 @@ function buildProfileFromResult(result) {
     radarNote: result.analysis || "",
     elements: elements
   };
+}
+
+function isResultForBirthInput(result, birthInput) {
+  if (!result || !birthInput) return false;
+  var safeInput = normalizeBirthInput(birthInput);
+  return result.birthDate === safeInput.date &&
+    result.birthTime === safeInput.time &&
+    normalizeGender(result.gender) === safeInput.gender;
+}
+
+function buildProfileForInput(birthInput, options) {
+  var opts = options || {};
+  var safeInput = normalizeBirthInput(birthInput);
+  var result = Object.prototype.hasOwnProperty.call(opts, "result") ?
+    opts.result :
+    getSavedWuxingResult();
+  var serverProfile = isResultForBirthInput(result, safeInput) ?
+    buildProfileFromResult(result) :
+    null;
+
+  if (serverProfile) return serverProfile;
+  if (opts.allowLocalFallback === false) return buildEmptyProfile(safeInput);
+  return buildProfile(safeInput);
 }
 
 function buildCurrentProfile() {
@@ -259,8 +294,11 @@ module.exports = {
   saveBirthInput: saveBirthInput,
   saveWuxingResult: saveWuxingResult,
   getSavedWuxingResult: getSavedWuxingResult,
+  normalizeBirthInput: normalizeBirthInput,
+  isResultForBirthInput: isResultForBirthInput,
   buildEmptyProfile: buildEmptyProfile,
   buildProfileFromResult: buildProfileFromResult,
+  buildProfileForInput: buildProfileForInput,
   buildCurrentProfile: buildCurrentProfile,
   buildProfile: buildProfile
 };
