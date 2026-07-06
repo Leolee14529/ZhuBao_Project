@@ -13,7 +13,7 @@ Page({
     isLoggingIn: false,
     isAccountSubmitting: false,
     isCreatingAccount: false,
-    loginMode: "account",
+    loginMode: "wechat",
     accountName: "",
     password: "",
     agreed: false,

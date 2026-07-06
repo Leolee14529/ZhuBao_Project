@@ -12,8 +12,8 @@
     </view>
     <view class="login-form">
       <view class="mode-tabs">
-        <view class="mode-tab {{loginMode === 'account' ? 'mode-tab-on' : ''}}" data-mode="account" bindtap="switchLoginMode">账号</view>
         <view class="mode-tab {{loginMode === 'wechat' ? 'mode-tab-on' : ''}}" data-mode="wechat" bindtap="switchLoginMode">微信</view>
+        <view class="mode-tab {{loginMode === 'account' ? 'mode-tab-on' : ''}}" data-mode="account" bindtap="switchLoginMode">账号</view>
       </view>
       <empty-state
         wx:if="{{serviceError}}"
