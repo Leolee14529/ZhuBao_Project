@@ -18,6 +18,7 @@ Page({
     selectedDetail: null,
     summaryDays: "--",
     summaryNextStart: "暂无预测结果",
+    cyclePrivacyConfirmed: false,
     cycleProfile: { lastPeriodDate: "", cycleLength: "28", periodLength: "5", todayPeriodStartEnabled: false, adjustments: {} },
     weeks: [],
     legendItems: [{ key: "period", label: "经期" }, { key: "periodForecast", label: "预测经期" }, { key: "ovulation", label: "排卵日" }, { key: "fertile", label: "易孕期" }, { key: "safe", label: "安全期" }]
@@ -129,7 +130,10 @@ Page({
   },
 
   onSetupCycle() {
-    this.setData({ showCycleSetup: true });
+    this.setData({
+      showCycleSetup: true,
+      cyclePrivacyConfirmed: !!wx.getStorageSync(auth.PERIOD_PRIVACY_KEY)
+    });
   },
 
   noop() {},
@@ -150,6 +154,12 @@ Page({
   onPeriodLengthInput(event) {
     const value = (event.detail.value || "").replace(/[^\d]/g, "").slice(0, 2);
     this.setData({ "cycleProfile.periodLength": value });
+  },
+
+  onToggleCyclePrivacy() {
+    this.setData({
+      cyclePrivacyConfirmed: !this.data.cyclePrivacyConfirmed
+    });
   },
 
   onSaveCycleSetup() {
@@ -194,24 +204,10 @@ Page({
     if (wx.getStorageSync(auth.PERIOD_PRIVACY_KEY)) {
       return Promise.resolve(true);
     }
-    return new Promise((resolve, reject) => {
-      wx.showModal({
-        title: "经期数据说明",
-        content: "经期记录仅保存在本机，不上传服务器，不构成医疗、诊断、避孕、生育或健康建议。清除缓存或卸载可能导致数据丢失。",
-        confirmText: "知晓并同意",
-        cancelText: "取消",
-        success(res) {
-          if (res.confirm) {
-            resolve(true);
-            return;
-          }
-          reject(new Error("请先确认经期数据说明"));
-        },
-        fail() {
-          reject(new Error("请先确认经期数据说明"));
-        }
-      });
-    });
+    if (this.data.cyclePrivacyConfirmed) {
+      return Promise.resolve(true);
+    }
+    return Promise.reject(new Error("请先勾选经期数据说明"));
   },
 
   onToggleTodayPeriod(event) {

@@ -90,6 +90,15 @@ test("active page route references are registered in app.json", () => {
   }
 });
 
+test("period setup exposes an in-sheet data notice confirmation", () => {
+  const calendarPage = readText("subpackage/periodCalendar/pages/calendar/index.wxml");
+  const calendarLogic = readText("subpackage/periodCalendar/pages/calendar/index.js");
+
+  assert.ok(calendarPage.includes("我已知晓经期数据说明"));
+  assert.ok(calendarPage.includes("bindtap=\"onToggleCyclePrivacy\""));
+  assert.ok(calendarLogic.includes("cyclePrivacyConfirmed"));
+});
+
 test("auth state prefers token over guest mode and clears conflicts", () => {
   const storage = { token: "token-value", guestMode: true };
   global.wx = {

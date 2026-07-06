@@ -62,6 +62,15 @@
       <view class="cycle-setup-sheet__handle"></view>
       <text class="cycle-setup-sheet__title">设置周期</text>
       <text class="cycle-setup-sheet__desc">只做前端保存，设置完成后会直接显示预测日历与倒计时结果。</text>
+      <view class="cycle-privacy-confirm" bindtap="onToggleCyclePrivacy">
+        <view class="cycle-privacy-confirm__box {{cyclePrivacyConfirmed ? 'cycle-privacy-confirm__box--checked' : ''}}">
+          <text wx:if="{{cyclePrivacyConfirmed}}" class="cycle-privacy-confirm__mark">✓</text>
+        </view>
+        <view class="cycle-privacy-confirm__copy">
+          <text class="cycle-privacy-confirm__title">我已知晓经期数据说明</text>
+          <text class="cycle-privacy-confirm__desc">经期记录仅保存在本机，不上传服务器，不构成医疗、诊断、避孕、生育或健康建议；清除缓存或卸载可能导致数据丢失。</text>
+        </view>
+      </view>
 
       <view class="cycle-field">
         <text class="cycle-field__label">上次经期开始日期</text>
