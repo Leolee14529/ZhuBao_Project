@@ -1,8 +1,6 @@
 .calendar-page {
   min-height: 100vh;
-  background:
-    radial-gradient(circle at 50% 18%, rgba(18, 28, 47, 0.24), transparent 32%),
-    linear-gradient(180deg, #02070f 0%, #02060d 52%, #01050b 100%);
+  background: radial-gradient(circle at 50% 18%, rgba(18, 28, 47, 0.24), transparent 32%), linear-gradient(180deg, #02070f 0%, #02060d 52%, #01050b 100%);
   color: #ffffff;
 }
 .page-content {
@@ -26,9 +24,7 @@
   text-align: center;
   box-shadow: inset 0 1rpx 0 rgba(255, 255, 255, 0.03);
 }
-.cycle-empty-state__icon-wrap {
-  margin-bottom: 34rpx;
-}
+.cycle-empty-state__icon-wrap { margin-bottom: 34rpx; }
 .cycle-empty-state__icon-bg {
   position: relative;
   width: 118rpx;
@@ -46,22 +42,9 @@
   transform: translate(-50%, -50%);
   border-radius: 50%;
 }
-.cycle-empty-state__icon-ring {
-  width: 70rpx;
-  height: 70rpx;
-  border: 2rpx solid rgba(255, 255, 255, 0.14);
-}
-.cycle-empty-state__icon-pulse {
-  width: 88rpx;
-  height: 88rpx;
-  border: 1rpx dashed rgba(255, 255, 255, 0.12);
-}
-.cycle-empty-state__icon-dot {
-  width: 24rpx;
-  height: 24rpx;
-  background: #ffffff;
-  box-shadow: 0 0 16rpx rgba(255, 255, 255, 0.2);
-}
+.cycle-empty-state__icon-ring { width: 70rpx; height: 70rpx; border: 2rpx solid rgba(255, 255, 255, 0.14); }
+.cycle-empty-state__icon-pulse { width: 88rpx; height: 88rpx; border: 1rpx dashed rgba(255, 255, 255, 0.12); }
+.cycle-empty-state__icon-dot { width: 24rpx; height: 24rpx; background: #ffffff; box-shadow: 0 0 16rpx rgba(255, 255, 255, 0.2); }
 .cycle-empty-state__title {
   display: block;
   color: #ffffff;
@@ -205,9 +188,7 @@
   font-size: 30rpx;
   line-height: 60rpx;
 }
-.cycle-field__placeholder {
-  color: rgba(255, 255, 255, 0.24);
-}
+.cycle-field__placeholder { color: rgba(255, 255, 255, 0.24); }
 .cycle-setup-sheet__actions {
   display: flex;
   gap: 18rpx;

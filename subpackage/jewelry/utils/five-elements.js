@@ -183,8 +183,7 @@ function buildProfileForInput(birthInput, options) {
 }
 
 function buildCurrentProfile() {
-  return buildProfileFromResult(getSavedWuxingResult()) ||
-    buildEmptyProfile(getSavedBirthInput());
+  return buildProfileFromResult(getSavedWuxingResult()) || buildEmptyProfile(getSavedBirthInput());
 }
 
 function buildProfile(birthInput) {
@@ -286,19 +285,12 @@ function buildProfile(birthInput) {
 }
 
 module.exports = {
-  STORAGE_KEY: STORAGE_KEY,
-  ELEMENT_META: ELEMENT_META,
-  ELEMENT_ORDER: ELEMENT_ORDER,
-  getDefaultBirthInput: getDefaultBirthInput,
-  getSavedBirthInput: getSavedBirthInput,
-  saveBirthInput: saveBirthInput,
-  saveWuxingResult: saveWuxingResult,
-  getSavedWuxingResult: getSavedWuxingResult,
-  normalizeBirthInput: normalizeBirthInput,
-  isResultForBirthInput: isResultForBirthInput,
-  buildEmptyProfile: buildEmptyProfile,
-  buildProfileFromResult: buildProfileFromResult,
-  buildProfileForInput: buildProfileForInput,
+  STORAGE_KEY: STORAGE_KEY, ELEMENT_META: ELEMENT_META, ELEMENT_ORDER: ELEMENT_ORDER,
+  getDefaultBirthInput: getDefaultBirthInput, getSavedBirthInput: getSavedBirthInput,
+  saveBirthInput: saveBirthInput, saveWuxingResult: saveWuxingResult,
+  getSavedWuxingResult: getSavedWuxingResult, normalizeBirthInput: normalizeBirthInput,
+  isResultForBirthInput: isResultForBirthInput, buildEmptyProfile: buildEmptyProfile,
+  buildProfileFromResult: buildProfileFromResult, buildProfileForInput: buildProfileForInput,
   buildCurrentProfile: buildCurrentProfile,
   buildProfile: buildProfile
 };
