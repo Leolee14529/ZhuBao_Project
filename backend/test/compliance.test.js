@@ -119,6 +119,17 @@ test("login page exposes account password entry wired to backend auth", () => {
   assert.ok(migration.includes("password_hash"));
 });
 
+test("release login defaults to wechat before account password", () => {
+  const loginPage = readText("pages/login/index.wxml");
+  const loginLogic = readText("pages/login/index.js");
+  const wechatTabIndex = loginPage.indexOf('data-mode="wechat"');
+  const accountTabIndex = loginPage.indexOf('data-mode="account"');
+
+  assert.ok(loginLogic.includes('loginMode: "wechat"'));
+  assert.ok(wechatTabIndex >= 0);
+  assert.ok(accountTabIndex > wechatTabIndex);
+});
+
 test("period setup exposes an in-sheet data notice confirmation", () => {
   const calendarPage = readText("subpackage/periodCalendar/pages/calendar/index.wxml");
   const calendarLogic = readText("subpackage/periodCalendar/pages/calendar/index.js");
