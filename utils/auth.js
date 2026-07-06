@@ -101,7 +101,8 @@ function hasPrivacyConsent() {
 function buildLoginUrl(source) {
   const allowRestore = source === "/subpackage/jewelry/pages/data/index" ||
     source === "/subpackage/jewelry/pages/settings/index" ||
-    source === "/subpackage/jewelry/pages/five-elements/index";
+    source === "/subpackage/jewelry/pages/five-elements/index" ||
+    source === "/subpackage/periodCalendar/pages/calendar/index";
   if (!allowRestore) return LOGIN_URL;
   return LOGIN_URL + "?redirect=" + encodeURIComponent(source);
 }

@@ -109,7 +109,7 @@ function classifyDate(date, cycleStarts, periodLength) {
     if (daysBeforeStart === 14) {
       return {
         status: "ovulation",
-        statusLabel: "排卵日",
+        statusLabel: "参考日",
         cycleIndex: cycle.cycleIndex,
         cycleStartDateKey: formatDateKey(cycle.startDate)
       };
@@ -118,7 +118,7 @@ function classifyDate(date, cycleStarts, periodLength) {
     if (daysBeforeStart >= 13 && daysBeforeStart <= 19) {
       return {
         status: "fertile",
-        statusLabel: "易孕期",
+        statusLabel: "参考窗口",
         cycleIndex: cycle.cycleIndex,
         cycleStartDateKey: formatDateKey(cycle.startDate)
       };
@@ -127,7 +127,7 @@ function classifyDate(date, cycleStarts, periodLength) {
 
   return {
     status: "safe",
-    statusLabel: "安全期",
+    statusLabel: "其他日期",
     cycleIndex: null,
     cycleStartDateKey: ""
   };

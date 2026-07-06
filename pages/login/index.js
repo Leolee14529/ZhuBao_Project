@@ -138,7 +138,8 @@ Page({
     const redirect = this.data.redirect;
     if (redirect === "/subpackage/jewelry/pages/data/index" ||
       redirect === "/subpackage/jewelry/pages/settings/index" ||
-      redirect === "/subpackage/jewelry/pages/five-elements/index") {
+      redirect === "/subpackage/jewelry/pages/five-elements/index" ||
+      redirect === "/subpackage/periodCalendar/pages/calendar/index") {
       return redirect;
     }
     return "";

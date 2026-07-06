@@ -45,8 +45,18 @@ function clearAuthState() {
   auth.clearAuthState();
 }
 
-function redirectToLogin() {
-  auth.redirectToLogin();
+function getCurrentPageUrl() {
+  try {
+    const pages = typeof getCurrentPages === "function" ? getCurrentPages() : [];
+    const currentPage = pages && pages.length ? pages[pages.length - 1] : null;
+    return currentPage && currentPage.route ? "/" + currentPage.route : "";
+  } catch (error) {
+    return "";
+  }
+}
+
+function redirectToLogin(source) {
+  auth.redirectToLogin(source);
 }
 
 function request(options) {
@@ -93,7 +103,7 @@ function request(options) {
           body
         );
         if (statusCode === 401 && path !== "/api/auth/wechat-login") {
-          redirectToLogin();
+          redirectToLogin(getCurrentPageUrl());
         }
         reject(requestError);
       },

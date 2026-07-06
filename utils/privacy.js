@@ -3,7 +3,7 @@ const auth = require("./auth");
 
 function showLocalPrivacy() {
   wx.navigateTo({
-    url: PRIVACY_URL,
+    url: PRIVACY_URL + "?mode=consent",
     fail() {
       wx.showToast({
         title: "请先阅读隐私政策",

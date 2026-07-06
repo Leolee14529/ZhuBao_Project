@@ -1,4 +1,4 @@
-.bottom-nav { position: fixed; left: 18rpx; right: 18rpx; bottom: 16rpx; z-index: 80; height: 116rpx; display: flex; align-items: center; justify-content: space-around; border-radius: 32rpx; border: 1rpx solid rgba(255,255,255,0.08); background: rgba(7,7,8,0.96); box-shadow: 0 18rpx 48rpx rgba(0,0,0,0.42); backdrop-filter: blur(20rpx); }
+.bottom-nav { position: fixed; left: 18rpx; right: 18rpx; bottom: calc(16rpx + constant(safe-area-inset-bottom)); bottom: calc(16rpx + env(safe-area-inset-bottom)); z-index: 80; height: 116rpx; display: flex; align-items: center; justify-content: space-around; border-radius: 32rpx; border: 1rpx solid rgba(255,255,255,0.08); background: rgba(7,7,8,0.96); box-shadow: 0 18rpx 48rpx rgba(0,0,0,0.42); backdrop-filter: blur(20rpx); }
 .nav-item { position: relative; width: 238rpx; height: 116rpx; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0; background: transparent; border: 0; color: rgba(255,255,255,0.4); line-height: 1; }
 .nav-item::after { border: 0; }
 .nav-top { position: absolute; top: -2rpx; width: 60rpx; height: 8rpx; border-radius: 999rpx; background: transparent; }

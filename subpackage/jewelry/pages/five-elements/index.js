@@ -73,7 +73,9 @@ Page({
     });
 
     this.applyPreviewProfile(profile);
-    if (!fiveElements.isResultForBirthInput(savedResult, birthInput)) {
+    if (!fiveElements.isResultForBirthInput(savedResult, birthInput) &&
+      wx.getStorageSync(auth.BIRTH_NOTICE_KEY) &&
+      auth.hasPrivacyConsent()) {
       this.calculatePreview(birthInput);
     }
   },

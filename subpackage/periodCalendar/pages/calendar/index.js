@@ -21,7 +21,7 @@ Page({
     cyclePrivacyConfirmed: false,
     cycleProfile: { lastPeriodDate: "", cycleLength: "28", periodLength: "5", todayPeriodStartEnabled: false, adjustments: {} },
     weeks: [],
-    legendItems: [{ key: "period", label: "经期" }, { key: "periodForecast", label: "预测经期" }, { key: "ovulation", label: "排卵日" }, { key: "fertile", label: "易孕期" }, { key: "safe", label: "安全期" }]
+    legendItems: [{ key: "period", label: "经期" }, { key: "periodForecast", label: "预测经期" }, { key: "ovulation", label: "参考日" }, { key: "fertile", label: "参考窗口" }, { key: "safe", label: "其他日期" }]
   },
   onLoad() {
     if (!auth.requireLogin({ source: "/subpackage/periodCalendar/pages/calendar/index" })) return;
@@ -207,27 +207,50 @@ Page({
     if (this.data.cyclePrivacyConfirmed) {
       return Promise.resolve(true);
     }
+    if (!this.data.showCycleSetup) {
+      this.setData({
+        showCycleSetup: true,
+        cyclePrivacyConfirmed: false
+      });
+    }
     return Promise.reject(new Error("请先勾选经期数据说明"));
+  },
+
+  ensureCyclePrivacyReady() {
+    return this.confirmCyclePrivacy()
+      .then(() => privacy.checkWechatPrivacyReady({ action: "periodCalendar" }))
+      .then(() => {
+        wx.setStorageSync(auth.PERIOD_PRIVACY_KEY, true);
+        this.setData({ cyclePrivacyConfirmed: true });
+      });
   },
 
   onToggleTodayPeriod(event) {
     const enabled = !!event.detail.enabled;
     const todayDateKey = this.data.todayDateKey;
-    const nextProfile = cycleEngine.normalizeProfile({
-      lastPeriodDate: this.data.cycleProfile.lastPeriodDate || todayDateKey,
-      cycleLength: this.data.cycleProfile.cycleLength,
-      periodLength: this.data.cycleProfile.periodLength,
-      todayPeriodStartEnabled: enabled,
-      adjustments: enabled ? {} : this.data.cycleProfile.adjustments
-    });
 
-    wx.setStorageSync(this.cycleStorageKey, nextProfile);
-    this.setData({
-      hasCycleData: true,
-      selectedDateKey: todayDateKey,
-      cycleProfile: nextProfile
+    this.ensureCyclePrivacyReady().then(() => {
+      const nextProfile = cycleEngine.normalizeProfile({
+        lastPeriodDate: this.data.cycleProfile.lastPeriodDate || todayDateKey,
+        cycleLength: this.data.cycleProfile.cycleLength,
+        periodLength: this.data.cycleProfile.periodLength,
+        todayPeriodStartEnabled: enabled,
+        adjustments: enabled ? {} : this.data.cycleProfile.adjustments
+      });
+
+      wx.setStorageSync(this.cycleStorageKey, nextProfile);
+      this.setData({
+        hasCycleData: true,
+        selectedDateKey: todayDateKey,
+        cycleProfile: nextProfile
+      });
+      this.refreshCalendar(this.data.viewYear, this.data.viewMonth);
+    }).catch((error) => {
+      wx.showToast({
+        title: error && error.message ? error.message : "请先确认经期数据说明",
+        icon: "none"
+      });
     });
-    this.refreshCalendar(this.data.viewYear, this.data.viewMonth);
   },
 
   onSelectDay(event) {
@@ -254,14 +277,21 @@ Page({
       return;
     }
 
-    wx.setStorageSync(this.cycleStorageKey, nextProfile);
-    this.setData({
-      cycleProfile: nextProfile
-    });
-    this.refreshCalendar(this.data.viewYear, this.data.viewMonth);
-    wx.showToast({
-      title: "已重新预测后续周期",
-      icon: "success"
+    this.ensureCyclePrivacyReady().then(() => {
+      wx.setStorageSync(this.cycleStorageKey, nextProfile);
+      this.setData({
+        cycleProfile: nextProfile
+      });
+      this.refreshCalendar(this.data.viewYear, this.data.viewMonth);
+      wx.showToast({
+        title: "已重新预测后续周期",
+        icon: "success"
+      });
+    }).catch((error) => {
+      wx.showToast({
+        title: error && error.message ? error.message : "请先确认经期数据说明",
+        icon: "none"
+      });
     });
   }
 });

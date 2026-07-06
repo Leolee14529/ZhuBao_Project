@@ -97,6 +97,21 @@ test("period setup exposes an in-sheet data notice confirmation", () => {
   assert.ok(calendarPage.includes("我已知晓经期数据说明"));
   assert.ok(calendarPage.includes("bindtap=\"onToggleCyclePrivacy\""));
   assert.ok(calendarLogic.includes("cyclePrivacyConfirmed"));
+  assert.ok(calendarLogic.includes("ensureCyclePrivacyReady"));
+});
+
+test("period calendar is a safe login restore target", () => {
+  const authLogic = readText("utils/auth.js");
+  const loginLogic = readText("pages/login/index.js");
+  const periodRoute = "/subpackage/periodCalendar/pages/calendar/index";
+
+  assert.ok(authLogic.includes(periodRoute));
+  assert.ok(loginLogic.includes(periodRoute));
+});
+
+test("runtime wuxing data is not committed with the review package", () => {
+  assert.equal(fs.existsSync(path.join(root, "backend/data/wuxing.json")), false);
+  assert.ok(readText(".gitignore").includes("backend/data/wuxing.json"));
 });
 
 test("auth state prefers token over guest mode and clears conflicts", () => {
@@ -138,7 +153,10 @@ test("active review text does not contain prohibited promise language", () => {
     "精准命理",
     "改运",
     "转运",
-    "旺财"
+    "旺财",
+    "排卵日",
+    "易孕期",
+    "安全期"
   ];
 
   for (const file of files) {

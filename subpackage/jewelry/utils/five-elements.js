@@ -184,7 +184,7 @@ function buildProfileForInput(birthInput, options) {
 
 function buildCurrentProfile() {
   return buildProfileFromResult(getSavedWuxingResult()) ||
-    buildProfile(getSavedBirthInput());
+    buildEmptyProfile(getSavedBirthInput());
 }
 
 function buildProfile(birthInput) {
