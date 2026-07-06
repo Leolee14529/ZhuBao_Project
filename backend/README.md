@@ -156,4 +156,18 @@ pnpm audit --prod
 6. 配置 HTTPS 反向代理和微信请求域名。
 7. 小流量验证登录、五行保存、读取、退出。
 
+可在服务器仓库根目录执行部署脚本：
+
+```bash
+export ZHUBAO_RESTART_CMD='pm2 restart zhubao-backend --update-env'
+export ZHUBAO_API_BASE_URL='https://jewelry-api.birdai-glasses.com'
+bash backend/scripts/deploy-production.sh
+```
+
+如果服务器使用 systemd 或 Docker，把 `ZHUBAO_RESTART_CMD` 替换成对应重启命令。部署后可单独执行账号密码登录冒烟测试：
+
+```bash
+ZHUBAO_API_BASE_URL=https://jewelry-api.birdai-glasses.com pnpm run smoke:production-auth
+```
+
 服务支持 `SIGTERM`、`SIGINT` 优雅关闭。生产环境应由容器平台或进程管理器负责重启与日志采集。
