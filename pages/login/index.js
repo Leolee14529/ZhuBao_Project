@@ -11,6 +11,11 @@ Page({
   data: {
     serviceError: "",
     isLoggingIn: false,
+    isAccountSubmitting: false,
+    isCreatingAccount: false,
+    loginMode: "account",
+    accountName: "",
+    password: "",
     agreed: false,
     redirect: ""
   },
@@ -25,22 +30,11 @@ Page({
       return;
     }
 
-    if (!this.data.agreed) {
-      this.setData({ serviceError: "请先阅读并同意用户协议与隐私政策" });
-      return;
-    }
-
     this.setData({ serviceError: "", isLoggingIn: true });
 
-    privacy.checkWechatPrivacyReady({
-      agreed: this.data.agreed,
-      action: "login"
-    })
+    this.ensureLoginReady()
       .then(() => this.loginWithWechat())
-      .then((data) => {
-        auth.acceptPrivacyConsent();
-        return data;
-      })
+      .then((data) => this.acceptAuthData(data))
       .then(() => this.goHome())
       .catch((error) => {
         console.error("wechat login failed", error);
@@ -54,22 +48,73 @@ Page({
         });
       });
   },
+  accountLogin() {
+    this.submitAccount("login");
+  },
+  accountRegister() {
+    this.submitAccount("register");
+  },
+  submitAccount(action) {
+    const isRegister = action === "register";
+    const loadingKey = isRegister ? "isCreatingAccount" : "isAccountSubmitting";
+
+    if (this.data[loadingKey]) return;
+
+    const accountName = this.data.accountName.trim();
+    const password = this.data.password;
+    if (!accountName || !password) {
+      this.setData({ serviceError: "请输入账号和密码" });
+      return;
+    }
+
+    this.setData({ serviceError: "", [loadingKey]: true });
+
+    this.ensureLoginReady()
+      .then(() => request.post(isRegister ? "/api/auth/account-register" : "/api/auth/account-login", {
+        accountName,
+        password
+      }))
+      .then((data) => this.acceptAuthData(data))
+      .then(() => this.goHome())
+      .catch((error) => {
+        console.error("account auth failed", error);
+        this.setData({
+          serviceError: error && error.message ? error.message : DEFAULT_LOGIN_ERROR
+        });
+      })
+      .then(() => {
+        this.setData({ [loadingKey]: false });
+      });
+  },
+  ensureLoginReady() {
+    if (!this.data.agreed) {
+      this.setData({ serviceError: "请先阅读并同意用户协议与隐私政策" });
+      return Promise.reject(new Error("请先阅读并同意用户协议与隐私政策"));
+    }
+
+    return privacy.checkWechatPrivacyReady({
+      agreed: this.data.agreed,
+      action: "login"
+    });
+  },
+  acceptAuthData(data) {
+    const token = data && data.token;
+    const user = data && data.user;
+
+    if (!token || !user) {
+      throw new Error(DEFAULT_LOGIN_ERROR);
+    }
+
+    wx.setStorageSync("token", token);
+    wx.setStorageSync("userInfo", user);
+    auth.clearGuestMode();
+    auth.acceptPrivacyConsent();
+    return data;
+  },
   loginWithWechat() {
     return this.getWechatLoginCode()
       .then((code) => request.post("/api/auth/wechat-login", { code }))
-      .then((data) => {
-        const token = data && data.token;
-        const user = data && data.user;
-
-        if (!token || !user) {
-          throw new Error(DEFAULT_LOGIN_ERROR);
-        }
-
-        wx.setStorageSync("token", token);
-        wx.setStorageSync("userInfo", user);
-        auth.clearGuestMode();
-        return data;
-      });
+      .then((data) => data);
   },
   getWechatLoginCode(attempt) {
     const currentAttempt = attempt || 1;
@@ -150,6 +195,26 @@ Page({
       serviceError: ""
     });
   },
+  switchLoginMode(event) {
+    const mode = event.currentTarget.dataset.mode;
+    if (mode !== "account" && mode !== "wechat") return;
+    this.setData({
+      loginMode: mode,
+      serviceError: ""
+    });
+  },
+  onAccountInput(event) {
+    this.setData({
+      accountName: event.detail.value,
+      serviceError: ""
+    });
+  },
+  onPasswordInput(event) {
+    this.setData({
+      password: event.detail.value,
+      serviceError: ""
+    });
+  },
   openAgreement() {
     wx.navigateTo({ url: "/pages/legal/agreement/index" });
   },
@@ -168,6 +233,10 @@ Page({
     wx.reLaunch({ url: HOME_URL });
   },
   retryLogin() {
+    if (this.data.loginMode === "account") {
+      this.accountLogin();
+      return;
+    }
     this.login();
   }
 });

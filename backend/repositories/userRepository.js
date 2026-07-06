@@ -7,8 +7,10 @@ function mapUser(row) {
 
   return {
     id: row.id,
-    openid: row.openid,
+    openid: row.openid || null,
     unionid: row.unionid || null,
+    accountName: row.account_name || null,
+    passwordHash: row.password_hash || null,
     nickname: row.nickname || null,
     avatarUrl: row.avatar_url || null,
     createdAt: new Date(row.created_at).toISOString(),
@@ -66,9 +68,44 @@ async function findOrCreateByWechatProfile(profile) {
   return mapUser(result.rows[0]);
 }
 
+async function findUserByAccountName(accountName) {
+  if (!hasDatabase()) {
+    return userStore.findUserByAccountName(accountName);
+  }
+
+  const result = await getPool().query(
+    "SELECT * FROM users WHERE account_name = $1",
+    [accountName]
+  );
+  return mapUser(result.rows[0]);
+}
+
+async function createAccountUser(accountName, passwordHash) {
+  if (!hasDatabase()) {
+    return userStore.createAccountUser(accountName, passwordHash);
+  }
+
+  try {
+    const result = await getPool().query(
+      `INSERT INTO users(id, account_name, password_hash, nickname)
+       VALUES ($1, $2, $3, $4)
+       RETURNING *`,
+      [crypto.randomUUID(), accountName, passwordHash, accountName]
+    );
+    return mapUser(result.rows[0]);
+  } catch (error) {
+    if (error.code === "23505") {
+      return null;
+    }
+    throw error;
+  }
+}
+
 module.exports = {
   findUserById,
   findOrCreateByWechatProfile,
+  findUserByAccountName,
+  createAccountUser,
   deleteUserById,
   toClientUser
 };

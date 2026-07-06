@@ -59,6 +59,12 @@ function redirectToLogin(source) {
   auth.redirectToLogin(source);
 }
 
+function isAuthEntryPath(path) {
+  return path === "/api/auth/wechat-login" ||
+    path === "/api/auth/account-login" ||
+    path === "/api/auth/account-register";
+}
+
 function request(options) {
   const requestOptions = options || {};
 
@@ -102,7 +108,7 @@ function request(options) {
           statusCode,
           body
         );
-        if (statusCode === 401 && path !== "/api/auth/wechat-login") {
+        if (statusCode === 401 && !isAuthEntryPath(path)) {
           redirectToLogin(getCurrentPageUrl());
         }
         reject(requestError);

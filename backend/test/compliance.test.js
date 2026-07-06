@@ -104,6 +104,21 @@ test("login page keeps a visible first screen", () => {
   assert.match(loginStyle, /\.login-page\{[^}]*background:#000/);
 });
 
+test("login page exposes account password entry wired to backend auth", () => {
+  const loginPage = readText("pages/login/index.wxml");
+  const loginLogic = readText("pages/login/index.js");
+  const migration = readText("backend/db/migrations/002_account_password_login.sql");
+
+  assert.ok(loginPage.includes("mode-tab"));
+  assert.ok(loginPage.includes("账号登录"));
+  assert.ok(loginPage.includes("创建账号"));
+  assert.ok(loginLogic.includes("/api/auth/account-login"));
+  assert.ok(loginLogic.includes("/api/auth/account-register"));
+  assert.ok(readText("utils/request.js").includes("isAuthEntryPath"));
+  assert.ok(migration.includes("account_name"));
+  assert.ok(migration.includes("password_hash"));
+});
+
 test("period setup exposes an in-sheet data notice confirmation", () => {
   const calendarPage = readText("subpackage/periodCalendar/pages/calendar/index.wxml");
   const calendarLogic = readText("subpackage/periodCalendar/pages/calendar/index.js");

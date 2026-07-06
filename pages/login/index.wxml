@@ -11,6 +11,10 @@
       <text class="brand-subtitle">Computing Power Jewelry</text>
     </view>
     <view class="login-form">
+      <view class="mode-tabs">
+        <view class="mode-tab {{loginMode === 'account' ? 'mode-tab-on' : ''}}" data-mode="account" bindtap="switchLoginMode">账号</view>
+        <view class="mode-tab {{loginMode === 'wechat' ? 'mode-tab-on' : ''}}" data-mode="wechat" bindtap="switchLoginMode">微信</view>
+      </view>
       <empty-state
         wx:if="{{serviceError}}"
         title="登录暂时不可用"
@@ -20,7 +24,19 @@
         compact="{{true}}"
         bind:action="retryLogin"
       ></empty-state>
-      <button class="primary" bindtap="login" loading="{{isLoggingIn}}" disabled="{{isLoggingIn}}" hover-class="primary-hover"><text>微信登录</text></button>
+      <block wx:if="{{loginMode === 'account'}}">
+        <view class="field">
+          <input value="{{accountName}}" bindinput="onAccountInput" placeholder="账号 / 邮箱" placeholder-class="placeholder" confirm-type="next"></input>
+        </view>
+        <view class="field">
+          <input value="{{password}}" bindinput="onPasswordInput" password="{{true}}" placeholder="密码" placeholder-class="placeholder" confirm-type="done"></input>
+        </view>
+        <button class="primary" bindtap="accountLogin" loading="{{isAccountSubmitting}}" disabled="{{isAccountSubmitting || isCreatingAccount}}" hover-class="primary-hover"><text>账号登录</text></button>
+        <button class="secondary" bindtap="accountRegister" loading="{{isCreatingAccount}}" disabled="{{isAccountSubmitting || isCreatingAccount}}" hover-class="secondary-hover"><text>创建账号</text></button>
+      </block>
+      <block wx:else>
+        <button class="primary" bindtap="login" loading="{{isLoggingIn}}" disabled="{{isLoggingIn}}" hover-class="primary-hover"><text>微信登录</text></button>
+      </block>
       <view class="agreement-row" bindtap="toggleAgreement">
         <view class="agreement-check {{agreed ? 'agreement-check-on' : ''}}">
           <text wx:if="{{agreed}}">✓</text>

@@ -45,8 +45,10 @@ function toPublicUser(user) {
 
   return {
     id: user.id,
-    openid: user.openid,
+    openid: user.openid || null,
     unionid: user.unionid || null,
+    accountName: user.accountName || null,
+    passwordHash: user.passwordHash || null,
     nickname: user.nickname || null,
     avatarUrl: user.avatarUrl || null,
     createdAt: user.createdAt,
@@ -86,6 +88,31 @@ function findOrCreateByWechatProfile(profile) {
   return toPublicUser(user);
 }
 
+function findUserByAccountName(accountName) {
+  const data = readData();
+  return toPublicUser(data.users.find((user) => user.accountName === accountName));
+}
+
+function createAccountUser(accountName, passwordHash) {
+  const data = readData();
+  const now = new Date().toISOString();
+  const user = {
+    id: createUserId(),
+    openid: null,
+    unionid: null,
+    accountName,
+    passwordHash,
+    nickname: accountName,
+    avatarUrl: null,
+    createdAt: now,
+    updatedAt: now
+  };
+
+  data.users.push(user);
+  writeData(data);
+  return toPublicUser(user);
+}
+
 function deleteUserById(userId) {
   const data = readData();
   const before = data.users.length;
@@ -97,6 +124,8 @@ function deleteUserById(userId) {
 module.exports = {
   findUserById,
   findOrCreateByWechatProfile,
+  findUserByAccountName,
+  createAccountUser,
   deleteUserById,
   toPublicUser
 };
