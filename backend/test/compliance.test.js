@@ -25,13 +25,35 @@ function listFiles(dir, extensions) {
   return results;
 }
 
-test("review package excludes unfinished routes from active surfaces", () => {
-  const activeFiles = [
+function listActiveReviewFiles() {
+  return [
     ...listFiles("pages", [".js", ".json", ".wxml"]),
     ...listFiles("subpackage/jewelry", [".js", ".json", ".wxml"]),
     ...listFiles("subpackage/periodCalendar", [".js", ".json", ".wxml"]),
     "app.json"
   ];
+}
+
+function listRegisteredPages() {
+  const appConfig = JSON.parse(readText("app.json"));
+  const registered = new Set();
+
+  for (const page of appConfig.pages || []) {
+    registered.add(`/${page}`);
+  }
+
+  for (const subPackage of appConfig.subPackages || appConfig.subpackages || []) {
+    const packageRoot = String(subPackage.root || "").replace(/^\/+|\/+$/g, "");
+    for (const page of subPackage.pages || []) {
+      registered.add(`/${packageRoot}/${page}`);
+    }
+  }
+
+  return registered;
+}
+
+test("review package excludes unfinished routes from active surfaces", () => {
+  const activeFiles = listActiveReviewFiles();
   const removedRoutePattern = /\/subpackage\/(auth|showcase|showcase-device|device12|device13|device17)\//;
 
   for (const file of activeFiles) {
@@ -40,6 +62,31 @@ test("review package excludes unfinished routes from active surfaces", () => {
       false,
       `${file} references a route removed from the review package`
     );
+  }
+});
+
+test("active page route references are registered in app.json", () => {
+  const activeFiles = listActiveReviewFiles();
+  const registeredPages = listRegisteredPages();
+  const routePattern = /["'](\/(?:pages|subpackage)\/[^"']+)["']/g;
+  const ignoredPathPattern = /\/(?:assets|components|utils)\//;
+  const ignoredExtensionPattern = /\.(?:png|jpe?g|webp|gif|svg|json|js|wxml|wxss)$/i;
+
+  for (const file of activeFiles) {
+    const text = readText(file);
+    let match;
+    while ((match = routePattern.exec(text))) {
+      const route = match[1].split("?")[0];
+      if (ignoredPathPattern.test(route) || ignoredExtensionPattern.test(route)) {
+        continue;
+      }
+
+      assert.equal(
+        registeredPages.has(route),
+        true,
+        `${file} references unregistered page route ${route}`
+      );
+    }
   }
 });
 
