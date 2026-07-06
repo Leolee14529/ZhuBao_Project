@@ -90,6 +90,20 @@ test("active page route references are registered in app.json", () => {
   }
 });
 
+test("login page keeps a visible first screen", () => {
+  const appStyle = readText("app.wxss");
+  const loginPage = readText("pages/login/index.wxml");
+  const loginStyle = readText("pages/login/index.wxss");
+
+  assert.ok(appStyle.includes("min-height: 100vh"));
+  assert.ok(loginPage.includes("class=\"login-page\""));
+  assert.ok(loginPage.includes("class=\"login-bg\""));
+  assert.ok(loginPage.includes("class=\"brand-name\""));
+  assert.ok(loginPage.includes("微信登录"));
+  assert.match(loginStyle, /\.login-page\{[^}]*height:100vh/);
+  assert.match(loginStyle, /\.login-page\{[^}]*background:#000/);
+});
+
 test("period setup exposes an in-sheet data notice confirmation", () => {
   const calendarPage = readText("subpackage/periodCalendar/pages/calendar/index.wxml");
   const calendarLogic = readText("subpackage/periodCalendar/pages/calendar/index.js");

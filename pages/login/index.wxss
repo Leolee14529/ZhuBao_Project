@@ -1,4 +1,4 @@
-.login-page{position:relative;min-height:100vh;overflow:hidden;background:#000;color:#fff}
+.login-page{position:relative;min-height:100vh;height:100vh;overflow:hidden;background:#000;color:#fff}
 .login-backdrop{position:absolute;left:0;right:0;top:0;bottom:0;z-index:0}
 .login-bg{position:absolute;left:0;right:0;top:0;bottom:0;width:100%;height:100%;transform:scale(1.08)}
 .login-shade{position:absolute;left:0;right:0;top:0;bottom:0;background:linear-gradient(180deg,rgba(0,0,0,.42),rgba(5,17,13,.42) 44%,rgba(0,0,0,.96))}
