@@ -1,4 +1,4 @@
-<view class="calendar-grid">
+<view class="calendar-grid {{compact ? 'calendar-grid--compact' : ''}}">
   <view class="week-header">
     <block wx:for="{{weekLabels}}" wx:key="*this">
       <text class="week-label">{{item}}</text>

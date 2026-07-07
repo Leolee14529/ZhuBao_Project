@@ -1,6 +1,7 @@
 const request = require("../../../../utils/request");
 const auth = require("../../../../utils/auth");
 const privacy = require("../../../../utils/privacy");
+const share = require("../../../../utils/share");
 
 Page({
   data: {
@@ -31,6 +32,7 @@ Page({
     ]
   },
   onLoad() {
+    share.enableShareMenu();
     if (!auth.requireLogin({ source: "/subpackage/jewelry/pages/settings/index" })) return;
     const app = getApp();
     const navLayout = app.getNavLayout ? app.getNavLayout() : app.globalData.navLayout;
@@ -41,6 +43,8 @@ Page({
     }
     this.loadCurrentUser();
   },
+  onShareAppMessage() { return share.getPageShareAppMessage("/subpackage/jewelry/pages/settings/index"); },
+  onShareTimeline() { return share.getPageShareTimeline("/subpackage/jewelry/pages/settings/index"); },
   onShow() {
     auth.requireLogin({ source: "/subpackage/jewelry/pages/settings/index" });
   },

@@ -19,7 +19,7 @@
 }
 
 .page-body {
-  padding: 52rpx 20rpx 228rpx;
+  padding: 36rpx 20rpx 228rpx;
 }
 
 .page-top-spacer {
@@ -58,7 +58,7 @@
 .profile-title {
   display: block;
   font-size: 42rpx;
-  font-weight: 600;
+  font-weight: 500;
   color: #ffffff;
 }
 
@@ -70,7 +70,7 @@
 .profile-subtitle {
   float: left;
   font-size: 24rpx;
-  font-weight: 600;
+  font-weight: 500;
   color: #00c58b;
 }
 
@@ -91,7 +91,7 @@
   display: block;
   margin: 0 0 18rpx 24rpx;
   font-size: 18rpx;
-  font-weight: 700;
+  font-weight: 500;
   letter-spacing: 2rpx;
   color: rgba(255, 255, 255, 0.3);
 }
@@ -135,7 +135,7 @@
   display: block;
   line-height: 48rpx;
   font-size: 26rpx;
-  font-weight: 600;
+  font-weight: 500;
   color: rgba(255, 255, 255, 0.94);
 }
 

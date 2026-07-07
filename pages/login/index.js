@@ -2,6 +2,7 @@ const request = require("../../utils/request");
 const auth = require("../../utils/auth");
 const privacy = require("../../utils/privacy");
 const config = require("../../utils/config");
+const share = require("../../utils/share");
 
 const HOME_URL = "/subpackage/jewelry/pages/home/index";
 const DEFAULT_LOGIN_ERROR = "登录暂时不可用，请稍后再试";
@@ -23,6 +24,7 @@ Page({
     redirect: ""
   },
   onLoad(options) {
+    share.enableShareMenu();
     this.setData({
       agreed: false,
       accountAuthEnabled: config.isAccountAuthEnabled(),
@@ -32,6 +34,8 @@ Page({
       this.goHome().catch(() => null);
     }
   },
+  onShareAppMessage() { return share.getPageShareAppMessage("/pages/login/index"); },
+  onShareTimeline() { return share.getPageShareTimeline("/pages/login/index"); },
   login() {
     if (this.isAuthBusy()) {
       return;

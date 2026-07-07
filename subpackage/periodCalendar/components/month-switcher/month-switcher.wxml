@@ -1,9 +1,9 @@
 <view class="month-switcher">
   <view class="month-row">
     <view class="month-center">
-      <button class="nav-circle month-prev" bindtap="onPrevTap">‹</button>
+      <view class="nav-circle month-prev" bindtap="onPrevTap">‹</view>
       <text class="month-label">{{monthLabel}}</text>
-      <button class="nav-circle month-next" bindtap="onNextTap">›</button>
+      <view class="nav-circle month-next" bindtap="onNextTap">›</view>
     </view>
   </view>
 

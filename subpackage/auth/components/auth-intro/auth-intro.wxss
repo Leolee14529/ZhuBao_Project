@@ -6,7 +6,7 @@
   display: block;
   color: #ffffff;
   font-size: 56rpx;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1.16;
 }
 

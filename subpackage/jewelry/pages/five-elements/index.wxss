@@ -10,7 +10,7 @@
 }
 
 .page-body {
-  padding: 40rpx 32rpx 96rpx;
+  padding: 28rpx 32rpx 96rpx;
 }
 
 .page-top-spacer {
@@ -46,7 +46,7 @@
   text-align: center;
   line-height: 72rpx;
   font-size: 32rpx;
-  font-weight: 700;
+  font-weight: 500;
 }
 
 .intro-card,
@@ -65,7 +65,7 @@
 .intro-title {
   display: block;
   font-size: 30rpx;
-  font-weight: 700;
+  font-weight: 500;
 }
 
 .intro-desc {
@@ -106,7 +106,7 @@
   display: block;
   margin-top: 12rpx;
   font-size: 30rpx;
-  font-weight: 600;
+  font-weight: 500;
   color: #ffffff;
 }
 
@@ -132,7 +132,7 @@
   display: block;
   margin-top: 18rpx;
   font-size: 42rpx;
-  font-weight: 700;
+  font-weight: 500;
   color: #39d87a;
 }
 
@@ -177,7 +177,7 @@
   background-color: #0d8f68;
   color: #ffffff;
   font-size: 30rpx;
-  font-weight: 700;
+  font-weight: 500;
   line-height: 104rpx;
   box-sizing: border-box;
   align-items: center;

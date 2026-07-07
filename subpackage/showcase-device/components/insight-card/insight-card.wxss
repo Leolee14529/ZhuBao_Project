@@ -9,14 +9,14 @@
 .insight-title {
   display: block;
   font-size: 22rpx;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .insight-value {
   display: block;
   margin-top: 24rpx;
   font-size: 44rpx;
-  font-weight: 700;
+  font-weight: 500;
   line-height: 1.1;
 }
 

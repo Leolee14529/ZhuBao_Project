@@ -21,7 +21,7 @@
   display: block;
   margin-top: 20rpx;
   font-size: 46rpx;
-  font-weight: 600;
+  font-weight: 500;
   color: #ff2d55;
 }
 

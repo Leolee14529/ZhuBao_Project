@@ -2,6 +2,7 @@ var fiveElements = require("../../utils/five-elements");
 var request = require("../../../../utils/request");
 var auth = require("../../../../utils/auth");
 var privacy = require("../../../../utils/privacy");
+var share = require("../../../../utils/share");
 
 Page({
   data: {
@@ -18,6 +19,7 @@ Page({
   },
 
   onLoad: function () {
+    share.enableShareMenu();
     if (!auth.requireLogin({ source: "/subpackage/jewelry/pages/five-elements/index" })) return;
     var app = getApp();
     var navLayout = app.getNavLayout ? app.getNavLayout() : app.globalData.navLayout;
@@ -38,6 +40,8 @@ Page({
     this.refreshPreview();
     this.loadLatestResult();
   },
+  onShareAppMessage: function () { return share.getPageShareAppMessage("/subpackage/jewelry/pages/five-elements/index"); },
+  onShareTimeline: function () { return share.getPageShareTimeline("/subpackage/jewelry/pages/five-elements/index"); },
   onShow: function () {
     auth.requireLogin({ source: "/subpackage/jewelry/pages/five-elements/index" });
   },

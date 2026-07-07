@@ -3,6 +3,10 @@ Component({
     weeks: {
       type: Array,
       value: []
+    },
+    compact: {
+      type: Boolean,
+      value: false
     }
   },
   data: {

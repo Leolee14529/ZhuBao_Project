@@ -33,7 +33,7 @@
   display: block;
   margin-top: 8rpx;
   font-size: 34rpx;
-  font-weight: 600;
+  font-weight: 500;
   color: #ffffff;
 }
 

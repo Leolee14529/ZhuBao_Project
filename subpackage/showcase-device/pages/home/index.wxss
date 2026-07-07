@@ -39,7 +39,7 @@ page {
 .hero-title {
   font-size: 56rpx;
   line-height: 1.1;
-  font-weight: 700;
+  font-weight: 500;
 }
 
 .hero-subtitle {
@@ -64,7 +64,7 @@ page {
 
 .section-title {
   font-size: 44rpx;
-  font-weight: 700;
+  font-weight: 500;
   letter-spacing: 2rpx;
 }
 

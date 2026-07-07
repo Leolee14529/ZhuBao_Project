@@ -74,7 +74,7 @@
   display: block;
   color: #ffffff;
   font-size: 32rpx;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1.45;
 }
 
@@ -99,6 +99,6 @@
   border: 1rpx solid rgba(52, 211, 153, 0.26);
   color: #9ff6d7;
   font-size: 24rpx;
-  font-weight: 600;
+  font-weight: 500;
   box-sizing: border-box;
 }

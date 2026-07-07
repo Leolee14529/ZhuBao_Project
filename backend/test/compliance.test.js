@@ -4,6 +4,7 @@ const path = require("node:path");
 const test = require("node:test");
 
 const root = path.resolve(__dirname, "..", "..");
+const appSerifFontStack = "\"STSongti-SC-Regular\", \"Songti SC\", \"Noto Serif CJK SC\", \"Source Han Serif SC\", \"SimSun\", \"NSimSun\", serif";
 
 function readText(file) {
   return fs.readFileSync(path.join(root, file), "utf8");
@@ -34,6 +35,24 @@ function listActiveReviewFiles() {
   ];
 }
 
+function listFrontendStyleFiles() {
+  return [
+    "app.wxss",
+    ...listFiles("components", [".wxss"]),
+    ...listFiles("pages", [".wxss"]),
+    ...listFiles("subpackage", [".wxss"])
+  ];
+}
+
+function listFrontendTypographyFiles() {
+  return [
+    ...listFrontendStyleFiles(),
+    ...listFiles("components", [".wxml", ".js"]),
+    ...listFiles("pages", [".wxml", ".js"]),
+    ...listFiles("subpackage", [".wxml", ".js"])
+  ];
+}
+
 function listRegisteredPages() {
   const appConfig = JSON.parse(readText("app.json"));
   const registered = new Set();
@@ -61,6 +80,48 @@ test("review package excludes unfinished routes from active surfaces", () => {
       removedRoutePattern.test(readText(file)),
       false,
       `${file} references a route removed from the review package`
+    );
+  }
+});
+
+test("frontend typography uses the unified serif stack", () => {
+  const allowedFontFamilyFiles = new Set([
+    "app.wxss",
+    "subpackage/periodCalendar/styles/typography.wxss"
+  ]);
+  const appStyle = readText("app.wxss");
+  const appFontBlock = appStyle.match(/([^{}]+)\{[^{}]*font-family\s*:[^{}]*\}/);
+  const periodTypography = readText("subpackage/periodCalendar/styles/typography.wxss");
+
+  assert.ok(appFontBlock, "app.wxss must declare a global font block");
+  assert.match(appFontBlock[1], /\bpage\b/, "app.wxss global font block must include page");
+  assert.match(appFontBlock[1], /\bcover-view\b/, "app.wxss global font block must include cover-view");
+  assert.equal(
+    /\.[\w-]+\s+(view|text|button|input|textarea|picker|label|cover-view)\b/.test(periodTypography),
+    false,
+    "period typography import must not use component descendant tag selectors"
+  );
+
+  for (const file of listFrontendTypographyFiles()) {
+    const text = readText(file);
+    const hasFontFamily = /font-family\s*:/.test(text);
+
+    assert.equal(
+      /font-weight\s*:\s*(bold|bolder|[6-9]00)\b/i.test(text) ||
+        /font\s*:\s*(?!inherit\b)[^;}"']*(bold|bolder|[6-9]00)\b/i.test(text),
+      false,
+      `${file} uses a heavy font weight outside the unified type scale`
+    );
+
+    if (!allowedFontFamilyFiles.has(file)) {
+      assert.equal(hasFontFamily, false, `${file} declares a page-level font family`);
+      continue;
+    }
+
+    assert.ok(text.includes(appSerifFontStack), `${file} must use the app serif font stack`);
+    assert.ok(
+      text.includes("font-variant-numeric: lining-nums tabular-nums"),
+      `${file} must keep numeric glyphs stable`
     );
   }
 });
@@ -153,10 +214,12 @@ test("release login defaults to wechat before account password", () => {
 
 test("period setup exposes an in-sheet data notice confirmation", () => {
   const calendarPage = readText("subpackage/periodCalendar/pages/calendar/index.wxml");
+  const setupSheet = readText("subpackage/periodCalendar/components/cycle-setup-sheet/cycle-setup-sheet.wxml");
   const calendarLogic = readText("subpackage/periodCalendar/pages/calendar/index.js");
 
-  assert.ok(calendarPage.includes("我已知晓经期数据说明"));
-  assert.ok(calendarPage.includes("bindtap=\"onToggleCyclePrivacy\""));
+  assert.ok(calendarPage.includes("cycle-setup-sheet"));
+  assert.ok(setupSheet.includes("我已知晓经期数据说明"));
+  assert.ok(setupSheet.includes("bindtap=\"onToggleCyclePrivacy\""));
   assert.ok(calendarLogic.includes("cyclePrivacyConfirmed"));
   assert.ok(calendarLogic.includes("auth.getPersonalData(auth.PERIOD_PRIVACY_KEY)"));
   assert.ok(calendarLogic.includes("ensureCyclePrivacyReady"));

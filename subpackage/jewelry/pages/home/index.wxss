@@ -23,7 +23,7 @@
 
 .page-body {
   min-height: 100%;
-  padding: 54rpx 40rpx 240rpx;
+  padding: 38rpx 40rpx 240rpx;
 }
 
 .page-top-spacer {
@@ -43,7 +43,7 @@
 .hello-line {
   display: block;
   font-size: 34rpx;
-  font-weight: 600;
+  font-weight: 500;
   color: #ffffff;
 }
 
@@ -112,7 +112,7 @@
   display: block;
   margin-top: 24rpx;
   font-size: 24rpx;
-  font-weight: 700;
+  font-weight: 500;
   color: #ffffff;
 }
 
@@ -131,7 +131,7 @@
 .section-title {
   float: left;
   font-size: 36rpx;
-  font-weight: 700;
+  font-weight: 500;
   color: #ffffff;
 }
 
@@ -193,7 +193,7 @@
   background-color: #39d87a;
   color: #052611;
   font-size: 18rpx;
-  font-weight: 700;
+  font-weight: 500;
 }
 
 .custom-card {

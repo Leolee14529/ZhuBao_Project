@@ -1,6 +1,7 @@
 var fiveElements = require("../../utils/five-elements");
 var request = require("../../../../utils/request");
 var auth = require("../../../../utils/auth");
+var share = require("../../../../utils/share");
 
 Page({
   data: {
@@ -23,6 +24,7 @@ Page({
     ]
   },
   onLoad() {
+    share.enableShareMenu();
     if (!auth.requireLogin({ source: "/subpackage/jewelry/pages/data/index" })) return;
     const app = getApp();
     const navLayout = app.getNavLayout ? app.getNavLayout() : app.globalData.navLayout;
@@ -33,6 +35,8 @@ Page({
     }
     this.applyBirthProfile();
   },
+  onShareAppMessage() { return share.getPageShareAppMessage("/subpackage/jewelry/pages/data/index"); },
+  onShareTimeline() { return share.getPageShareTimeline("/subpackage/jewelry/pages/data/index"); },
   onShow() {
     if (!auth.requireLogin({ source: "/subpackage/jewelry/pages/data/index" })) return;
     this.applyBirthProfile();

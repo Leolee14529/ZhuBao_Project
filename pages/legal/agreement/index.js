@@ -1,10 +1,12 @@
 const auth = require("../../../utils/auth");
+const share = require("../../../utils/share");
 
 Page({
   data: {
     headerTop: 64
   },
   onLoad() {
+    share.enableShareMenu();
     const app = getApp();
     const navLayout = app.getNavLayout ? app.getNavLayout() : app.globalData.navLayout;
     if (navLayout && navLayout.contentOffset) {
@@ -13,6 +15,8 @@ Page({
       });
     }
   },
+  onShareAppMessage() { return share.getPageShareAppMessage("/pages/legal/agreement/index"); },
+  onShareTimeline() { return share.getPageShareTimeline("/pages/legal/agreement/index"); },
   goBack() {
     wx.navigateBack({
       fail() {

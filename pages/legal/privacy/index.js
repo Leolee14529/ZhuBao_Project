@@ -1,4 +1,5 @@
 const auth = require("../../../utils/auth");
+const share = require("../../../utils/share");
 
 Page({
   data: {
@@ -6,6 +7,7 @@ Page({
     consentMode: false
   },
   onLoad(options) {
+    share.enableShareMenu();
     const app = getApp();
     const navLayout = app.getNavLayout ? app.getNavLayout() : app.globalData.navLayout;
     if (navLayout && navLayout.contentOffset) {
@@ -17,6 +19,8 @@ Page({
       consentMode: options && options.mode === "consent"
     });
   },
+  onShareAppMessage() { return share.getPageShareAppMessage("/pages/legal/privacy/index"); },
+  onShareTimeline() { return share.getPageShareTimeline("/pages/legal/privacy/index"); },
   acceptAndGoBack() {
     auth.acceptPrivacyConsent();
     wx.showToast({

@@ -1,6 +1,6 @@
 .data-page{min-height:100%;background-color:#121319;color:#ffffff}
 .data-scroll{height:100vh;background-color:#121319}
-.page-body{padding:48rpx 24rpx 176rpx}
+.page-body{padding:34rpx 24rpx 176rpx}
 .page-top-spacer{width:100%}
 .page-header{margin-bottom:28rpx}
 .page-title{display:block;font-size:38rpx;font-weight:300;color:#ffffff}
