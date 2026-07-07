@@ -1,6 +1,7 @@
 const request = require("../../utils/request");
 const auth = require("../../utils/auth");
 const privacy = require("../../utils/privacy");
+const config = require("../../utils/config");
 
 const HOME_URL = "/subpackage/jewelry/pages/home/index";
 const DEFAULT_LOGIN_ERROR = "登录暂时不可用，请稍后再试";
@@ -14,19 +15,25 @@ Page({
     isAccountSubmitting: false,
     isCreatingAccount: false,
     loginMode: "wechat",
+    accountAuthEnabled: true,
     accountName: "",
     password: "",
+    lastAccountAction: "login",
     agreed: false,
     redirect: ""
   },
   onLoad(options) {
     this.setData({
       agreed: false,
-      redirect: options && options.redirect ? decodeURIComponent(options.redirect) : ""
+      accountAuthEnabled: config.isAccountAuthEnabled(),
+      redirect: this.safeDecodeRedirect(options && options.redirect)
     });
+    if (auth.getAuthState().status !== "anonymous") {
+      this.goHome().catch(() => null);
+    }
   },
   login() {
-    if (this.data.isLoggingIn) {
+    if (this.isAuthBusy()) {
       return;
     }
 
@@ -55,10 +62,14 @@ Page({
     this.submitAccount("register");
   },
   submitAccount(action) {
+    if (!this.data.accountAuthEnabled) {
+      this.setData({ serviceError: "账号登录暂未开放，请使用微信登录" });
+      return;
+    }
+    if (this.isAuthBusy()) return;
+
     const isRegister = action === "register";
     const loadingKey = isRegister ? "isCreatingAccount" : "isAccountSubmitting";
-
-    if (this.data[loadingKey]) return;
 
     const accountName = this.data.accountName.trim();
     const password = this.data.password;
@@ -67,7 +78,7 @@ Page({
       return;
     }
 
-    this.setData({ serviceError: "", [loadingKey]: true });
+    this.setData({ serviceError: "", lastAccountAction: action, [loadingKey]: true });
 
     this.ensureLoginReady()
       .then(() => request.post(isRegister ? "/api/auth/account-register" : "/api/auth/account-login", {
@@ -105,9 +116,7 @@ Page({
       throw new Error(DEFAULT_LOGIN_ERROR);
     }
 
-    wx.setStorageSync("token", token);
-    wx.setStorageSync("userInfo", user);
-    auth.clearGuestMode();
+    auth.acceptAuthenticatedSession(token, user);
     auth.acceptPrivacyConsent();
     return data;
   },
@@ -179,6 +188,14 @@ Page({
       });
     });
   },
+  safeDecodeRedirect(value) {
+    if (!value) return "";
+    try {
+      return decodeURIComponent(value);
+    } catch (error) {
+      return "";
+    }
+  },
   getSafeRedirect() {
     const redirect = this.data.redirect;
     if (redirect === "/subpackage/jewelry/pages/data/index" ||
@@ -196,8 +213,10 @@ Page({
     });
   },
   switchLoginMode(event) {
+    if (this.isAuthBusy()) return;
     const mode = event.currentTarget.dataset.mode;
     if (mode !== "account" && mode !== "wechat") return;
+    if (mode === "account" && !this.data.accountAuthEnabled) return;
     this.setData({
       loginMode: mode,
       serviceError: ""
@@ -229,12 +248,18 @@ Page({
     });
   },
   enterGuest() {
+    if (this.isAuthBusy()) return;
     auth.enterGuestMode();
     wx.reLaunch({ url: HOME_URL });
   },
+  isAuthBusy() {
+    return this.data.isLoggingIn ||
+      this.data.isAccountSubmitting ||
+      this.data.isCreatingAccount;
+  },
   retryLogin() {
     if (this.data.loginMode === "account") {
-      this.accountLogin();
+      this.submitAccount(this.data.lastAccountAction || "login");
       return;
     }
     this.login();

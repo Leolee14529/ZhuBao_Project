@@ -8,10 +8,14 @@ global.wx = {
   },
   setStorageSync(key, value) {
     storage.set(key, value);
+  },
+  removeStorageSync(key) {
+    storage.delete(key);
   }
 };
 
 const fiveElements = require("../../subpackage/jewelry/utils/five-elements");
+const auth = require("../../utils/auth");
 
 test("server result is converted into page profile data", () => {
   const profile = fiveElements.buildProfileFromResult({
@@ -88,13 +92,13 @@ test("customization preview requires prior birth-data notice before upload", () 
     "utf8"
   );
 
-  assert.ok(pageLogic.includes("wx.getStorageSync(auth.BIRTH_NOTICE_KEY)"));
+  assert.ok(pageLogic.includes("auth.getPersonalData(auth.BIRTH_NOTICE_KEY)"));
   assert.ok(pageLogic.includes("auth.hasPrivacyConsent()"));
 });
 
 test("current profile does not fall back to local heuristic without server result", () => {
   storage.clear();
-  storage.set("jewelryBirthProfile", {
+  auth.setPersonalData(auth.BIRTH_KEY, {
     date: "2003-12-09",
     time: "10:30",
     gender: "female"

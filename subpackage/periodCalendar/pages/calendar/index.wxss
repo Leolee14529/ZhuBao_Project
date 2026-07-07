@@ -213,6 +213,7 @@
   border: 1rpx solid rgba(46, 208, 151, 0.22);
   color: #8ef0cf;
 }
+.cycle-setup-sheet__button--disabled { opacity: 0.58; }
 .detail-card {
   margin-top: 32rpx;
   padding: 34rpx 30rpx 32rpx;
@@ -254,15 +255,8 @@
   font-weight: 600;
   box-sizing: border-box;
 }
-.summary-block {
-  margin-top: 40rpx;
-  padding: 0 24rpx;
-}
-.summary-title {
-  display: block;
-  font-size: 24rpx;
-  color: rgba(255, 255, 255, 0.82);
-}
+.summary-block { margin-top: 40rpx; padding: 0 24rpx; }
+.summary-title { display: block; font-size: 24rpx; color: rgba(255, 255, 255, 0.82); }
 .summary-value {
   display: block;
   margin-top: 14rpx;
@@ -271,12 +265,7 @@
   font-weight: 600;
   color: #ff3d71;
 }
-.summary-note {
-  display: block;
-  margin-top: 14rpx;
-  font-size: 22rpx;
-  color: rgba(255, 255, 255, 0.78);
-}
+.summary-note { display: block; margin-top: 14rpx; font-size: 22rpx; color: rgba(255, 255, 255, 0.78); }
 .summary-action {
   display: flex;
   align-items: center;
@@ -296,3 +285,4 @@
   letter-spacing: 1rpx;
   box-shadow: 0 10rpx 24rpx rgba(120, 26, 54, 0.26);
 }
+.summary-clear-action { margin-top: 18rpx; color: rgba(255, 255, 255, 0.56); font-size: 24rpx; text-align: center; }

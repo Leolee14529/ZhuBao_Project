@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
-const { rateLimit } = require("express-rate-limit");
+const { rateLimit, ipKeyGenerator } = require("express-rate-limit");
 const authRouter = require("./routes/auth");
 const fortunesRouter = require("./routes/fortunes");
 const usersRouter = require("./routes/users");
@@ -12,6 +12,7 @@ const errorHandler = require("./middlewares/errorHandler");
 const { sendSuccess, sendError } = require("./http/responses");
 const { checkDatabase } = require("./db/pool");
 const { loadConfig } = require("./config/env");
+const passwordService = require("./services/passwordService");
 
 function createCorsOptions(config) {
   return {
@@ -43,6 +44,22 @@ function createRateLimiter(limit, message) {
         message,
         req.requestId
       );
+    }
+  });
+}
+
+function createAccountRateLimiter() {
+  return rateLimit({
+    windowMs: 60 * 1000,
+    limit: 20,
+    standardHeaders: "draft-7",
+    legacyHeaders: false,
+    keyGenerator(req) {
+      const accountName = passwordService.normalizeAccountName(req.body && req.body.accountName);
+      return ipKeyGenerator(req.ip) + ":" + accountName;
+    },
+    handler(req, res) {
+      return sendError(res, 429, "RATE_LIMITED", "Too many account attempts", req.requestId);
     }
   });
 }
@@ -98,7 +115,7 @@ function createApp(config = loadConfig()) {
   );
   app.use(
     ["/api/auth/account-login", "/api/auth/account-register"],
-    createRateLimiter(20, "Too many account attempts")
+    createAccountRateLimiter()
   );
   app.use("/api/auth", authRouter);
   app.use("/api/fortunes", fortunesRouter);

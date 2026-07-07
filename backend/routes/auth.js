@@ -61,9 +61,15 @@ router.post("/account-register", async (req, res, next) => {
 router.post("/account-login", async (req, res, next) => {
   try {
     const accountName = passwordService.validateAccountName(req.body && req.body.accountName);
-    const password = String(req.body && req.body.password || "");
+    const inputPassword = req.body && req.body.password;
+    const passwordShapeValid = passwordService.isValidPasswordInput(inputPassword);
+    const password = passwordShapeValid ? inputPassword : "InvalidPass0rd";
     const user = await userRepository.findUserByAccountName(accountName);
-    const isValid = user && await passwordService.verifyPassword(password, user.passwordHash);
+    const storedHash = user && user.passwordHash ?
+      user.passwordHash :
+      await passwordService.getDummyPasswordHash();
+    const passwordMatches = await passwordService.verifyPassword(password, storedHash);
+    const isValid = !!user && passwordShapeValid && passwordMatches;
 
     if (!isValid) {
       return sendError(res, 401, "ACCOUNT_LOGIN_FAILED", "账号或密码错误", req.requestId);

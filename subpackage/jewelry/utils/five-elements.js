@@ -1,5 +1,5 @@
 var STORAGE_KEY = "jewelryBirthProfile";
-
+var auth = require("../../../utils/auth");
 var ELEMENT_META = {
   wood: {
     key: "wood",
@@ -42,9 +42,7 @@ var ELEMENT_META = {
     suit: "适合沉静思考与灵感流动"
   }
 };
-
 var ELEMENT_ORDER = ["wood", "fire", "earth", "metal", "water"];
-
 function getDefaultBirthInput() {
   return {
     date: "1998-08-08",
@@ -52,11 +50,9 @@ function getDefaultBirthInput() {
     gender: "female"
   };
 }
-
 function normalizeGender(gender) {
   return gender === "male" ? "male" : "female";
 }
-
 function normalizeBirthInput(birthInput) {
   var safeInput = birthInput && birthInput.date && birthInput.time ? birthInput : getDefaultBirthInput();
   return {
@@ -65,27 +61,29 @@ function normalizeBirthInput(birthInput) {
     gender: normalizeGender(safeInput.gender)
   };
 }
-
 function getSavedBirthInput() {
-  var birthInput = wx.getStorageSync(STORAGE_KEY);
+  var birthInput = auth.getPersonalData(STORAGE_KEY);
   if (!birthInput || !birthInput.date || !birthInput.time) {
     return getDefaultBirthInput();
   }
   return normalizeBirthInput(birthInput);
 }
-
 function saveBirthInput(birthInput) {
-  wx.setStorageSync(STORAGE_KEY, birthInput);
+  auth.setPersonalData(STORAGE_KEY, birthInput);
 }
-
 function saveWuxingResult(result) {
-  wx.setStorageSync("jewelryWuxingResult", result);
+  auth.setPersonalData(auth.WUXING_KEY, result);
+  if (result && result.birthDate && result.birthTime) {
+    saveBirthInput({
+      date: result.birthDate,
+      time: result.birthTime,
+      gender: result.gender
+    });
+  }
 }
-
 function getSavedWuxingResult() {
-  return wx.getStorageSync("jewelryWuxingResult") || null;
+  return auth.getPersonalData(auth.WUXING_KEY) || null;
 }
-
 function buildEmptyElements() {
   return ELEMENT_ORDER.map(function (key, index) {
     var meta = ELEMENT_META[key];
@@ -99,7 +97,6 @@ function buildEmptyElements() {
     };
   });
 }
-
 function buildEmptyProfile(birthInput) {
   return {
     birthInput: birthInput || getDefaultBirthInput(),
@@ -112,10 +109,8 @@ function buildEmptyProfile(birthInput) {
     elements: buildEmptyElements()
   };
 }
-
 function buildProfileFromResult(result) {
   if (!result || !result.elements) return null;
-
   var ranked = ELEMENT_ORDER.map(function (key) {
     return {
       key: key,
@@ -142,7 +137,6 @@ function buildProfileFromResult(result) {
   var radarValues = ELEMENT_ORDER.map(function (key) {
     return Number((0.55 + Number(result.elements[key] || 0) * 0.004).toFixed(2));
   });
-
   return {
     birthInput: {
       date: result.birthDate,
@@ -158,7 +152,6 @@ function buildProfileFromResult(result) {
     elements: elements
   };
 }
-
 function isResultForBirthInput(result, birthInput) {
   if (!result || !birthInput) return false;
   var safeInput = normalizeBirthInput(birthInput);
@@ -166,7 +159,6 @@ function isResultForBirthInput(result, birthInput) {
     result.birthTime === safeInput.time &&
     normalizeGender(result.gender) === safeInput.gender;
 }
-
 function buildProfileForInput(birthInput, options) {
   var opts = options || {};
   var safeInput = normalizeBirthInput(birthInput);
@@ -176,16 +168,13 @@ function buildProfileForInput(birthInput, options) {
   var serverProfile = isResultForBirthInput(result, safeInput) ?
     buildProfileFromResult(result) :
     null;
-
   if (serverProfile) return serverProfile;
   if (opts.allowLocalFallback === false) return buildEmptyProfile(safeInput);
   return buildProfile(safeInput);
 }
-
 function buildCurrentProfile() {
   return buildProfileFromResult(getSavedWuxingResult()) || buildEmptyProfile(getSavedBirthInput());
 }
-
 function buildProfile(birthInput) {
   var safeInput = birthInput && birthInput.date && birthInput.time ? birthInput : getDefaultBirthInput();
   var dateParts = safeInput.date.split("-").map(function (item) {
@@ -199,7 +188,6 @@ function buildProfile(birthInput) {
   var day = dateParts[2] || 8;
   var hour = timeParts[0] || 8;
   var minute = timeParts[1] || 30;
-
   var scores = [18, 18, 18, 18, 18];
   var seeds = [
     year,
@@ -208,20 +196,16 @@ function buildProfile(birthInput) {
     year + month + day + hour + minute
   ];
   var seasonIndex = (month + 1) % 5;
-
   seeds.forEach(function (seed, seedIndex) {
     scores[(seed + seedIndex) % 5] += 10;
     scores[(seed * 2 + seedIndex) % 5] += 6;
     scores[(seed * 3 + seedIndex) % 5] += 4;
   });
-
   scores[seasonIndex] += 8;
   scores[(seasonIndex + 2) % 5] += 4;
-
   var highest = Math.max.apply(null, scores);
   var lowest = Math.min.apply(null, scores);
   var spread = highest - lowest || 1;
-
   var ranked = ELEMENT_ORDER.map(function (key, index) {
     var score = scores[index];
     return {
@@ -232,12 +216,10 @@ function buildProfile(birthInput) {
   }).sort(function (left, right) {
     return right.score - left.score;
   });
-
   var dominantKey = ranked[0].key;
   var weakestKey = ranked[ranked.length - 1].key;
   var dominantMeta = ELEMENT_META[dominantKey];
   var weakestMeta = ELEMENT_META[weakestKey];
-
   var elements = ranked.map(function (item, index) {
     var meta = ELEMENT_META[item.key];
     var suitable = meta.suit;
@@ -246,7 +228,6 @@ function buildProfile(birthInput) {
     } else if (item.key === weakestKey) {
       suitable = "当前偏弱，建议重点补足平衡";
     }
-
     return {
       key: item.key,
       name: meta.cn + " (" + meta.en + ")",
@@ -256,7 +237,6 @@ function buildProfile(birthInput) {
       rowClass: index === ranked.length - 1 ? "element-row-last" : ""
     };
   });
-
   var radarValues = ELEMENT_ORDER.map(function (key) {
     var current = null;
     ranked.forEach(function (item) {
@@ -266,12 +246,10 @@ function buildProfile(birthInput) {
     });
     return current ? current.value : 0.65;
   });
-
   var note = "当前状态：五行能量分布均衡，身心状态稳定。";
   if (highest - lowest >= 10) {
     note = "当前状态：" + dominantMeta.cn + "偏旺，" + weakestMeta.cn + "偏弱，建议佩戴" + weakestMeta.jade + "调和气场。";
   }
-
   return {
     birthInput: safeInput,
     focusElement: dominantMeta.cn,
@@ -283,7 +261,6 @@ function buildProfile(birthInput) {
     elements: elements
   };
 }
-
 module.exports = {
   STORAGE_KEY: STORAGE_KEY, ELEMENT_META: ELEMENT_META, ELEMENT_ORDER: ELEMENT_ORDER,
   getDefaultBirthInput: getDefaultBirthInput, getSavedBirthInput: getSavedBirthInput,

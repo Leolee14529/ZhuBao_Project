@@ -5,6 +5,7 @@ var auth = require("../../../../utils/auth");
 Page({
   data: {
     topSpacer: 40,
+    hasWuxingResult: false,
     focusElement: "无",
     radarValues: [0, 0, 0, 0, 0],
     radarNote: "暂无真实五行数据。",
@@ -56,8 +57,10 @@ Page({
     });
   },
   applyBirthProfile() {
+    var savedResult = fiveElements.getSavedWuxingResult();
     var profile = fiveElements.buildCurrentProfile();
     this.setData({
+      hasWuxingResult: !!savedResult,
       focusElement: profile.focusElement,
       radarValues: profile.radarValues,
       radarNote: profile.radarNote,
@@ -71,9 +74,12 @@ Page({
         this.applyBirthProfile();
       }.bind(this))
       .catch(function (error) {
-        if (error && error.code !== "WUXING_RESULT_NOT_FOUND") {
+        if (error && error.code === "WUXING_RESULT_NOT_FOUND") {
+          auth.clearWuxingLocalData();
+          this.applyBirthProfile();
+        } else if (error) {
           console.error("load latest wuxing result failed", error);
         }
-      });
+      }.bind(this));
   }
 });

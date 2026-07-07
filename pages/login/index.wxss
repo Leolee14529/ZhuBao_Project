@@ -1,8 +1,8 @@
-.login-page{position:relative;min-height:100vh;height:100vh;overflow:hidden;background:#000;color:#fff}
-.login-backdrop{position:absolute;left:0;right:0;top:0;bottom:0;z-index:0}
+.login-page{position:relative;min-height:100vh;height:auto;overflow-x:hidden;overflow-y:auto;background:#000;color:#fff}
+.login-backdrop{position:fixed;left:0;right:0;top:0;bottom:0;z-index:0}
 .login-bg{position:absolute;left:0;right:0;top:0;bottom:0;width:100%;height:100%;transform:scale(1.08)}
 .login-shade{position:absolute;left:0;right:0;top:0;bottom:0;background:linear-gradient(180deg,rgba(0,0,0,.42),rgba(5,17,13,.42) 44%,rgba(0,0,0,.96))}
-.login-content{position:relative;z-index:5;min-height:calc(100vh - 88rpx);padding:78rpx 54rpx 68rpx;display:flex;flex-direction:column;justify-content:space-between}
+.login-content{position:relative;z-index:5;min-height:calc(100vh - 88rpx);padding:78rpx 54rpx 96rpx;display:flex;flex-direction:column;justify-content:space-between;box-sizing:border-box}
 .brand-block{padding-top:60rpx}
 .brand-mark{width:106rpx;height:106rpx;border-radius:50%;border:1rpx solid rgba(16,185,129,.36);display:flex;align-items:center;justify-content:center;margin-bottom:34rpx;background:rgba(6,78,59,.13);box-shadow:0 0 60rpx rgba(16,185,129,.25)}
 .brand-mark view{width:72rpx;height:72rpx;border:7rpx solid rgba(52,211,153,.85);border-radius:50%}
@@ -22,7 +22,7 @@
 .primary-hover{opacity:.92;transform:scale(.99)}
 .secondary{position:relative;z-index:7;width:100%;height:78rpx;margin-top:16rpx;display:flex;align-items:center;justify-content:center;border-radius:26rpx;color:rgba(209,250,229,.82);font-size:26rpx;font-weight:600;background:rgba(255,255,255,.08)}
 .secondary-hover{opacity:.9}
-.link-row{display:flex;align-items:center;justify-content:space-between;padding:28rpx 16rpx 4rpx;color:rgba(209,250,229,.42);font-size:24rpx}
+.link-row{display:flex;align-items:center;justify-content:space-between;gap:20rpx;flex-wrap:wrap;padding:28rpx 16rpx 4rpx;color:rgba(209,250,229,.42);font-size:24rpx}
 .agreement-row{display:flex;align-items:flex-start;gap:18rpx;padding:26rpx 12rpx 0;color:rgba(255,255,255,.72)}
 .agreement-check{flex:0 0 auto;width:34rpx;height:34rpx;margin-top:3rpx;border-radius:8rpx;border:1rpx solid rgba(209,250,229,.55);text-align:center;line-height:34rpx;font-size:22rpx;color:#fff}
 .agreement-check-on{background:#059669;border-color:#34d399}

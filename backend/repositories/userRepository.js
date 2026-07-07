@@ -56,16 +56,40 @@ async function findOrCreateByWechatProfile(profile) {
     return userStore.findOrCreateByWechatProfile(profile);
   }
 
-  const result = await getPool().query(
-    `INSERT INTO users(id, openid, unionid)
-     VALUES ($1, $2, $3)
-     ON CONFLICT (openid) DO UPDATE SET
-       unionid = COALESCE(EXCLUDED.unionid, users.unionid),
-       updated_at = NOW()
-     RETURNING *`,
-    [crypto.randomUUID(), profile.openid, profile.unionid || null]
-  );
-  return mapUser(result.rows[0]);
+  const pool = getPool();
+  if (profile.unionid) {
+    const existing = await pool.query(
+      `UPDATE users
+       SET openid = CASE
+           WHEN openid IS NULL AND NOT EXISTS (SELECT 1 FROM users WHERE openid = $1) THEN $1
+           ELSE openid
+         END,
+         updated_at = NOW()
+       WHERE unionid = $2
+       RETURNING *`,
+      [profile.openid, profile.unionid]
+    );
+    if (existing.rows[0]) return mapUser(existing.rows[0]);
+  }
+
+  try {
+    const result = await pool.query(
+      `INSERT INTO users(id, openid, unionid)
+       VALUES ($1, $2, $3)
+       ON CONFLICT (openid) DO UPDATE SET
+         unionid = COALESCE(EXCLUDED.unionid, users.unionid),
+         updated_at = NOW()
+       RETURNING *`,
+      [crypto.randomUUID(), profile.openid, profile.unionid || null]
+    );
+    return mapUser(result.rows[0]);
+  } catch (error) {
+    if (error.code === "23505" && profile.unionid) {
+      const result = await pool.query("SELECT * FROM users WHERE unionid = $1", [profile.unionid]);
+      if (result.rows[0]) return mapUser(result.rows[0]);
+    }
+    throw error;
+  }
 }
 
 async function findUserByAccountName(accountName) {
@@ -90,7 +114,7 @@ async function createAccountUser(accountName, passwordHash) {
       `INSERT INTO users(id, account_name, password_hash, nickname)
        VALUES ($1, $2, $3, $4)
        RETURNING *`,
-      [crypto.randomUUID(), accountName, passwordHash, accountName]
+      [crypto.randomUUID(), accountName, passwordHash, null]
     );
     return mapUser(result.rows[0]);
   } catch (error) {

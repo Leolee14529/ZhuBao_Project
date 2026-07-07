@@ -7,6 +7,8 @@ const SCRYPT_COST = 16384;
 const SCRYPT_BLOCK_SIZE = 8;
 const SCRYPT_PARALLELIZATION = 1;
 const KEY_LENGTH = 64;
+const DUMMY_PASSWORD = "DummyPassw0rd2026";
+let dummyHashPromise = null;
 
 function normalizeAccountName(value) {
   return String(value || "").trim().toLowerCase();
@@ -24,14 +26,28 @@ function validateAccountName(value) {
 }
 
 function validatePassword(value) {
-  const password = String(value || "");
-  if (password.length < PASSWORD_MIN_LENGTH || password.length > PASSWORD_MAX_LENGTH) {
-    const error = new Error("密码需为 8-72 位");
+  if (typeof value !== "string") {
+    const error = new Error("密码需为 8-72 位且包含字母和数字");
+    error.status = 400;
+    error.code = "PASSWORD_INVALID";
+    throw error;
+  }
+  const password = value;
+  if (!isValidPasswordInput(password)) {
+    const error = new Error("密码需为 8-72 位且包含字母和数字");
     error.status = 400;
     error.code = "PASSWORD_INVALID";
     throw error;
   }
   return password;
+}
+
+function isValidPasswordInput(value) {
+  return typeof value === "string" &&
+    value.length >= PASSWORD_MIN_LENGTH &&
+    value.length <= PASSWORD_MAX_LENGTH &&
+    /[A-Za-z]/.test(value) &&
+    /\d/.test(value);
 }
 
 function scrypt(password, salt) {
@@ -69,16 +85,25 @@ async function verifyPassword(password, storedHash) {
   const parts = String(storedHash || "").split("$");
   if (parts.length !== 6 || parts[0] !== "scrypt") return false;
 
-  const key = await scrypt(String(password || ""), parts[4]);
+  const key = await scrypt(typeof password === "string" ? password : "", parts[4]);
   const expected = Buffer.from(parts[5], "base64url");
   if (expected.length !== key.length) return false;
   return crypto.timingSafeEqual(expected, key);
+}
+
+function getDummyPasswordHash() {
+  if (!dummyHashPromise) {
+    dummyHashPromise = hashPassword(DUMMY_PASSWORD);
+  }
+  return dummyHashPromise;
 }
 
 module.exports = {
   normalizeAccountName,
   validateAccountName,
   validatePassword,
+  isValidPasswordInput,
   hashPassword,
-  verifyPassword
+  verifyPassword,
+  getDummyPasswordHash
 };

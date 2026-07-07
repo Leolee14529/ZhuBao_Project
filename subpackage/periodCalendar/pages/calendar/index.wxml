@@ -53,6 +53,7 @@
         <text class="summary-value">{{summaryDays}}天</text>
         <text class="summary-note">{{summaryNextStart}}</text>
         <view class="summary-action" bindtap="onSetupCycle">调整经期周期</view>
+        <view class="summary-clear-action" bindtap="onClearCycleData">清除本机经期记录</view>
       </view>
     </block>
   </view>
@@ -107,7 +108,7 @@
 
       <view class="cycle-setup-sheet__actions">
         <view class="cycle-setup-sheet__button cycle-setup-sheet__button--ghost" bindtap="onCloseCycleSetup">取消</view>
-        <view class="cycle-setup-sheet__button cycle-setup-sheet__button--primary" bindtap="onSaveCycleSetup">保存并查看日历</view>
+        <view class="cycle-setup-sheet__button cycle-setup-sheet__button--primary {{isSavingCycle ? 'cycle-setup-sheet__button--disabled' : ''}}" bindtap="onSaveCycleSetup">{{isSavingCycle ? '保存中' : '保存并查看日历'}}</view>
       </view>
     </view>
   </view>

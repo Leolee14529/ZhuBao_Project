@@ -64,9 +64,17 @@ function findUserById(userId) {
 function findOrCreateByWechatProfile(profile) {
   const data = readData();
   const now = new Date().toISOString();
-  let user = data.users.find((item) => item.openid === profile.openid);
+  let user = profile.unionid ?
+    data.users.find((item) => item.unionid === profile.unionid) :
+    null;
+  if (!user) {
+    user = data.users.find((item) => item.openid === profile.openid);
+  }
 
   if (user) {
+    if (!user.openid && !data.users.some((item) => item.openid === profile.openid)) {
+      user.openid = profile.openid;
+    }
     user.unionid = profile.unionid || user.unionid || null;
     user.updatedAt = now;
     writeData(data);
@@ -95,6 +103,9 @@ function findUserByAccountName(accountName) {
 
 function createAccountUser(accountName, passwordHash) {
   const data = readData();
+  if (data.users.some((user) => user.accountName === accountName)) {
+    return null;
+  }
   const now = new Date().toISOString();
   const user = {
     id: createUserId(),
@@ -102,7 +113,7 @@ function createAccountUser(accountName, passwordHash) {
     unionid: null,
     accountName,
     passwordHash,
-    nickname: accountName,
+    nickname: null,
     avatarUrl: null,
     createdAt: now,
     updatedAt: now

@@ -1,3 +1,5 @@
+const auth = require("../../../utils/auth");
+
 Page({
   data: {
     headerTop: 64
@@ -14,7 +16,10 @@ Page({
   goBack() {
     wx.navigateBack({
       fail() {
-        wx.redirectTo({ url: "/pages/login/index" });
+        const state = auth.getAuthState();
+        wx.redirectTo({
+          url: state.status === "anonymous" ? "/pages/login/index" : auth.HOME_URL
+        });
       }
     });
   }

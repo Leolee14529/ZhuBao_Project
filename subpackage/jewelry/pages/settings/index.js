@@ -76,14 +76,22 @@ Page({
     this.setData({ isLoggingOut: true });
 
     request.post("/api/auth/logout")
-      .catch(() => null)
       .then(() => {
         request.clearAuthState();
         wx.reLaunch({
           url: "/pages/login/index"
         });
       })
-      .then(() => {
+      .catch((error) => {
+        if (error && error.statusCode === 401) {
+          request.clearAuthState();
+          wx.reLaunch({ url: "/pages/login/index" });
+          return;
+        }
+        wx.showToast({
+          title: error && error.message ? error.message : "退出失败，请稍后再试",
+          icon: "none"
+        });
         this.setData({ isLoggingOut: false });
       });
   },
@@ -156,15 +164,15 @@ Page({
       success: (res) => {
         if (!res.confirm) return;
         request.delete("/api/users/me")
-          .catch((error) => {
-            if (error && error.statusCode === 401) return null;
-            throw error;
-          })
-          .then(() => {
+          .then((data) => {
+            if (!data || data.deleted !== true) {
+              throw new Error("注销失败，请重试");
+            }
             auth.clearAllLocalPersonalData();
             wx.reLaunch({ url: "/pages/login/index" });
           })
           .catch((error) => {
+            if (error && error.statusCode === 401) return;
             wx.showToast({
               title: error && error.message ? error.message : "注销失败，请重试",
               icon: "none"

@@ -144,6 +144,7 @@ test("account password register and login use the shared session flow", async ()
   assert.ok(created.token);
   assert.equal(created.user.passwordHash, undefined);
   assert.equal(created.user.openid, undefined);
+  assert.equal(created.user.nickname, null);
 
   const me = await request("/api/users/me", {
     headers: { authorization: `Bearer ${created.token}` }

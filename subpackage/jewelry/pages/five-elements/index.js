@@ -36,6 +36,7 @@ Page({
       genderIndex: birthInput.gender === "male" ? 1 : 0
     });
     this.refreshPreview();
+    this.loadLatestResult();
   },
   onShow: function () {
     auth.requireLogin({ source: "/subpackage/jewelry/pages/five-elements/index" });
@@ -74,10 +75,36 @@ Page({
 
     this.applyPreviewProfile(profile);
     if (!fiveElements.isResultForBirthInput(savedResult, birthInput) &&
-      wx.getStorageSync(auth.BIRTH_NOTICE_KEY) &&
+      auth.getPersonalData(auth.BIRTH_NOTICE_KEY) &&
       auth.hasPrivacyConsent()) {
       this.calculatePreview(birthInput);
     }
+  },
+
+  loadLatestResult: function () {
+    request.get("/api/wuxing/latest")
+      .then(function (data) {
+        var result = data && data.result;
+        if (!result) return;
+        fiveElements.saveWuxingResult(result);
+        this.setData({
+          birthDate: result.birthDate,
+          birthTime: result.birthTime,
+          gender: result.gender,
+          genderIndex: result.gender === "male" ? 1 : 0
+        });
+        this.refreshPreview();
+      }.bind(this))
+      .catch(function (error) {
+        if (error && error.code === "WUXING_RESULT_NOT_FOUND") {
+          auth.clearWuxingLocalData();
+          this.refreshPreview();
+          return;
+        }
+        if (error && error.statusCode !== 401) {
+          console.error("load latest wuxing result failed", error);
+        }
+      }.bind(this));
   },
 
   getCurrentBirthInput: function () {
@@ -170,7 +197,7 @@ Page({
     }.bind(this));
   },
   confirmBirthProfileNotice: function () {
-    if (wx.getStorageSync(auth.BIRTH_NOTICE_KEY)) {
+    if (auth.getPersonalData(auth.BIRTH_NOTICE_KEY)) {
       return Promise.resolve(true);
     }
     return new Promise(function (resolve, reject) {
@@ -184,7 +211,7 @@ Page({
             reject(new Error("已取消保存"));
             return;
           }
-          wx.setStorageSync(auth.BIRTH_NOTICE_KEY, true);
+          auth.setPersonalData(auth.BIRTH_NOTICE_KEY, true);
           resolve(true);
         },
         fail: function () {

@@ -100,7 +100,8 @@ test("login page keeps a visible first screen", () => {
   assert.ok(loginPage.includes("class=\"login-bg\""));
   assert.ok(loginPage.includes("class=\"brand-name\""));
   assert.ok(loginPage.includes("微信登录"));
-  assert.match(loginStyle, /\.login-page\{[^}]*height:100vh/);
+  assert.match(loginStyle, /\.login-page\{[^}]*min-height:100vh/);
+  assert.match(loginStyle, /\.login-page\{[^}]*overflow-y:auto/);
   assert.match(loginStyle, /\.login-page\{[^}]*background:#000/);
 });
 
@@ -110,13 +111,32 @@ test("login page exposes account password entry wired to backend auth", () => {
   const migration = readText("backend/db/migrations/002_account_password_login.sql");
 
   assert.ok(loginPage.includes("mode-tab"));
+  assert.ok(loginPage.includes("accountAuthEnabled"));
   assert.ok(loginPage.includes("账号登录"));
   assert.ok(loginPage.includes("创建账号"));
+  assert.ok(loginLogic.includes("accountAuthEnabled: true"));
   assert.ok(loginLogic.includes("/api/auth/account-login"));
   assert.ok(loginLogic.includes("/api/auth/account-register"));
+  assert.ok(readText("utils/config.js").includes("isAccountAuthEnabled"));
   assert.ok(readText("utils/request.js").includes("isAuthEntryPath"));
   assert.ok(migration.includes("account_name"));
   assert.ok(migration.includes("password_hash"));
+});
+
+test("account password entry is enabled by default unless explicitly disabled", () => {
+  function loadConfig(extConfig) {
+    global.wx = {
+      getExtConfigSync() { return extConfig; },
+      getAccountInfoSync() { return { miniProgram: { envVersion: "release" } }; }
+    };
+    delete require.cache[require.resolve("../../utils/config")];
+    return require("../../utils/config");
+  }
+
+  assert.equal(loadConfig({}).isAccountAuthEnabled(), true);
+  assert.equal(loadConfig({ enableAccountAuth: true }).isAccountAuthEnabled(), true);
+  assert.equal(loadConfig({ enableAccountAuth: false }).isAccountAuthEnabled(), false);
+  assert.equal(loadConfig({ enableAccountAuth: "false" }).isAccountAuthEnabled(), false);
 });
 
 test("release login defaults to wechat before account password", () => {
@@ -126,6 +146,7 @@ test("release login defaults to wechat before account password", () => {
   const accountTabIndex = loginPage.indexOf('data-mode="account"');
 
   assert.ok(loginLogic.includes('loginMode: "wechat"'));
+  assert.ok(loginLogic.includes("accountAuthEnabled"));
   assert.ok(wechatTabIndex >= 0);
   assert.ok(accountTabIndex > wechatTabIndex);
 });
@@ -137,6 +158,7 @@ test("period setup exposes an in-sheet data notice confirmation", () => {
   assert.ok(calendarPage.includes("我已知晓经期数据说明"));
   assert.ok(calendarPage.includes("bindtap=\"onToggleCyclePrivacy\""));
   assert.ok(calendarLogic.includes("cyclePrivacyConfirmed"));
+  assert.ok(calendarLogic.includes("auth.getPersonalData(auth.PERIOD_PRIVACY_KEY)"));
   assert.ok(calendarLogic.includes("ensureCyclePrivacyReady"));
 });
 

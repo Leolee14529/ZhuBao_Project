@@ -93,7 +93,7 @@
 
       <view class="panel">
         <text class="panel-title">五行玉石适配</text>
-        <text class="panel-subtitle">基于您八字的佩戴建议</text>
+        <text class="panel-subtitle">{{hasWuxingResult ? '基于您八字的佩戴建议' : '保存出生资料后生成建议'}}</text>
         <view class="element-ring">
           <view class="element-ring-core">
             <text class="ring-small">主推</text>

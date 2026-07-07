@@ -42,7 +42,7 @@ function buildHeader(header) {
 }
 
 function clearAuthState() {
-  auth.clearAuthState();
+  auth.clearAllLocalPersonalData();
 }
 
 function getCurrentPageUrl() {

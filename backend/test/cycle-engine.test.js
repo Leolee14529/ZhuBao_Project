@@ -27,6 +27,19 @@ test("calendar engine always builds six weeks", () => {
   assert.ok(built.cycleStarts.length > 1);
 });
 
+test("past inferred cycles are labeled as forecasts, not actual periods", () => {
+  const profile = cycleEngine.normalizeProfile({
+    lastPeriodDate: "2026-06-15",
+    cycleLength: "28",
+    periodLength: "5"
+  });
+  const built = cycleEngine.buildWeeks(profile, 2026, 5, "2026-05-18");
+  const pastCell = built.weeks.flat().find((cell) => cell.dateKey === "2026-05-18");
+
+  assert.equal(pastCell.status, "periodForecast");
+  assert.equal(pastCell.statusLabel, "预测经期");
+});
+
 test("cycle setup validation rejects future dates", () => {
   const result = cycleProfile.prepareSavedProfile({
     lastPeriodDate: "2026-07-01",

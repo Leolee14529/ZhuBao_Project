@@ -17,11 +17,15 @@ function getEnvironment() {
 }
 
 function getExternalApiBaseUrl() {
+  const config = getExternalConfig();
+  return config && config.apiBaseUrl ? String(config.apiBaseUrl) : "";
+}
+
+function getExternalConfig() {
   try {
-    const config = wx.getExtConfigSync ? wx.getExtConfigSync() : {};
-    return config && config.apiBaseUrl ? String(config.apiBaseUrl) : "";
+    return wx.getExtConfigSync ? wx.getExtConfigSync() : {};
   } catch (error) {
-    return "";
+    return {};
   }
 }
 
@@ -31,8 +35,21 @@ function getApiBaseUrl() {
   return API_BASE_URLS[getEnvironment()] || "";
 }
 
+function readBooleanFlag(value, fallback) {
+  if (value === undefined || value === null || value === "") return fallback;
+  if (value === false || value === "false" || value === 0 || value === "0") return false;
+  return value === true || value === "true" || value === 1 || value === "1";
+}
+
+function isAccountAuthEnabled() {
+  const config = getExternalConfig();
+  return readBooleanFlag(config && config.enableAccountAuth, true);
+}
+
 module.exports = {
   API_BASE_URLS,
   getEnvironment,
-  getApiBaseUrl
+  getApiBaseUrl,
+  getExternalConfig,
+  isAccountAuthEnabled
 };

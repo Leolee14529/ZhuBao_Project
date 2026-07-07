@@ -94,8 +94,8 @@ function classifyDate(date, cycleStarts, periodLength) {
     daysFromStart = diffDays(cycle.startDate, date);
     if (daysFromStart >= 0 && daysFromStart < periodLength) {
       return {
-        status: cycle.cycleIndex <= 0 ? "period" : "periodForecast",
-        statusLabel: cycle.cycleIndex <= 0 ? "经期" : "预测经期",
+        status: cycle.cycleIndex === 0 ? "period" : "periodForecast",
+        statusLabel: cycle.cycleIndex === 0 ? "经期" : "预测经期",
         cycleIndex: cycle.cycleIndex,
         cycleStartDateKey: formatDateKey(cycle.startDate)
       };
