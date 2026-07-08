@@ -38,13 +38,6 @@ Page({
     });
   },
 
-  onCapsuleTap() {
-    wx.showToast({
-      title: "更多功能待接入",
-      icon: "none"
-    });
-  },
-
   onDisconnect() {
     console.warn("[ROUTE]", "from subpackage/device12/pages/connected/index.js/onDisconnect", "to", "/subpackage/device17/pages/unconnected-detail/index", "reason", "disconnect device");
     wx.redirectTo({

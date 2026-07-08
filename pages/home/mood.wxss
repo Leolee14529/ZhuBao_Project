@@ -6,11 +6,12 @@
   display: flex;
   flex-wrap: wrap;
   gap: 12rpx;
-  margin-top: 18rpx;
+  margin-top: 16rpx;
 }
 
 .mood-option {
-  width: 88rpx;
+  flex: 1 0 86rpx;
+  max-width: 100rpx;
   height: 46rpx;
   padding: 0;
   border-radius: 23rpx;

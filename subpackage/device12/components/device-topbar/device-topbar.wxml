@@ -2,16 +2,4 @@
   <button class="back-button" bindtap="onBackTap" aria-label="返回">
     <view class="back-arrow"></view>
   </button>
-
-  <button class="capsule-button" bindtap="onCapsuleTap" aria-label="更多">
-    <view class="capsule-dots">
-      <text class="dot"></text>
-      <text class="dot"></text>
-      <text class="dot"></text>
-    </view>
-    <view class="capsule-divider"></view>
-    <view class="capsule-ring">
-      <view class="capsule-ring-inner"></view>
-    </view>
-  </button>
 </view>

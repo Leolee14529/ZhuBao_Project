@@ -73,9 +73,9 @@
   display: block;
   position: static;
   flex: 0 1 280rpx;
-  min-width: 220rpx;
-  margin: 0 24rpx;
-  font-size: 40rpx;
+  min-width: 180rpx;
+  margin: 0 16rpx;
+  font-size: 38rpx;
   font-weight: 500;
   color: #ffffff;
   white-space: nowrap;
@@ -86,7 +86,7 @@
 
 .reminder-bar {
   margin-top: 24rpx;
-  padding: 0 20rpx 0 30rpx;
+  padding: 18rpx 20rpx 18rpx 26rpx;
   min-height: 88rpx;
   border-radius: 24rpx;
   background: rgba(255, 255, 255, 0.055);
@@ -101,11 +101,10 @@
 .reminder-text {
   flex: 1;
   min-width: 0;
-  font-size: 31rpx;
+  font-size: 29rpx;
   font-weight: 500;
   color: rgba(255, 255, 255, 0.9);
   line-height: 1.35;
-  white-space: nowrap;
 }
 
 .reminder-actions {

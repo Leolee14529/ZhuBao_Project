@@ -1,8 +1,9 @@
 .inspiration-card {
   position: relative;
   overflow: hidden;
+  height: 610rpx;
   min-height: 610rpx;
-  margin-bottom: 44rpx;
+  margin-bottom: 30rpx;
   border-radius: 34rpx;
   background-color: #0f1714;
   border: 1rpx solid rgba(16, 185, 129, 0.22);
@@ -10,7 +11,9 @@
 
 .inspiration-front {
   display: block;
-  padding: 30rpx 42rpx 42rpx;
+  height: 100%;
+  padding: 28rpx 32rpx 34rpx;
+  box-sizing: border-box;
 }
 
 .inspiration-grid,
@@ -26,7 +29,7 @@
 .inspiration-head {
   position: relative;
   overflow: hidden;
-  margin-bottom: 76rpx;
+  margin-bottom: 48rpx;
 }
 
 .inspiration-label {
@@ -53,36 +56,37 @@
 .inspiration-center {
   position: relative;
   text-align: center;
-  margin-bottom: 56rpx;
+  margin-bottom: 36rpx;
 }
 
 .inspiration-ring {
   position: relative;
-  width: 184rpx;
-  height: 184rpx;
-  margin: 0 auto 28rpx;
-  border-radius: 92rpx;
+  width: 164rpx;
+  height: 164rpx;
+  margin: 0 auto 24rpx;
+  border-radius: 82rpx;
   border: 1rpx solid rgba(57, 216, 122, 0.28);
 }
 
 .inspiration-ring-inner {
   position: absolute;
-  inset: 24rpx;
-  border-radius: 68rpx;
+  inset: 20rpx;
+  border-radius: 62rpx;
   border: 4rpx solid rgba(57, 216, 122, 0.8);
 }
 
 .inspiration-symbol {
   display: block;
-  line-height: 184rpx;
+  line-height: 164rpx;
   text-align: center;
-  font-size: 82rpx;
+  font-size: 74rpx;
   color: #ffffff;
 }
 
 .inspiration-title {
   display: block;
-  font-size: 56rpx;
+  font-size: 50rpx;
+  line-height: 1.12;
   color: #ffffff;
 }
 
@@ -95,8 +99,8 @@
 
 .inspiration-copy {
   position: relative;
-  min-height: 150rpx;
-  padding: 30rpx 30rpx 28rpx 70rpx;
+  min-height: 126rpx;
+  padding: 26rpx 26rpx 24rpx 62rpx;
   border-radius: 24rpx;
   background-color: rgba(0, 0, 0, 0.34);
 }
@@ -111,7 +115,7 @@
 
 .inspiration-text {
   display: block;
-  font-size: 28rpx;
+  font-size: 26rpx;
   line-height: 1.5;
   color: rgba(220, 252, 231, 0.92);
 }
@@ -119,10 +123,12 @@
 .inspiration-back {
   display: none;
   position: relative;
-  min-height: 610rpx;
-  padding-top: 180rpx;
+  height: 100%;
+  min-height: 100%;
+  padding-top: 154rpx;
   text-align: center;
   background-color: #0a120f;
+  box-sizing: border-box;
 }
 
 .inspiration-card-flipped .inspiration-front {

@@ -8,11 +8,6 @@
             <text class="hello-line">你好</text>
             <text class="destiny-line">{{destinyLine}}</text>
           </view>
-          <view class="capsule-action">
-            <text>● ● ●</text>
-            <text class="capsule-divider">|</text>
-            <text>◎</text>
-          </view>
         </view>
 
         <view class="inspiration-card {{cardClass}}" bindtap="toggleInspiration">

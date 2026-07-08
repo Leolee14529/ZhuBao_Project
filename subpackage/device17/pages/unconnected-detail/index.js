@@ -48,13 +48,6 @@ Page({
     this.onSearchDevice();
   },
 
-  onCapsuleTap() {
-    wx.showToast({
-      title: "更多功能待接入",
-      icon: "none"
-    });
-  },
-
   onInfoSelect(event) {
     const { item } = event.detail;
     wx.showToast({

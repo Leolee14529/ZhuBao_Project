@@ -1,5 +1,5 @@
 <view class="connected-page" style="padding-top: {{statusBarHeight}}px;">
-  <device-topbar bind:back="onBackTap" bind:capsule="onCapsuleTap" />
+  <device-topbar bind:back="onBackTap" />
 
   <view class="page-content">
     <text class="page-title">设备连接</text>

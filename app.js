@@ -11,7 +11,7 @@ App({
       menuTop: 6,
       menuHeight: 32,
       menuBottom: 52,
-      contentOffset: 52
+      contentOffset: 64
     };
 
     try {
@@ -23,14 +23,14 @@ App({
         return fallback;
       }
 
-      const liftedContentOffset = Math.max(menuButton.bottom - 10, statusBarHeight + 32);
+      const safeContentOffset = Math.max(menuButton.bottom + 12, statusBarHeight + 48);
 
       return {
         statusBarHeight,
         menuTop: menuButton.top,
         menuHeight: menuButton.height,
         menuBottom: menuButton.bottom,
-        contentOffset: Math.round(liftedContentOffset)
+        contentOffset: Math.round(safeContentOffset)
       };
     } catch (error) {
       return fallback;

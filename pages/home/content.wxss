@@ -1,26 +1,23 @@
 .stats-row {
-  overflow: hidden;
-  margin-bottom: 30rpx;
+  display: flex;
+  gap: 20rpx;
+  margin-bottom: 26rpx;
 }
 
 .stat-card {
-  width: 320rpx;
-  min-height: 148rpx;
+  flex: 1;
+  min-width: 0;
+  min-height: 154rpx;
   padding: 18rpx 18rpx 16rpx;
   border-radius: 24rpx;
   background-color: #171920;
   border: 1rpx solid rgba(255, 255, 255, 0.07);
 }
 
-.stat-left,
-.gallery-col-left {
-  float: left;
-}
-
-.stat-right,
-.gallery-col-right {
-  float: right;
-}
+.stat-left { float: none; }
+.stat-right { float: none; }
+.gallery-col-left { float: none; }
+.gallery-col-right { float: none; }
 
 .stat-caption {
   display: block;
@@ -34,8 +31,9 @@
 
 .stat-value {
   display: block;
-  margin-top: 24rpx;
+  margin-top: 20rpx;
   font-size: 24rpx;
+  line-height: 1.25;
   font-weight: 500;
   color: #ffffff;
 }
@@ -48,8 +46,10 @@
 }
 
 .device-card {
-  overflow: hidden;
-  margin-bottom: 30rpx;
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  margin-bottom: 28rpx;
   padding: 22rpx 24rpx;
   border-radius: 28rpx;
   border: 1rpx solid rgba(57, 216, 122, 0.2);
@@ -57,13 +57,13 @@
     linear-gradient(180deg, rgba(8, 15, 12, 0.96), rgba(10, 19, 15, 0.92)),
     radial-gradient(circle at left, rgba(36, 166, 108, 0.12), transparent 35%);
   box-shadow: inset 0 0 0 1rpx rgba(255, 255, 255, 0.02);
+  box-sizing: border-box;
 }
 
 .device-icon-wrap {
-  float: left;
+  flex: none;
   width: 68rpx;
   height: 68rpx;
-  margin-top: 10rpx;
   border-radius: 34rpx;
   overflow: hidden;
   background-color: rgba(57, 216, 122, 0.1);
@@ -75,8 +75,8 @@
 }
 
 .device-main {
-  float: left;
-  margin-left: 22rpx;
+  flex: 1;
+  min-width: 0;
 }
 
 .device-title {
@@ -90,12 +90,15 @@
   display: block;
   margin-top: 8rpx;
   font-size: 34rpx;
+  line-height: 1.22;
   font-weight: 500;
   color: #ffffff;
+  word-break: break-all;
 }
 
 .device-side {
-  float: right;
+  flex: none;
+  min-width: 120rpx;
   padding-top: 2rpx;
 }
 
@@ -171,20 +174,23 @@
 }
 
 .section-head {
-  overflow: hidden;
-  margin-bottom: 26rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20rpx;
+  margin-bottom: 22rpx;
 }
 
 .section-title {
-  float: left;
+  flex: 1;
+  min-width: 0;
   font-size: 36rpx;
   font-weight: 500;
   color: #ffffff;
 }
 
 .section-link {
-  float: right;
-  margin-top: 4rpx;
+  flex: none;
   padding: 10rpx 20rpx;
   border-radius: 28rpx;
   background-color: rgba(0, 185, 120, 0.16);
@@ -194,32 +200,35 @@
 }
 
 .gallery {
-  overflow: hidden;
+  display: flex;
+  gap: 20rpx;
+  align-items: flex-start;
 }
 
 .gallery-col {
-  width: 320rpx;
+  flex: 1;
+  min-width: 0;
 }
 
 .product-card {
   position: relative;
   overflow: hidden;
-  width: 320rpx;
-  margin-bottom: 28rpx;
+  width: 100%;
+  margin-bottom: 22rpx;
   border-radius: 24rpx;
   background-color: #1a1d24;
 }
 
 .product-card-tall {
-  height: 398rpx;
+  height: 360rpx;
 }
 
 .product-card-short {
-  height: 260rpx;
+  height: 248rpx;
 }
 
 .product-image {
-  width: 320rpx;
+  width: 100%;
   height: 100%;
 }
 
@@ -236,16 +245,18 @@
 }
 
 .custom-card {
-  overflow: hidden;
-  margin-top: 34rpx;
-  padding: 30rpx 28rpx;
+  display: flex;
+  align-items: center;
+  gap: 22rpx;
+  margin-top: 20rpx;
+  padding: 28rpx;
   border-radius: 28rpx;
   border: 1rpx solid rgba(57, 216, 122, 0.24);
   background-color: rgba(0, 95, 68, 0.72);
 }
 
 .custom-icon {
-  float: left;
+  flex: none;
   width: 76rpx;
   height: 76rpx;
   border-radius: 38rpx;
@@ -257,8 +268,8 @@
 }
 
 .custom-copy {
-  float: left;
-  margin-left: 24rpx;
+  flex: 1;
+  min-width: 0;
 }
 
 .custom-title {
@@ -271,12 +282,13 @@
   display: block;
   margin-top: 8rpx;
   font-size: 22rpx;
+  line-height: 1.45;
   color: rgba(255, 255, 255, 0.44);
 }
 
 .custom-arrow {
-  float: right;
-  margin-top: 8rpx;
+  flex: none;
   font-size: 40rpx;
+  line-height: 1;
   color: rgba(255, 255, 255, 0.54);
 }
