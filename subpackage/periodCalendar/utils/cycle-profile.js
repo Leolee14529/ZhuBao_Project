@@ -6,7 +6,7 @@ function prepareSavedProfile(source, todayDate) {
   var periodNum = Number(source.periodLength);
 
   if (!lastPeriodDate) {
-    return { error: "请选择上次经期日期" };
+    return { error: "请选择上次周期日期" };
   }
   if (cycleEngine.diffDays(cycleEngine.parseDateKey(lastPeriodDate), todayDate) < 0) {
     return { error: "开始日期不能晚于今天" };
@@ -15,7 +15,7 @@ function prepareSavedProfile(source, todayDate) {
     return { error: "周期天数填写 21-35" };
   }
   if (!periodNum || periodNum < 3 || periodNum > 8) {
-    return { error: "经期天数填写 3-8" };
+    return { error: "持续天数填写 3-8" };
   }
 
   var valuesUnchanged =

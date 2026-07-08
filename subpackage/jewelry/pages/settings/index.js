@@ -64,9 +64,9 @@ Page({
       });
   },
   goHome() {
-    console.warn("[ROUTE]", "from subpackage/jewelry/pages/settings/index.js/goHome", "to", "/subpackage/jewelry/pages/home/index", "reason", "tab home");
+    console.warn("[ROUTE]", "from subpackage/jewelry/pages/settings/index.js/goHome", "to", "/pages/home/index", "reason", "tab home");
     wx.redirectTo({
-      url: "/subpackage/jewelry/pages/home/index"
+      url: "/pages/home/index"
     });
   },
   goData() {
@@ -128,14 +128,14 @@ Page({
   deleteWuxingProfile() {
     wx.showModal({
       title: "删除出生资料",
-      content: "将删除出生资料和五行结果，本地和服务器记录都会清空。",
+      content: "将删除出生资料和元素参考，本地和服务器记录都会清空。",
       confirmText: "删除",
       success: (res) => {
         if (!res.confirm) return;
         request.delete("/api/wuxing/profile")
           .then(() => {
             auth.clearWuxingLocalData();
-            wx.showToast({ title: "已删除五行资料", icon: "success" });
+            wx.showToast({ title: "已删除参考资料", icon: "success" });
           })
           .catch((error) => {
             wx.showToast({
@@ -163,7 +163,7 @@ Page({
   deleteAccount() {
     wx.showModal({
       title: "注销账号",
-      content: "将删除账号、全部服务器业务数据、出生资料、五行结果，并清除本机经期记录。该操作不可恢复。",
+      content: "将删除账号、全部服务器业务数据、出生资料、元素参考，并清除本机周期记录。该操作不可恢复。",
       confirmText: "注销",
       success: (res) => {
         if (!res.confirm) return;

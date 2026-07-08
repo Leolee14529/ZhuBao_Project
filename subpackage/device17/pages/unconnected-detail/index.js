@@ -32,9 +32,9 @@ Page({
   },
 
   onBackTap() {
-    console.warn("[ROUTE]", "from subpackage/device17/pages/unconnected-detail/index.js/onBackTap", "to", "/subpackage/jewelry/pages/home/index", "reason", "back to home");
+    console.warn("[ROUTE]", "from subpackage/device17/pages/unconnected-detail/index.js/onBackTap", "to", "/pages/home/index", "reason", "back to home");
     wx.reLaunch({
-      url: "/subpackage/jewelry/pages/home/index"
+      url: "/pages/home/index"
     });
   },
 

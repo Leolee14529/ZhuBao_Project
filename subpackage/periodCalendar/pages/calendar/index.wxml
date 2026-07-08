@@ -25,7 +25,7 @@
       <text class="cycle-preview-card__eyebrow">预览日历</text>
       <text class="cycle-preview-card__title">先用颜色看懂周期，再选择开始日期</text>
       <view class="cycle-preview-card__button" bindtap="onSetupCycle">设置我的周期</view>
-      <text class="cycle-preview-card__desc">点“设置我的周期”后，可以直接在月历上选上次经期开始日，系统会按颜色生成专属预测。</text>
+      <text class="cycle-preview-card__desc">点“设置我的周期”后，可以直接在月历上选上次周期开始日，系统会按颜色生成周期参考。</text>
     </view>
 
     <block wx:else>
@@ -43,11 +43,11 @@
       </view>
 
       <view class="summary-block">
-        <text class="summary-title">距离下次经期还有</text>
+        <text class="summary-title">距离下次参考日期还有</text>
         <text class="summary-value">{{summaryDays}}天</text>
         <text class="summary-note">{{summaryNextStart}}</text>
-        <view class="summary-action" bindtap="onSetupCycle">调整经期周期</view>
-        <view class="summary-clear-action" bindtap="onClearCycleData">清除本机经期记录</view>
+        <view class="summary-action" bindtap="onSetupCycle">调整周期</view>
+        <view class="summary-clear-action" bindtap="onClearCycleData">清除本机周期记录</view>
       </view>
     </block>
   </view>

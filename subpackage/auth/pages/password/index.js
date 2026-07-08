@@ -75,9 +75,9 @@ Page({
       });
       return;
     }
-    console.warn("[ROUTE]", "from subpackage/auth/pages/password/index.js/submitPassword", "to", "/subpackage/jewelry/pages/home/index", "reason", "password submit success");
+    console.warn("[ROUTE]", "from subpackage/auth/pages/password/index.js/submitPassword", "to", "/pages/home/index", "reason", "password submit success");
     wx.reLaunch({
-      url: "/subpackage/jewelry/pages/home/index",
+      url: "/pages/home/index",
       fail: () => {
         this.setData({
           serviceError: "当前无法继续，请稍后再试"

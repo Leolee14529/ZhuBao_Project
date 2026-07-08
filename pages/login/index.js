@@ -4,7 +4,7 @@ const privacy = require("../../utils/privacy");
 const config = require("../../utils/config");
 const share = require("../../utils/share");
 
-const HOME_URL = "/subpackage/jewelry/pages/home/index";
+const HOME_URL = "/pages/home/index";
 const DEFAULT_LOGIN_ERROR = "登录暂时不可用，请稍后再试";
 const WX_LOGIN_TIMEOUT_MS = 12000;
 const WX_LOGIN_MAX_ATTEMPTS = 2;
@@ -253,7 +253,7 @@ Page({
   },
   enterGuest() {
     if (this.isAuthBusy()) return;
-    auth.enterGuestMode();
+    auth.clearGuestMode();
     wx.reLaunch({ url: HOME_URL });
   },
   isAuthBusy() {

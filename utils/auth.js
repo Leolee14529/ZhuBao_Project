@@ -1,5 +1,5 @@
 const LOGIN_URL = "/pages/login/index";
-const HOME_URL = "/subpackage/jewelry/pages/home/index";
+const HOME_URL = "/pages/home/index";
 
 const TOKEN_KEY = "token";
 const USER_KEY = "userInfo";
@@ -9,13 +9,15 @@ const WUXING_KEY = "jewelryWuxingResult";
 const CYCLE_KEY = "periodCalendarCycleProfile";
 const PERIOD_PRIVACY_KEY = "periodPrivacyConfirmed";
 const BIRTH_NOTICE_KEY = "birthProfileNoticeConfirmed";
+const DAILY_MOOD_KEY = "dailyMoodRecord";
 const PRIVACY_CONSENT_KEY = "privacyConsentAccepted";
 const PERSONAL_KEYS = [
   BIRTH_KEY,
   WUXING_KEY,
   CYCLE_KEY,
   PERIOD_PRIVACY_KEY,
-  BIRTH_NOTICE_KEY
+  BIRTH_NOTICE_KEY,
+  DAILY_MOOD_KEY
 ];
 
 let isRedirectingToLogin = false;
@@ -56,7 +58,6 @@ function getStoredUser() {
 function getPersonalOwner() {
   const user = getStoredUser();
   if (user && user.id) return "user:" + String(user.id);
-  if (safeGet(GUEST_KEY) === true) return "guest";
   return "anonymous";
 }
 
@@ -93,20 +94,13 @@ function clearGuestMode() {
   safeRemove(GUEST_KEY);
 }
 
-function enterGuestMode() {
-  clearAllLocalPersonalData();
-  safeSet(GUEST_KEY, true);
-}
-
 function getAuthState() {
   const token = getToken();
   if (token) {
     clearGuestMode();
     return { status: "loggedIn", token };
   }
-  if (safeGet(GUEST_KEY) === true) {
-    return { status: "guest", token: "" };
-  }
+  clearGuestMode();
   return { status: "anonymous", token: "" };
 }
 
@@ -133,6 +127,8 @@ function clearWuxingLocalData() {
 function clearAllLocalPersonalData() {
   const owner = getPersonalOwner();
   clearPersonalDataForOwner(owner);
+  clearPersonalDataForOwner("anonymous");
+  clearPersonalDataForOwner("guest");
   clearLegacyPersonalData();
   clearAuthState();
   clearGuestMode();
@@ -202,6 +198,7 @@ module.exports = {
   CYCLE_KEY,
   PERIOD_PRIVACY_KEY,
   BIRTH_NOTICE_KEY,
+  DAILY_MOOD_KEY,
   PRIVACY_CONSENT_KEY,
   getToken,
   getAuthState,
@@ -209,7 +206,6 @@ module.exports = {
   getPersonalData,
   setPersonalData,
   removePersonalData,
-  enterGuestMode,
   clearGuestMode,
   clearAuthState,
   acceptAuthenticatedSession,

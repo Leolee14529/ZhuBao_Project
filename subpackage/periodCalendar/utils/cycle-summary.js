@@ -42,7 +42,7 @@ function buildSummary(cycleStarts, todayDate) {
   });
 
   if (!nextStart) {
-    return { daysUntil: "--", nextStartLabel: "暂无预测结果" };
+    return { daysUntil: "--", nextStartLabel: "暂无参考日期" };
   }
   return {
     daysUntil: String(dates.diffDays(todayDate, nextStart)),

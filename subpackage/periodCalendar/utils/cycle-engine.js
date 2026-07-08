@@ -95,7 +95,7 @@ function classifyDate(date, cycleStarts, periodLength) {
     if (daysFromStart >= 0 && daysFromStart < periodLength) {
       return {
         status: cycle.cycleIndex === 0 ? "period" : "periodForecast",
-        statusLabel: cycle.cycleIndex === 0 ? "经期" : "预测经期",
+        statusLabel: cycle.cycleIndex === 0 ? "周期" : "参考周期",
         cycleIndex: cycle.cycleIndex,
         cycleStartDateKey: formatDateKey(cycle.startDate)
       };

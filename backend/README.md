@@ -111,11 +111,11 @@ token 只以 SHA-256 哈希形式存储。退出登录会撤销当前 session。
 
 后端只保存密码哈希，不保存明文密码；账号名会统一转为小写。
 
-### 灵签
+### 今日灵感
 
-- `GET /api/fortunes/random`
+- `GET /api/inspirations/random`
 
-当前从后端灵签池随机返回一条，支持 `previousId` 查询参数避免连续重复。后续可在 `backend/services/fortuneService.js` 内替换为数据库或运营配置来源。
+当前从后端灵感卡池随机返回一条，支持 `previousId` 查询参数避免连续重复。后续可在 `backend/services/inspirationService.js` 内替换为数据库或运营配置来源。
 
 ### 五行
 

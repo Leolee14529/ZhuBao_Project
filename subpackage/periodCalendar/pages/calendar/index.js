@@ -16,12 +16,12 @@ Page({
     selectedDateKey: "",
     selectedDetail: null,
     summaryDays: "--",
-    summaryNextStart: "暂无预测结果",
+    summaryNextStart: "暂无参考日期",
     cyclePrivacyConfirmed: false,
     isSavingCycle: false,
     cycleProfile: { lastPeriodDate: "", cycleLength: "28", periodLength: "5", todayPeriodStartEnabled: false, adjustments: {} },
     weeks: [],
-    legendItems: [{ key: "period", label: "经期" }, { key: "periodForecast", label: "预测经期" }, { key: "ovulation", label: "参考日" }, { key: "fertile", label: "参考窗口" }, { key: "safe", label: "其他日期" }]
+    legendItems: [{ key: "period", label: "周期" }, { key: "periodForecast", label: "参考周期" }, { key: "ovulation", label: "参考日" }, { key: "fertile", label: "参考窗口" }, { key: "safe", label: "其他日期" }]
   },
   onLoad() {
     share.enableShareMenu();
@@ -74,7 +74,7 @@ Page({
         weeks: built.weeks,
         selectedDetail: null,
         summaryDays: "--",
-        summaryNextStart: "设置后生成专属预测"
+        summaryNextStart: "设置后生成周期参考"
       });
       return;
     }
@@ -165,7 +165,7 @@ Page({
       })
       .catch((error) => {
         wx.showToast({
-          title: error && error.message ? error.message : "请先确认经期数据说明",
+          title: error && error.message ? error.message : "请先确认周期数据说明",
           icon: "none"
         });
         this.setData({ isSavingCycle: false });
@@ -175,7 +175,7 @@ Page({
     if (this.data.showCycleSetup) {
       return this.data.cyclePrivacyConfirmed ?
         Promise.resolve(true) :
-        Promise.reject(new Error("请先勾选经期数据说明"));
+        Promise.reject(new Error("请先勾选周期数据说明"));
     }
     if (this.data.cyclePrivacyConfirmed || auth.getPersonalData(auth.PERIOD_PRIVACY_KEY)) {
       return Promise.resolve(true);
@@ -186,7 +186,7 @@ Page({
         cyclePrivacyConfirmed: false
       });
     }
-    return Promise.reject(new Error("请先勾选经期数据说明"));
+    return Promise.reject(new Error("请先勾选周期数据说明"));
   },
   ensureCyclePrivacyReady() {
     return this.confirmCyclePrivacy()
@@ -216,7 +216,7 @@ Page({
       this.refreshCalendar(this.data.viewYear, this.data.viewMonth);
     }).catch((error) => {
       wx.showToast({
-        title: error && error.message ? error.message : "请先确认经期数据说明",
+        title: error && error.message ? error.message : "请先确认周期数据说明",
         icon: "none"
       });
     });
@@ -238,7 +238,7 @@ Page({
     );
     if (!nextProfile) {
       wx.showToast({
-        title: "当前日期无法调整预测",
+        title: "当前日期无法调整参考日期",
         icon: "none"
       });
       return;
@@ -250,20 +250,20 @@ Page({
       });
       this.refreshCalendar(this.data.viewYear, this.data.viewMonth);
       wx.showToast({
-        title: "已重新预测后续周期",
+        title: "已更新后续参考日期",
         icon: "success"
       });
     }).catch((error) => {
       wx.showToast({
-        title: error && error.message ? error.message : "请先确认经期数据说明",
+        title: error && error.message ? error.message : "请先确认周期数据说明",
         icon: "none"
       });
     });
   },
   onClearCycleData() {
     wx.showModal({
-      title: "清除经期记录",
-      content: "将清除本机保存的经期记录和确认状态，不会影响服务器账号。",
+      title: "清除周期记录",
+      content: "将清除本机保存的周期记录和确认状态，不会影响服务器账号。",
       confirmText: "清除",
       success: (res) => {
         if (!res.confirm) return;
@@ -285,7 +285,7 @@ Page({
           cycleProfile: profile
         });
         this.refreshCalendar(this.data.viewYear, this.data.viewMonth);
-        wx.showToast({ title: "已清除本机经期记录", icon: "success" });
+        wx.showToast({ title: "已清除本机周期记录", icon: "success" });
       }
     });
   }

@@ -1,7 +1,7 @@
 {
   "name": "wuxing-backend",
   "version": "1.0.0",
-  "description": "WeChat mini program backend for Bazi and Wuxing calculation",
+  "description": "WeChat mini program backend for element color and jewelry style references",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -14,8 +14,8 @@
   },
   "keywords": [
     "express",
-    "bazi",
-    "wuxing"
+    "element-color",
+    "jewelry-style"
   ],
   "author": "",
   "license": "ISC",

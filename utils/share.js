@@ -1,15 +1,19 @@
-const HOME_SHARE_PATH = "/subpackage/jewelry/pages/home/index";
+const HOME_SHARE_PATH = "/pages/home/index";
 const HOME_SHARE_IMAGE = "/subpackage/jewelry/assets/product-1.jpg";
-const HOME_SHARE_TITLE = "海米算力 | 五行能量珠宝";
+const HOME_SHARE_TITLE = "海米算力 | 珠宝风格参考";
 const PAGE_SHARE_CONFIGS = {
+  "/pages/home/index": { title: HOME_SHARE_TITLE },
   "/pages/login/index": { title: HOME_SHARE_TITLE },
   "/pages/legal/agreement/index": { title: "海米算力 | 用户协议" },
   "/pages/legal/privacy/index": { title: "海米算力 | 隐私政策" },
-  "/subpackage/jewelry/pages/home/index": { title: HOME_SHARE_TITLE },
-  "/subpackage/jewelry/pages/data/index": { title: "海米算力 | 健康数据记录" },
+  "/subpackage/jewelry/pages/data/index": { title: "海米算力 | 记录中心" },
   "/subpackage/jewelry/pages/settings/index": { title: "海米算力 | 设置中心" },
-  "/subpackage/jewelry/pages/five-elements/index": { title: "海米算力 | 五行定制" },
-  "/subpackage/periodCalendar/pages/calendar/index": { title: "海米算力 | 智能经期日历" }
+  "/subpackage/jewelry/pages/five-elements/index": { title: "海米算力 | 五行色彩" },
+  "/subpackage/jewelry/pages/products/index": {
+    title: "海米算力 | 系列产品",
+    imageUrl: "/subpackage/jewelry/assets/product-6.jpg"
+  },
+  "/subpackage/periodCalendar/pages/calendar/index": { title: "海米算力 | 周期记录" }
 };
 
 function enableShareMenu() {

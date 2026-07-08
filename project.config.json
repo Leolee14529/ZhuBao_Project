@@ -13,6 +13,42 @@
       {
         "value": "node_modules",
         "type": "folder"
+      },
+      {
+        "value": "subpackage/showcase",
+        "type": "folder"
+      },
+      {
+        "value": "subpackage/showcase-device",
+        "type": "folder"
+      },
+      {
+        "value": "subpackage/auth",
+        "type": "folder"
+      },
+      {
+        "value": "subpackage/device12",
+        "type": "folder"
+      },
+      {
+        "value": "subpackage/device13",
+        "type": "folder"
+      },
+      {
+        "value": "subpackage/device17",
+        "type": "folder"
+      },
+      {
+        "value": "agent.md",
+        "type": "file"
+      },
+      {
+        "value": "涓婄嚎鍑嗗.md",
+        "type": "file"
+      },
+      {
+        "value": "浜ゆ帴鏂囨。.md",
+        "type": "file"
       }
     ],
     "include": []

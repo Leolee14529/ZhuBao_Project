@@ -12,9 +12,9 @@ Page({
       },
       {
         accent: "#ff7aa8",
-        title: "幸运元素",
+        title: "今日元素",
         value: "无",
-        desc: "暂无真实五行数据"
+        desc: "暂无元素参考数据"
       }
     ],
     device: {

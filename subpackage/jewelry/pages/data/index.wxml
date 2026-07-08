@@ -24,7 +24,7 @@
       </view>
 
       <view class="period-entry" bindtap="openPeriodCalendar">
-        <text class="period-entry-title">智能经期日历</text>
+        <text class="period-entry-title">周期记录</text>
         <text class="period-entry-arrow">›</text>
       </view>
 
@@ -33,7 +33,7 @@
           <view class="key-stat-icon icon-rose">♥</view>
           <view class="key-stat-copy">
             <text class="key-stat-value">0 <text class="small-unit">bpm</text></text>
-            <text class="key-stat-label">静息心率</text>
+            <text class="key-stat-label">心率参考</text>
           </view>
         </view>
         <view class="key-stat key-stat-right">
@@ -46,8 +46,8 @@
       </view>
 
       <view class="panel">
-        <text class="panel-title">心率趋势</text>
-        <text class="panel-subtitle">24小时心率波动</text>
+        <text class="panel-title">心率记录</text>
+        <text class="panel-subtitle">24小时记录参考</text>
         <view class="chart-area">
           <view class="chart-line chart-line-top"></view>
           <view class="chart-line chart-line-mid"></view>
@@ -64,7 +64,7 @@
       </view>
 
       <view class="panel">
-        <text class="panel-title">睡眠结构</text>
+        <text class="panel-title">休息记录</text>
         <text class="panel-subtitle">总时长 0小时 0分</text>
         <view class="sleep-cards">
           <block wx:for="{{sleep}}" wx:key="name">
@@ -85,15 +85,15 @@
       <view class="energy-card">
         <view class="energy-icon">✦</view>
         <view class="energy-copy">
-          <text class="energy-title">身体能量</text>
-          <text class="energy-desc">暂无真实能量数据</text>
+          <text class="energy-title">身体感受</text>
+          <text class="energy-desc">暂无感受记录</text>
         </view>
         <text class="energy-value">0<text class="small-unit">/100</text></text>
       </view>
 
       <view class="panel">
-        <text class="panel-title">五行玉石适配</text>
-        <text class="panel-subtitle">{{hasWuxingResult ? '基于您八字的佩戴建议' : '保存出生资料后生成建议'}}</text>
+        <text class="panel-title">五行色彩参考</text>
+        <text class="panel-subtitle">{{hasWuxingResult ? '基于出生资料的风格参考' : '保存出生资料后生成参考'}}</text>
         <view class="element-ring">
           <view class="element-ring-core">
             <text class="ring-small">主推</text>

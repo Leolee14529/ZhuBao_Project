@@ -150,42 +150,42 @@ function buildAnalysis(dominantKey, percentages, gender) {
   const dominantLabel = ELEMENT_LABELS[dominantKey];
 
   if (dominantKey === "wood") {
-    return `${dominantLabel}元素偏强，整体气质更偏生长与延展，做事有主动性，${gender === "female" ? "风格更显灵动" : "风格更显进取"}。`;
+    return `${dominantLabel}元素更明显，整体风格偏清新舒展，${gender === "female" ? "视觉感受更显灵动" : "视觉感受更显利落"}。`;
   }
 
   if (dominantKey === "fire") {
-    return `${dominantLabel}元素偏强，整体能量外放，表达力和存在感较强，适合突出个人气场。`;
+    return `${dominantLabel}元素更明显，整体色彩更醒目，适合突出明亮、轻盈的视觉感受。`;
   }
 
   if (dominantKey === "earth") {
-    return `${dominantLabel}元素较强，整体稳定踏实，重视秩序与安全感，气质偏沉稳。`;
+    return `${dominantLabel}元素更明显，整体风格更温润踏实，适合呈现沉稳、柔和的层次。`;
   }
 
   if (dominantKey === "metal") {
-    return `${dominantLabel}元素偏强，判断力和边界感更明显，审美更容易偏向利落与质感。`;
+    return `${dominantLabel}元素更明显，整体线条更清爽，适合呈现利落、通透的质感。`;
   }
 
-  return `${dominantLabel}元素偏强，整体感受力较细腻，适应变化能力较好，气质偏柔和流动。`;
+  return `${dominantLabel}元素更明显，整体色彩更冷静，适合呈现柔和、流动的风格。`;
 }
 
 function buildSuggestion(dominantKey) {
   if (dominantKey === "wood") {
-    return "适合绿色、青色系珠宝，可优先考虑翡翠、碧玉、绿松石等偏木属性搭配。";
+    return "适合绿色、青色系珠宝，可优先考虑翡翠、碧玉、绿松石等搭配。";
   }
 
   if (dominantKey === "fire") {
-    return "适合红色、紫红色系珠宝，可优先考虑南红、红玛瑙、石榴石等偏火属性搭配。";
+    return "适合红色、紫红色系珠宝，可优先考虑南红、红玛瑙、石榴石等搭配。";
   }
 
   if (dominantKey === "earth") {
-    return "适合黄色、茶色、暖棕色系珠宝，可优先考虑蜜蜡、黄水晶、琥珀等偏土属性搭配。";
+    return "适合黄色、茶色、暖棕色系珠宝，可优先考虑蜜蜡、黄水晶、琥珀等搭配。";
   }
 
   if (dominantKey === "metal") {
-    return "适合白色、金色系珠宝，可优先考虑珍珠、白水晶、K金、银饰等偏金属性搭配。";
+    return "适合白色、金色系珠宝，可优先考虑珍珠、白水晶、K金、银饰等搭配。";
   }
 
-  return "适合蓝色、黑色系珠宝，可优先考虑海蓝宝、青金石、黑曜石等偏水属性搭配。";
+  return "适合蓝色、黑色系珠宝，可优先考虑海蓝宝、青金石、黑曜石等搭配。";
 }
 
 function calculateWuxing(input) {

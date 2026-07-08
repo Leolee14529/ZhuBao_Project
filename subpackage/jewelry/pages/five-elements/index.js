@@ -179,7 +179,7 @@ Page({
       fiveElements.saveBirthInput(birthInput);
       fiveElements.saveWuxingResult(data.result);
       wx.showToast({
-        title: "已更新五行",
+        title: "已更新参考",
         icon: "success"
       });
       setTimeout(function () {
@@ -207,7 +207,7 @@ Page({
     return new Promise(function (resolve, reject) {
       wx.showModal({
         title: "出生资料用途说明",
-        content: "将保存出生日期、出生时间、性别，用于五行计算和饰品风格推荐；可在设置中删除；不构成命理、健康或功效承诺。",
+        content: "将保存出生日期、出生时间、性别，用于生成五行色彩和饰品风格参考；可在设置中删除；不作为健康判断或功效承诺。",
         confirmText: "同意保存",
         cancelText: "取消",
         success: function (res) {
@@ -232,9 +232,9 @@ Page({
       });
       return;
     }
-    console.warn("[ROUTE]", "from subpackage/jewelry/pages/five-elements/index.js/goBack", "to", "/subpackage/jewelry/pages/home/index", "reason", "fallback back");
+    console.warn("[ROUTE]", "from subpackage/jewelry/pages/five-elements/index.js/goBack", "to", "/pages/home/index", "reason", "fallback back");
     wx.redirectTo({
-      url: "/subpackage/jewelry/pages/home/index"
+      url: "/pages/home/index"
     });
   }
 });

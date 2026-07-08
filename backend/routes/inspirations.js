@@ -1,5 +1,5 @@
 const express = require("express");
-const fortuneService = require("../services/fortuneService");
+const inspirationService = require("../services/inspirationService");
 const { sendSuccess } = require("../http/responses");
 
 const router = express.Router();
@@ -10,7 +10,7 @@ router.get("/random", (req, res, next) => {
       ? req.query.previousId
       : "";
     return sendSuccess(res, {
-      fortune: fortuneService.getRandomFortune({ previousId })
+      inspiration: inspirationService.getRandomInspiration({ previousId })
     });
   } catch (error) {
     return next(error);

@@ -1,5 +1,6 @@
 const express = require("express");
 const { calculateWuxing } = require("../services/baziService");
+const { sanitizeWuxingResult } = require("../services/wuxingResultPresenter");
 const wuxingRepository = require("../repositories/wuxingRepository");
 const authMiddleware = require("../middlewares/authMiddleware");
 const { sendSuccess, sendError } = require("../http/responses");
@@ -35,7 +36,7 @@ router.post("/calculate", (req, res, next) => {
       ...req.body,
       userId: req.user.id
     });
-    return sendSuccess(res, result);
+    return sendSuccess(res, sanitizeWuxingResult(result));
   } catch (error) {
     return next(error);
   }
