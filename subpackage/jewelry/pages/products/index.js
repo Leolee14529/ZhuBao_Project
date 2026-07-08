@@ -179,9 +179,11 @@ Page({
 
     if (!product) return;
 
-    wx.previewImage({
-      current: product.image,
-      urls: currentProducts.map((item) => item.image)
+    wx.showModal({
+      title: product.name,
+      content: `${product.type}\n${product.desc}\n${product.price}`,
+      showCancel: false,
+      confirmText: "知道了"
     });
   },
   showSearchHint() {
