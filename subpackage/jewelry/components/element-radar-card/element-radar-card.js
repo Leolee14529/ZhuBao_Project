@@ -2,15 +2,15 @@ Component({
   properties: {
     title: {
       type: String,
-      value: "元素分布参考"
+      value: "色彩分布参考"
     },
     subtitle: {
       type: String,
-      value: "实时元素分布参考"
+      value: "实时色彩分布参考"
     },
     note: {
       type: String,
-      value: "整体元素分布较均衡。"
+      value: "整体色彩分布较均衡。"
     },
     values: {
       type: Array,

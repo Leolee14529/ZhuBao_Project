@@ -7,12 +7,12 @@
         <view class="back-button" bindtap="goBack">
           <text class="back-arrow">‹</text>
         </view>
-        <text class="topbar-title">五行色彩</text>
+        <text class="topbar-title">色彩风格</text>
       </view>
 
       <view class="intro-card">
-        <text class="intro-title">完善出生资料</text>
-        <text class="intro-desc">保存后会根据你的出生日期和时刻，刷新五行色彩与珠宝风格参考。</text>
+        <text class="intro-title">完善风格资料</text>
+        <text class="intro-desc">保存后会根据你填写的基础资料，刷新色彩偏好与珠宝风格参考。</text>
       </view>
 
       <view class="form-card">
@@ -48,7 +48,7 @@
       </view>
 
       <view class="preview-card">
-        <text class="preview-title">五行色彩参考</text>
+        <text class="preview-title">色彩风格参考</text>
         <text class="preview-focus">推荐色系：{{focusElement}}</text>
         <text class="preview-desc">{{destinyLine}}</text>
         <view class="tags">

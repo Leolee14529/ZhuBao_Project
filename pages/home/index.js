@@ -2,11 +2,11 @@ const auth = require("../../utils/auth");
 const share = require("../../utils/share");
 
 const ELEMENT_LABELS = {
-  wood: "木",
-  fire: "火",
-  earth: "土",
-  metal: "金",
-  water: "水"
+  wood: "翠绿色",
+  fire: "红紫色",
+  earth: "蜜糖色",
+  metal: "银白色",
+  water: "蓝黑色"
 };
 
 const DEFAULT_INSPIRATION = {
@@ -79,8 +79,8 @@ function buildHomeProfile() {
   const result = auth.getPersonalData(auth.WUXING_KEY);
   if (!result || !result.elements) {
     return {
-      destinyLine: "暂无元素参考数据",
-      customDesc: "暂无元素参考数据"
+      destinyLine: "暂无色彩参考数据",
+      customDesc: "暂无色彩参考数据"
     };
   }
 
@@ -92,16 +92,16 @@ function buildHomeProfile() {
   const weakest = ELEMENT_LABELS[ranked[ranked.length - 1].key];
 
   return {
-    destinyLine: dominant + "元素更明显 · " + weakest + "色可作平衡参考",
-    customDesc: dominant + "元素更明显，可搭配" + weakest + "色丰富整体风格层次"
+    destinyLine: dominant + "倾向更明显 · " + weakest + "可作平衡参考",
+    customDesc: dominant + "倾向更明显，可搭配" + weakest + "丰富整体风格层次"
   };
 }
 
 Page({
   data: {
     topSpacer: 40,
-    destinyLine: "暂无元素参考数据",
-    customDesc: "暂无元素参考数据",
+    destinyLine: "暂无色彩参考数据",
+    customDesc: "暂无色彩参考数据",
     flipped: false,
     cardClass: "",
     inspiration: DEFAULT_INSPIRATION,

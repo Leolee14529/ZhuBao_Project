@@ -36,7 +36,10 @@ test("backend inspiration and presentation copy stays review-safe", () => {
     "气场",
     "调和气场",
     "增强能量",
-    "身心状态稳定"
+    "身心状态稳定",
+    "五行色彩",
+    "出生资料",
+    "元素更明显"
   ];
 
   for (const file of files) {

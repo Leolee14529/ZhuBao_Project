@@ -74,7 +74,7 @@
               <view class="row-right"><text class="row-arrow">></text></view>
             </view>
             <view class="setting-row" bindtap="deleteWuxingProfile">
-              <view class="row-left"><text class="row-label">删除出生资料和元素参考</text></view>
+              <view class="row-left"><text class="row-label">删除风格资料和色彩参考</text></view>
               <view class="row-right"><text class="row-arrow">></text></view>
             </view>
             <view class="setting-row" bindtap="withdrawConsent">

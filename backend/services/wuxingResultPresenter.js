@@ -1,6 +1,13 @@
 const { ELEMENT_LABELS } = require("./bazi/constants");
 
 const ELEMENT_KEYS = ["wood", "fire", "earth", "metal", "water"];
+const COLOR_STYLE_LABELS = {
+  wood: "翠绿色",
+  fire: "红紫色",
+  earth: "蜜糖色",
+  metal: "银白色",
+  water: "蓝黑色"
+};
 
 function getDominantKey(elements) {
   const source = elements || {};
@@ -12,8 +19,8 @@ function getDominantKey(elements) {
 }
 
 function buildSafeAnalysis(dominantKey) {
-  const label = ELEMENT_LABELS[dominantKey] || "木";
-  return `${label}元素更明显，可作为今日色彩和珠宝风格参考。`;
+  const label = COLOR_STYLE_LABELS[dominantKey] || "翠绿色";
+  return `${label}倾向更明显，可作为今日色彩和珠宝风格参考。`;
 }
 
 function buildSafeSuggestion(dominantKey) {

@@ -127,8 +127,8 @@ Page({
   },
   deleteWuxingProfile() {
     wx.showModal({
-      title: "删除出生资料",
-      content: "将删除出生资料和元素参考，本地和服务器记录都会清空。",
+      title: "删除风格资料",
+      content: "将删除风格资料和色彩参考，本地和服务器记录都会清空。",
       confirmText: "删除",
       success: (res) => {
         if (!res.confirm) return;
@@ -163,7 +163,7 @@ Page({
   deleteAccount() {
     wx.showModal({
       title: "注销账号",
-      content: "将删除账号、全部服务器业务数据、出生资料、元素参考，并清除本机周期记录。该操作不可恢复。",
+      content: "将删除账号、全部服务器业务数据、风格资料、色彩参考，并清除本机周期记录。该操作不可恢复。",
       confirmText: "注销",
       success: (res) => {
         if (!res.confirm) return;

@@ -11,6 +11,8 @@ const {
   ELEMENT_KEYS,
   ELEMENT_LABELS
 } = require("./bazi/constants");
+
+const COLOR_STYLE_LABELS = { wood: "翠绿色", fire: "红紫色", earth: "蜜糖色", metal: "银白色", water: "蓝黑色" };
 const {
   gregorianToJulianDay,
   sunLongitude,
@@ -146,26 +148,16 @@ function calculatePercentages(counts) {
   return percentages;
 }
 
-function buildAnalysis(dominantKey, percentages, gender) {
-  const dominantLabel = ELEMENT_LABELS[dominantKey];
-
-  if (dominantKey === "wood") {
-    return `${dominantLabel}元素更明显，整体风格偏清新舒展，${gender === "female" ? "视觉感受更显灵动" : "视觉感受更显利落"}。`;
-  }
-
-  if (dominantKey === "fire") {
-    return `${dominantLabel}元素更明显，整体色彩更醒目，适合突出明亮、轻盈的视觉感受。`;
-  }
-
-  if (dominantKey === "earth") {
-    return `${dominantLabel}元素更明显，整体风格更温润踏实，适合呈现沉稳、柔和的层次。`;
-  }
-
-  if (dominantKey === "metal") {
-    return `${dominantLabel}元素更明显，整体线条更清爽，适合呈现利落、通透的质感。`;
-  }
-
-  return `${dominantLabel}元素更明显，整体色彩更冷静，适合呈现柔和、流动的风格。`;
+function buildAnalysis(dominantKey, gender) {
+  const dominantLabel = COLOR_STYLE_LABELS[dominantKey] || "翠绿色";
+  const descriptions = {
+    wood: `整体风格偏清新舒展，${gender === "female" ? "视觉感受更显灵动" : "视觉感受更显利落"}。`,
+    fire: "整体色彩更醒目，适合突出明亮、轻盈的视觉感受。",
+    earth: "整体风格更温润踏实，适合呈现沉稳、柔和的层次。",
+    metal: "整体线条更清爽，适合呈现利落、通透的质感。",
+    water: "整体色彩更冷静，适合呈现柔和、流动的风格。"
+  };
+  return `${dominantLabel}倾向更明显，${descriptions[dominantKey] || descriptions.water}`;
 }
 
 function buildSuggestion(dominantKey) {
@@ -280,7 +272,7 @@ function calculateWuxing(input) {
     },
     elements: percentages,
     dominant: ELEMENT_LABELS[dominantKey],
-    analysis: buildAnalysis(dominantKey, percentages, normalized.gender),
+    analysis: buildAnalysis(dominantKey, normalized.gender),
     suggestion: buildSuggestion(dominantKey),
     raw: {
       stems: rawStems,

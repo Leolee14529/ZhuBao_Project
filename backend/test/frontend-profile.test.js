@@ -32,10 +32,10 @@ test("server result is converted into page profile data", () => {
     analysis: "server analysis"
   });
 
-  assert.equal(profile.focusElement, "水");
+  assert.equal(profile.focusElement, "蓝黑色");
   assert.equal(profile.radarValues.length, 5);
   assert.equal(profile.elements.length, 5);
-  assert.equal(profile.summaryText.includes("元素更明显"), true);
+  assert.equal(profile.summaryText.includes("倾向更明显"), true);
   assert.equal(profile.summaryText.includes("server analysis"), false);
 });
 
@@ -64,8 +64,8 @@ test("matching saved server result is used for customization preview", () => {
     }
   );
 
-  assert.equal(profile.focusElement, "土");
-  assert.equal(profile.summaryText.includes("元素更明显"), true);
+  assert.equal(profile.focusElement, "蜜糖色");
+  assert.equal(profile.summaryText.includes("倾向更明显"), true);
   assert.equal(profile.summaryText.includes("earth server analysis"), false);
   assert.equal(profile.elements[0].key, "earth");
   assert.match(profile.elements[0].suitable, /^62%/);
@@ -119,7 +119,7 @@ test("customization preview avoids local heuristic when server result is missing
   );
 
   assert.equal(profile.focusElement, "无");
-  assert.equal(profile.destinyLine, "暂无元素参考数据");
+  assert.equal(profile.destinyLine, "暂无色彩参考数据");
 });
 
 test("customization preview requires prior birth-data notice before upload", () => {
@@ -143,5 +143,5 @@ test("current profile does not fall back to local heuristic without server resul
   const profile = fiveElements.buildCurrentProfile();
 
   assert.equal(profile.focusElement, "无");
-  assert.equal(profile.destinyLine, "暂无元素参考数据");
+  assert.equal(profile.destinyLine, "暂无色彩参考数据");
 });

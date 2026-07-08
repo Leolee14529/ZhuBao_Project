@@ -62,9 +62,9 @@
             </view>
           </view>
           <view class="stat-card stat-right">
-            <text class="stat-caption stat-pink">· 今日元素</text>
+            <text class="stat-caption stat-pink">· 今日色彩</text>
             <text class="stat-value">无</text>
-            <text class="stat-desc">暂无元素参考数据</text>
+            <text class="stat-desc">暂无色彩参考数据</text>
           </view>
         </view>
 
@@ -120,7 +120,7 @@
             <text>GEM</text>
           </view>
           <view class="custom-copy">
-            <text class="custom-title">五行色彩</text>
+            <text class="custom-title">色彩风格</text>
             <text class="custom-desc">{{customDesc}}</text>
           </view>
           <text class="custom-arrow">›</text>

@@ -97,7 +97,7 @@ test("authenticated user owns calculated and saved results", async () => {
   assert.equal(calculated.body.data.userId, auth.user.id);
   assert.equal(calculated.body.data.bazi, undefined);
   assert.equal(calculated.body.data.raw, undefined);
-  assert.match(calculated.body.data.analysis, /元素更明显/);
+  assert.match(calculated.body.data.analysis, /倾向更明显/);
 
   const saved = await request("/api/wuxing/save", {
     method: "POST",
@@ -134,7 +134,7 @@ test("saved wuxing result API returns presentation-safe fields", async () => {
   assert.equal(saved.response.status, 200);
   assert.equal(saved.body.data.result.bazi, undefined);
   assert.equal(saved.body.data.result.raw, undefined);
-  assert.match(saved.body.data.result.analysis, /元素更明显/);
+  assert.match(saved.body.data.result.analysis, /倾向更明显/);
   assert.equal(/能量|气场|命理|八字/.test(saved.body.data.result.analysis), false);
 
   const latest = await request("/api/wuxing/latest", { headers });

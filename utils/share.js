@@ -8,7 +8,7 @@ const PAGE_SHARE_CONFIGS = {
   "/pages/legal/privacy/index": { title: "海米算力 | 隐私政策" },
   "/subpackage/jewelry/pages/data/index": { title: "海米算力 | 记录中心" },
   "/subpackage/jewelry/pages/settings/index": { title: "海米算力 | 设置中心" },
-  "/subpackage/jewelry/pages/five-elements/index": { title: "海米算力 | 五行色彩" },
+  "/subpackage/jewelry/pages/five-elements/index": { title: "海米算力 | 色彩风格" },
   "/subpackage/jewelry/pages/products/index": {
     title: "海米算力 | 系列产品",
     imageUrl: "/subpackage/jewelry/assets/product-6.jpg"

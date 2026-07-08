@@ -222,7 +222,8 @@ test("active review text does not contain prohibited promise language", () => {
   const files = [
     ...listFiles("pages", [".js", ".wxml"]),
     ...listFiles("subpackage/jewelry", [".js", ".wxml"]),
-    ...listFiles("subpackage/periodCalendar", [".js", ".wxml"])
+    ...listFiles("subpackage/periodCalendar", [".js", ".wxml"]),
+    "utils/share.js"
   ];
   const prohibited = [
     "占卜",
@@ -261,10 +262,17 @@ test("active review text does not contain prohibited promise language", () => {
     "易孕期",
     "安全期"
   ];
+  const discouragedReviewPhrases = [
+    "五行色彩",
+    "出生资料",
+    "出生日期和时刻",
+    "元素更明显",
+    "暂无元素参考数据"
+  ];
 
   for (const file of files) {
     const text = readText(file);
-    for (const word of prohibited) {
+    for (const word of [...prohibited, ...discouragedReviewPhrases]) {
       assert.equal(text.includes(word), false, `${file} contains prohibited word ${word}`);
     }
   }

@@ -12,11 +12,13 @@
   border: 1rpx solid rgba(255, 255, 255, 0.07);
 }
 
-.stat-left {
+.stat-left,
+.gallery-col-left {
   float: left;
 }
 
-.stat-right {
+.stat-right,
+.gallery-col-right {
   float: right;
 }
 
@@ -197,14 +199,6 @@
 
 .gallery-col {
   width: 320rpx;
-}
-
-.gallery-col-left {
-  float: left;
-}
-
-.gallery-col-right {
-  float: right;
 }
 
 .product-card {
