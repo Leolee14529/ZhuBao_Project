@@ -15,6 +15,10 @@
         "type": "folder"
       },
       {
+        "value": ".tmp",
+        "type": "folder"
+      },
+      {
         "value": "subpackage/showcase",
         "type": "folder"
       },
@@ -43,11 +47,23 @@
         "type": "file"
       },
       {
+        "value": "上线准备.md",
+        "type": "file"
+      },
+      {
+        "value": "交接文档.md",
+        "type": "file"
+      },
+      {
         "value": "涓婄嚎鍑嗗.md",
         "type": "file"
       },
       {
         "value": "浜ゆ帴鏂囨。.md",
+        "type": "file"
+      },
+      {
+        "value": "UI修复方案-顶部与截图残影.md",
         "type": "file"
       }
     ],

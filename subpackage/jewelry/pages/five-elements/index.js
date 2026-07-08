@@ -207,7 +207,7 @@ Page({
     return new Promise(function (resolve, reject) {
       wx.showModal({
         title: "风格资料用途说明",
-        content: "将保存出生日期、出生时间、性别，用于生成色彩偏好和饰品风格参考；可在设置中删除；不作为健康判断或功效承诺。",
+        content: "将保存出生日期、出生时间、性别，用于生成色彩偏好和饰品风格参考；可在设置中删除；仅作为日常记录与风格参考，不构成专业意见，也不代表确定结果。",
         confirmText: "同意保存",
         cancelText: "取消",
         success: function (res) {

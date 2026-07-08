@@ -92,8 +92,8 @@
         </view>
 
         <view class="section-head">
-          <text class="section-title">系列产品</text>
-          <button class="section-link" bindtap="openProducts">查看全部 ›</button>
+          <text class="section-title">风格参考</text>
+          <button class="section-link" bindtap="openProducts">更多参考 ›</button>
         </view>
 
         <view class="gallery">

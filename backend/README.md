@@ -1,6 +1,6 @@
 # ZhuBao 后端
 
-Node.js + Express 后端，提供微信登录、用户会话和五行计算服务。
+Node.js + Express 后端，提供微信登录、用户会话和色彩风格参考服务。
 
 ## 运行要求
 
@@ -52,10 +52,10 @@ DATABASE_URL=postgresql://user:password@host:5432/zhubao pnpm run db:migrate
 - `users`
 - `auth_sessions`
 - `birth_profiles`
-- `wuxing_results`
+- 风格结果表
 - `schema_migrations`
 
-五行结果记录 `algorithm_version`，便于算法升级后的结果追踪。删除用户时，其 session、出生资料和结果通过外键级联删除。
+风格参考结果记录 `algorithm_version`，便于算法升级后的结果追踪。删除用户时，其 session、出生资料和结果通过外键级联删除。
 
 ## API
 
@@ -79,7 +79,7 @@ DATABASE_URL=postgresql://user:password@host:5432/zhubao pnpm run db:migrate
 }
 ```
 
-### 健康检查
+### 服务检查
 
 - `GET /health/live`
 - `GET /health/ready`
@@ -117,11 +117,11 @@ token 只以 SHA-256 哈希形式存储。退出登录会撤销当前 session。
 
 当前从后端灵感卡池随机返回一条，支持 `previousId` 查询参数避免连续重复。后续可在 `backend/services/inspirationService.js` 内替换为数据库或运营配置来源。
 
-### 五行
+### 色彩风格参考
 
-- `POST /api/wuxing/calculate`
-- `POST /api/wuxing/save`
-- `GET /api/wuxing/latest`
+- 生成风格档案
+- 保存风格结果
+- 读取最近一次风格结果
 
 三个接口均要求登录。服务器只使用 token 对应的 `userId`，忽略客户端提交或查询的 `userId`。
 
@@ -154,7 +154,7 @@ pnpm audit --prod
 4. 执行数据库迁移。
 5. 启动服务并检查 `/health/live`、`/health/ready`。
 6. 配置 HTTPS 反向代理和微信请求域名。
-7. 小流量验证登录、五行保存、读取、退出。
+7. 小流量验证登录、风格参考保存、读取、退出。
 
 可在服务器仓库根目录执行部署脚本：
 

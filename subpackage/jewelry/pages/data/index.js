@@ -11,9 +11,9 @@ Page({
     radarValues: [0, 0, 0, 0, 0],
     radarNote: "暂无色彩参考数据。",
     sleep: [
-      { name: "深睡", value: "0", width: "0%", color: "#10b981", cardClass: "sleep-card-left" },
-      { name: "浅睡", value: "0", width: "0%", color: "#34d399", cardClass: "sleep-card-mid" },
-      { name: "REM", value: "0", width: "0%", color: "#6ee7b7", cardClass: "sleep-card-right" }
+      { name: "安静", value: "0", width: "0%", color: "#10b981", cardClass: "sleep-card-left" },
+      { name: "舒展", value: "0", width: "0%", color: "#34d399", cardClass: "sleep-card-mid" },
+      { name: "专注", value: "0", width: "0%", color: "#6ee7b7", cardClass: "sleep-card-right" }
     ],
     elements: [
       { name: "翠绿色", jade: "暂无参考数据", suitable: "0% · 暂无色彩参考数据", color: "#10b981", rowClass: "" },

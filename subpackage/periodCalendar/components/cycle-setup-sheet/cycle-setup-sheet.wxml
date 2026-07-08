@@ -10,7 +10,7 @@
       </view>
       <view class="cycle-privacy-confirm__copy">
         <text class="cycle-privacy-confirm__title">我已知晓周期数据说明</text>
-        <text class="cycle-privacy-confirm__desc">周期记录仅保存在本机，不上传服务器，不作为医疗判断、避孕、生育安排或健康建议；清除缓存或卸载可能导致数据丢失。</text>
+        <text class="cycle-privacy-confirm__desc">周期记录仅保存在本机，不上传服务器，仅用于个人记录与日期展示参考；清除缓存或卸载可能导致数据丢失。</text>
       </view>
     </view>
 

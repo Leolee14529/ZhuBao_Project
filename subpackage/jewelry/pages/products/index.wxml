@@ -8,8 +8,8 @@
           <view class="back-chevron"></view>
         </button>
         <view class="title-block">
-          <text class="page-title">系列产品</text>
-          <text class="page-subtitle">{{filteredCount}} 件可浏览作品</text>
+          <text class="page-title">风格参考</text>
+          <text class="page-subtitle">色彩与材质参考</text>
         </view>
         <button class="icon-button search-button" bindtap="showSearchHint" aria-label="搜索">
           <view class="search-ring"></view>
@@ -19,12 +19,8 @@
 
       <view class="feature-band">
         <view class="feature-copy">
-          <text class="feature-kicker">WEARABLE JEWELRY</text>
-          <text class="feature-title">把芯片戴成珠宝</text>
-        </view>
-        <view class="feature-stats">
-          <text class="feature-number">{{filteredCount}}</text>
-          <text class="feature-label">款</text>
+          <text class="feature-kicker">STYLE REFERENCE</text>
+          <text class="feature-title">珠宝风格灵感</text>
         </view>
       </view>
 
@@ -54,8 +50,7 @@
                 <text class="product-type">{{item.type}}</text>
                 <text class="product-desc">{{item.desc}}</text>
                 <view class="product-foot">
-                  <text class="product-price">{{item.price}}</text>
-                  <text class="product-more">查看</text>
+                  <text class="product-more">风格说明</text>
                 </view>
               </view>
             </view>
@@ -75,8 +70,7 @@
                 <text class="product-type">{{item.type}}</text>
                 <text class="product-desc">{{item.desc}}</text>
                 <view class="product-foot">
-                  <text class="product-price">{{item.price}}</text>
-                  <text class="product-more">查看</text>
+                  <text class="product-more">风格说明</text>
                 </view>
               </view>
             </view>

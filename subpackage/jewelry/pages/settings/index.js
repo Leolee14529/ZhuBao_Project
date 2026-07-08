@@ -19,7 +19,7 @@ Page({
         title: "DEVICE",
         items: [
           { isRing: true, label: "指环连接 (Ring)", arrow: false, rowClass: "", valueClass: "row-value-shifted" },
-          { isSleep: true, label: "睡眠模式", toggle: true, toggleClass: "toggle-off", rowClass: "setting-row-last" }
+          { isSleep: true, label: "夜间提醒", toggle: true, toggleClass: "toggle-off", rowClass: "setting-row-last" }
         ]
       },
       {
@@ -115,13 +115,13 @@ Page({
   },
   clearCycleData() {
     wx.showModal({
-      title: "清除经期记录",
-      content: "将清除本机保存的经期记录和确认状态，不会影响服务器账号。",
+      title: "清除周期记录",
+      content: "将清除本机保存的周期记录和确认状态，不会影响服务器账号。",
       confirmText: "清除",
       success: (res) => {
         if (!res.confirm) return;
         auth.clearCycleData();
-        wx.showToast({ title: "已清除本机经期记录", icon: "success" });
+        wx.showToast({ title: "已清除本机周期记录", icon: "success" });
       }
     });
   },

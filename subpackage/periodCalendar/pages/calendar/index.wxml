@@ -1,9 +1,8 @@
-<view class="calendar-page" style="padding-top: {{statusBarHeight}}px;">
+<view class="calendar-page" style="padding-top: {{contentTopOffset}}px;">
   <calendar-topbar
     topbar-height="{{topbarHeight}}"
     back-button-top="{{backButtonTop}}"
     bind:back="onBackTap"
-    bind:capsule="onCapsuleTap"
   />
 
   <view class="page-content">

@@ -2,10 +2,10 @@
   <view class="image-wrap">
     <image class="product-image" src="{{image}}" mode="aspectFill"></image>
     <view class="shade"></view>
-    <text wx:if="{{isNew}}" class="tag">新品</text>
+    <text wx:if="{{showTag}}" class="tag">参考</text>
   </view>
   <view class="product-meta">
     <view><text class="name">{{name}}</text><text class="type">{{type}}</text></view>
-    <text class="price">{{price}}</text>
+    <text wx:if="{{note}}" class="note">{{note}}</text>
   </view>
 </view>

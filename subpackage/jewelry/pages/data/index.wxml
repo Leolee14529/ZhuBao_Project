@@ -11,10 +11,10 @@
         <view class="score-copy">
           <view class="score-label-row">
             <view class="score-dot"></view>
-            <text class="score-label">今日测评</text>
+            <text class="score-label">今日记录</text>
           </view>
-          <text class="score-value">0 <text class="score-unit">/ 100</text></text>
-          <text class="score-text">暂无真实记录数据。</text>
+          <text class="score-value">0 <text class="score-unit">条</text></text>
+          <text class="score-text">暂无佩戴记录。</text>
         </view>
         <view class="score-ring">
           <view class="score-ring-inner">
@@ -32,22 +32,22 @@
         <view class="key-stat key-stat-left">
           <view class="key-stat-icon icon-rose">♥</view>
           <view class="key-stat-copy">
-            <text class="key-stat-value">0 <text class="small-unit">bpm</text></text>
-            <text class="key-stat-label">心率参考</text>
+            <text class="key-stat-value">0 <text class="small-unit">次</text></text>
+            <text class="key-stat-label">佩戴节奏</text>
           </view>
         </view>
         <view class="key-stat key-stat-right">
           <view class="key-stat-icon icon-green">●</view>
           <view class="key-stat-copy">
-            <text class="key-stat-value">0 <text class="small-unit">%</text></text>
-            <text class="key-stat-label">HRV 指数</text>
+            <text class="key-stat-value">0 <text class="small-unit">项</text></text>
+            <text class="key-stat-label">佩戴状态</text>
           </view>
         </view>
       </view>
 
       <view class="panel">
-        <text class="panel-title">心率记录</text>
-        <text class="panel-subtitle">24小时记录参考</text>
+        <text class="panel-title">节奏记录</text>
+        <text class="panel-subtitle">今日记录参考</text>
         <view class="chart-area">
           <view class="chart-line chart-line-top"></view>
           <view class="chart-line chart-line-mid"></view>
@@ -64,14 +64,14 @@
       </view>
 
       <view class="panel">
-        <text class="panel-title">休息记录</text>
-        <text class="panel-subtitle">总时长 0小时 0分</text>
+        <text class="panel-title">感受记录</text>
+        <text class="panel-subtitle">暂无记录</text>
         <view class="sleep-cards">
           <block wx:for="{{sleep}}" wx:key="name">
             <view class="sleep-card {{item.cardClass}}">
               <view class="sleep-top-line" style="background-color: {{item.color}};"></view>
               <text class="sleep-name">{{item.name}}</text>
-              <text class="sleep-value">{{item.value}}<text class="sleep-unit">小时</text></text>
+              <text class="sleep-value">{{item.value}}<text class="sleep-unit">次</text></text>
             </view>
           </block>
         </view>
@@ -85,10 +85,10 @@
       <view class="energy-card">
         <view class="energy-icon">✦</view>
         <view class="energy-copy">
-          <text class="energy-title">身体感受</text>
+          <text class="energy-title">今日感受</text>
           <text class="energy-desc">暂无感受记录</text>
         </view>
-        <text class="energy-value">0<text class="small-unit">/100</text></text>
+        <text class="energy-value">暂无</text>
       </view>
 
       <view class="panel">

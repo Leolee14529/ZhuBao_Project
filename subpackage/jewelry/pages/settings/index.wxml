@@ -70,7 +70,7 @@
               <view class="row-right"><text class="row-arrow">></text></view>
             </view>
             <view class="setting-row" bindtap="clearCycleData">
-              <view class="row-left"><text class="row-label">清除经期本地数据</text></view>
+              <view class="row-left"><text class="row-label">清除周期本地数据</text></view>
               <view class="row-right"><text class="row-arrow">></text></view>
             </view>
             <view class="setting-row" bindtap="deleteWuxingProfile">

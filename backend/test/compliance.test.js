@@ -96,8 +96,8 @@ test("review package ignores stale demo routes and handoff documents", () => {
     "folder:subpackage/device13",
     "folder:subpackage/device17",
     "file:agent.md",
-    "file:涓婄嚎鍑嗗.md",
-    "file:浜ゆ帴鏂囨。.md"
+    "file:上线准备.md",
+    "file:交接文档.md"
   ].forEach((entry) => {
     assert.ok(ignored.has(entry), `project.config.json must ignore ${entry}`);
   });
@@ -239,6 +239,10 @@ test("active review text does not contain prohibited promise language", () => {
     "治愈",
     "治疗",
     "诊断",
+    "健康",
+    "健康建议",
+    "功效",
+    "功效承诺",
     "保证",
     "必然有效",
     "预测未来",
@@ -260,7 +264,16 @@ test("active review text does not contain prohibited promise language", () => {
     "旺财",
     "排卵日",
     "易孕期",
-    "安全期"
+    "安全期",
+    "心率",
+    "HRV",
+    "bpm",
+    "今日测评",
+    "身体感受",
+    "身体检测",
+    "健康指数",
+    "改善健康",
+    "睡眠模式"
   ];
   const discouragedReviewPhrases = [
     "五行色彩",

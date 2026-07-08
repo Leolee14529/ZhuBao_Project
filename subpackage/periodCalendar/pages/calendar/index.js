@@ -6,6 +6,7 @@ Page({
   data: {
     statusBarHeight: 47,
     topbarHeight: 52,
+    contentTopOffset: 60,
     backButtonTop: 26,
     monthLabel: "",
     viewYear: 0,
@@ -57,7 +58,12 @@ Page({
       topbarHeight = Math.max(menuButton.bottom + 8, statusBarHeight + 44);
       backButtonTop = menuButton.top + (menuButton.height - backButtonHeight) / 2 + 2;
     }
-    this.setData({ statusBarHeight: statusBarHeight, topbarHeight: Math.round(topbarHeight), backButtonTop: Math.round(backButtonTop) });
+    this.setData({
+      statusBarHeight: statusBarHeight,
+      topbarHeight: Math.round(topbarHeight),
+      contentTopOffset: Math.round(topbarHeight + 8),
+      backButtonTop: Math.round(backButtonTop)
+    });
   },
   loadCycleProfile() {
     const profile = auth.getPersonalData(this.cycleStorageKey);
@@ -92,7 +98,6 @@ Page({
     console.warn("[ROUTE]", "from subpackage/periodCalendar/pages/calendar/index.js/onBackTap", "to", "/subpackage/jewelry/pages/data/index", "reason", "fallback back");
     wx.redirectTo({ url: "/subpackage/jewelry/pages/data/index" });
   },
-  onCapsuleTap() { wx.showToast({ title: "更多功能待接入", icon: "none" }); },
   onPrevMonth() {
     let { viewYear, viewMonth } = this.data;
     viewMonth -= 1;

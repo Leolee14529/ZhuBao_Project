@@ -118,7 +118,7 @@ Page({
     leftProducts: [
       {
         image: "/pages/home/assets/product-1.jpg",
-        tag: "新品",
+        tag: "灵感",
         cardClass: "product-card-tall"
       },
       {

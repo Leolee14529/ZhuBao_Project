@@ -1,5 +1,5 @@
 {
-  "name": "wuxing-backend",
+  "name": "zhubao-style-backend",
   "version": "1.0.0",
   "description": "WeChat mini program backend for element color and jewelry style references",
   "main": "server.js",
