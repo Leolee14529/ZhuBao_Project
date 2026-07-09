@@ -1,76 +1,124 @@
+@import "../../styles/typography.wxss";
+
 .calendar-grid {
+  width: 100%;
   margin-top: 28rpx;
+  box-sizing: border-box;
+}
+
+.calendar-grid--compact {
+  margin-top: 18rpx;
 }
 
 .week-header,
 .week-row {
   display: flex;
-  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .week-header {
-  padding: 0 12rpx;
+  padding: 0 4rpx;
 }
 
 .week-label {
-  width: 88rpx;
+  flex: 1;
+  min-width: 0;
   text-align: center;
-  font-size: 20rpx;
-  color: rgba(255, 255, 255, 0.68);
+  font-size: 21rpx;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.56);
 }
 
 .week-row {
-  margin-top: 18rpx;
-  padding: 0 12rpx;
+  margin-top: 16rpx;
+  padding: 0 4rpx;
+}
+
+.calendar-grid--compact .week-row {
+  margin-top: 10rpx;
 }
 
 .day-cell {
   position: relative;
-  width: 88rpx;
-  height: 90rpx;
+  flex: 1;
+  min-width: 0;
+  height: 86rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.calendar-grid--compact .day-cell {
+  height: 72rpx;
 }
 
 .day-ring {
   position: relative;
   width: 58rpx;
   height: 58rpx;
-  margin: 0 auto;
   border-radius: 50%;
   border: 2rpx solid transparent;
   display: flex;
   align-items: center;
   justify-content: center;
+  box-sizing: border-box;
+}
+
+.calendar-grid--compact .day-ring {
+  width: 50rpx;
+  height: 50rpx;
 }
 
 .status-period {
   background: #ff3d71;
+  box-shadow: 0 8rpx 18rpx rgba(255, 61, 113, 0.24);
 }
 
 .status-periodForecast {
-  border-color: #ff3d71;
+  border-color: #ff6b96;
+  background: rgba(255, 61, 113, 0.08);
 }
 
 .status-ovulation {
-  border-color: #9f59ff;
+  border-color: #a875ff;
+  background: rgba(159, 89, 255, 0.1);
 }
 
 .status-fertile {
-  border-color: #11de71;
+  border-color: #22df88;
+  background: rgba(17, 222, 113, 0.08);
 }
 
 .day-ring-today {
-  box-shadow: 0 0 16rpx rgba(17, 222, 113, 0.55);
+  box-shadow: 0 0 0 4rpx rgba(142, 240, 207, 0.1), 0 0 18rpx rgba(17, 222, 113, 0.36);
+}
+
+.day-cell-selected .day-ring {
+  box-shadow: 0 0 0 5rpx rgba(255, 255, 255, 0.08);
+}
+
+.day-cell-selected .day-ring-today {
+  box-shadow: 0 0 0 5rpx rgba(255, 255, 255, 0.08), 0 0 18rpx rgba(17, 222, 113, 0.36);
 }
 
 .day-text {
   position: relative;
   z-index: 2;
-  font-size: 22rpx;
+  font-size: 25rpx;
+  font-weight: 500;
   color: #ffffff;
+  line-height: 1;
+}
+
+.calendar-grid--compact .day-text {
+  font-size: 23rpx;
 }
 
 .day-muted {
-  color: rgba(255, 255, 255, 0.34);
+  color: rgba(255, 255, 255, 0.3);
 }
 
 .day-safe-dot {
@@ -81,14 +129,26 @@
   height: 10rpx;
   margin-left: -5rpx;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.calendar-grid--compact .day-safe-dot {
+  bottom: 6rpx;
+  width: 8rpx;
+  height: 8rpx;
+  margin-left: -4rpx;
 }
 
 .day-marker {
   width: 4rpx;
-  height: 18rpx;
-  margin: 8rpx auto 0;
+  height: 16rpx;
+  margin: 7rpx auto 0;
   border-radius: 999rpx;
-  background: linear-gradient(180deg, rgba(17, 222, 113, 0.1) 0%, #ffffff 100%);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.18) 0%, #ffffff 100%);
   opacity: 0.84;
+}
+
+.calendar-grid--compact .day-marker {
+  height: 12rpx;
+  margin-top: 5rpx;
 }

@@ -32,16 +32,9 @@ Page({
   },
 
   onBackTap() {
-    console.warn("[ROUTE]", "from subpackage/device12/pages/connected/index.js/onBackTap", "to", "/subpackage/jewelry/pages/home/index", "reason", "back to home");
+    console.warn("[ROUTE]", "from subpackage/device12/pages/connected/index.js/onBackTap", "to", "/pages/home/index", "reason", "back to home");
     wx.reLaunch({
-      url: "/subpackage/jewelry/pages/home/index"
-    });
-  },
-
-  onCapsuleTap() {
-    wx.showToast({
-      title: "更多功能待接入",
-      icon: "none"
+      url: "/pages/home/index"
     });
   },
 

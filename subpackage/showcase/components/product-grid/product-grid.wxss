@@ -30,5 +30,5 @@
   background: rgba(50, 218, 132, 0.92);
   color: #082114;
   font-size: 22rpx;
-  font-weight: 700;
+  font-weight: 500;
 }

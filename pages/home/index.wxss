@@ -1,0 +1,76 @@
+@import "./inspiration.wxss";
+@import "./mood.wxss";
+@import "./content.wxss";
+@import "./nav.wxss";
+
+.home-page {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  min-height: 100vh;
+  background: #050806;
+  background-color: #050806;
+  color: #ffffff;
+  overflow: hidden;
+}
+
+.scroll-container {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #050806;
+  overflow: hidden;
+}
+
+.home-scroll {
+  height: 100vh;
+  min-height: 100%;
+  background-color: #050806;
+}
+
+.page-body {
+  min-height: 100%;
+  padding: 30rpx 28rpx calc(150rpx + constant(safe-area-inset-bottom));
+  padding: 30rpx 28rpx calc(150rpx + env(safe-area-inset-bottom));
+  background-color: #050806;
+  box-sizing: border-box;
+}
+
+.page-top-spacer {
+  width: 100%;
+}
+
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 24rpx;
+  margin-bottom: 22rpx;
+}
+
+.header-copy {
+  flex: 1;
+  min-width: 0;
+  padding-top: 12rpx;
+}
+
+.hello-line {
+  display: block;
+  font-size: 34rpx;
+  font-weight: 500;
+  color: #ffffff;
+}
+
+.destiny-line {
+  display: block;
+  margin-top: 10rpx;
+  font-size: 22rpx;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.46);
+}
+
+.bottom-space {
+  height: 28rpx;
+}

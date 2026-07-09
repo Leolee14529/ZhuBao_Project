@@ -1,0 +1,148 @@
+<view class="home-page">
+  <view class="scroll-container">
+    <scroll-view class="home-scroll" scroll-y="true" enhanced="true" bounces="true" show-scrollbar="false">
+      <view class="page-body">
+        <view class="page-top-spacer" style="height: {{topSpacer}}px;"></view>
+        <view class="page-header">
+          <view class="header-copy">
+            <text class="hello-line">你好</text>
+            <text class="destiny-line">{{destinyLine}}</text>
+          </view>
+        </view>
+
+        <view class="inspiration-card {{cardClass}}" bindtap="toggleInspiration">
+          <view class="inspiration-front">
+            <view class="inspiration-grid"></view>
+            <view class="inspiration-head">
+              <view class="inspiration-label">
+                <view class="inspiration-dot"></view>
+                <text>今日灵感</text>
+              </view>
+              <text class="inspiration-no">{{inspiration.no}}</text>
+            </view>
+            <view class="inspiration-center">
+              <view class="inspiration-ring">
+                <view class="inspiration-ring-inner"></view>
+                <text class="inspiration-symbol">{{inspiration.symbol}}</text>
+              </view>
+              <text class="inspiration-title">{{inspiration.title}}</text>
+              <text class="inspiration-subtitle">{{inspiration.subtitle}}</text>
+            </view>
+            <view class="inspiration-copy">
+              <text class="inspiration-quote">“</text>
+              <text class="inspiration-text">{{inspiration.text}}</text>
+            </view>
+          </view>
+          <view class="inspiration-back">
+            <view class="inspiration-back-grid"></view>
+            <view class="inspiration-back-core"></view>
+            <text class="inspiration-back-title">DAILY INSPIRATION</text>
+            <text class="inspiration-back-tip">点击翻面</text>
+          </view>
+        </view>
+
+        <view class="stats-row">
+          <view class="stat-card stat-left mood-stat">
+            <text class="stat-caption">· 今日心情</text>
+            <text class="stat-value">{{moodLabel}}</text>
+            <text class="stat-desc">{{moodDesc}}</text>
+            <view class="mood-options">
+              <block wx:for="{{moodOptions}}" wx:key="id">
+                <button
+                  class="mood-option {{item.itemClass}}"
+                  data-mood="{{item.id}}"
+                  bindtap="recordMood"
+                >{{item.label}}</button>
+              </block>
+            </view>
+          </view>
+          <view class="stat-card stat-right">
+            <text class="stat-caption stat-pink">· 今日色彩</text>
+            <text class="stat-value">无</text>
+            <text class="stat-desc">浏览珠宝风格参考</text>
+          </view>
+        </view>
+
+        <view class="device-card" bindtap="openDevice">
+          <view class="device-icon-wrap">
+            <image class="device-icon-image" src="/pages/home/assets/device-bluetooth.png" mode="aspectFill"></image>
+          </view>
+          <view class="device-main">
+            <text class="device-title">{{device.title}}</text>
+            <text class="device-name">{{device.name}}</text>
+          </view>
+          <view class="device-side">
+            <view class="device-status-row">
+              <view class="device-status-dot {{device.statusClass}}"></view>
+              <text class="device-status {{device.statusClass}}">{{device.status}}</text>
+            </view>
+            <view class="device-battery-row">
+              <view class="battery-icon">
+                <view class="battery-cap"></view>
+                <view class="battery-level" style="width: {{device.batteryWidth || '0%'}};"></view>
+              </view>
+              <text class="device-battery">{{device.battery}}</text>
+            </view>
+          </view>
+        </view>
+
+        <view class="section-head">
+          <text class="section-title">风格参考</text>
+          <button class="section-link" bindtap="openProducts">更多参考 ›</button>
+        </view>
+
+        <view class="gallery">
+          <view class="gallery-col gallery-col-left">
+            <block wx:for="{{leftProducts}}" wx:key="image">
+              <view class="product-card {{item.cardClass}}">
+                <image class="product-image" src="{{item.image}}" mode="aspectFill"></image>
+                <text wx:if="{{item.tag}}" class="product-tag">{{item.tag}}</text>
+              </view>
+            </block>
+          </view>
+          <view class="gallery-col gallery-col-right">
+            <block wx:for="{{rightProducts}}" wx:key="image">
+              <view class="product-card {{item.cardClass}}">
+                <image class="product-image" src="{{item.image}}" mode="aspectFill"></image>
+                <text wx:if="{{item.tag}}" class="product-tag">{{item.tag}}</text>
+              </view>
+            </block>
+          </view>
+        </view>
+
+        <view class="bottom-space"></view>
+      </view>
+    </scroll-view>
+  </view>
+
+  <view class="bottom-nav">
+    <button class="nav-item active" bindtap="noop">
+      <view class="nav-top"></view>
+      <view class="nav-icon icon-home">
+        <view class="home-roof"></view>
+        <view class="home-body"></view>
+      </view>
+      <text class="nav-label">首页</text>
+    </button>
+    <button class="nav-item" bindtap="goData">
+      <view class="nav-top"></view>
+      <view class="nav-icon icon-wave">
+        <view class="wave-line wave-left"></view>
+        <view class="wave-line wave-mid"></view>
+        <view class="wave-line wave-right"></view>
+      </view>
+      <text class="nav-label">记录</text>
+    </button>
+    <button class="nav-item" bindtap="goSettings">
+      <view class="nav-top"></view>
+      <view class="nav-icon icon-gear">
+        <view class="gear-core"></view>
+        <view class="gear-tooth gear-top"></view>
+        <view class="gear-tooth gear-right"></view>
+        <view class="gear-tooth gear-bottom"></view>
+        <view class="gear-tooth gear-left"></view>
+      </view>
+      <text class="nav-label">设置</text>
+    </button>
+  </view>
+</view>

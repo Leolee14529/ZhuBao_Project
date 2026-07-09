@@ -7,11 +7,11 @@
 
   <view class="radar-stage">
     <canvas canvas-id="elementRadarCanvas" class="radar-canvas"></canvas>
-    <cover-view class="radar-label label-wood">木</cover-view>
-    <cover-view class="radar-label label-fire">火</cover-view>
-    <cover-view class="radar-label label-earth">土</cover-view>
-    <cover-view class="radar-label label-metal">金</cover-view>
-    <cover-view class="radar-label label-water">水</cover-view>
+    <cover-view class="radar-label label-wood">翠绿</cover-view>
+    <cover-view class="radar-label label-fire">红紫</cover-view>
+    <cover-view class="radar-label label-earth">蜜糖</cover-view>
+    <cover-view class="radar-label label-metal">银白</cover-view>
+    <cover-view class="radar-label label-water">蓝黑</cover-view>
   </view>
 
   <text class="radar-status">{{note}}</text>

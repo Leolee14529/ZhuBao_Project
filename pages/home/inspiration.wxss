@@ -1,0 +1,165 @@
+.inspiration-card {
+  position: relative;
+  overflow: hidden;
+  height: 610rpx;
+  min-height: 610rpx;
+  margin-bottom: 30rpx;
+  border-radius: 34rpx;
+  background-color: #0f1714;
+  border: 1rpx solid rgba(16, 185, 129, 0.22);
+}
+
+.inspiration-front {
+  display: block;
+  height: 100%;
+  padding: 28rpx 32rpx 34rpx;
+  box-sizing: border-box;
+}
+
+.inspiration-grid,
+.inspiration-back-grid {
+  position: absolute;
+  inset: 0;
+  opacity: 0.12;
+  background-image: linear-gradient(rgba(16, 185, 129, 0.2) 1rpx, transparent 1rpx),
+    linear-gradient(90deg, rgba(16, 185, 129, 0.2) 1rpx, transparent 1rpx);
+  background-size: 48rpx 48rpx;
+}
+
+.inspiration-head {
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 48rpx;
+}
+
+.inspiration-label {
+  float: left;
+  font-size: 26rpx;
+  color: #39d87a;
+}
+
+.inspiration-dot {
+  display: inline-block;
+  width: 12rpx;
+  height: 12rpx;
+  margin-right: 14rpx;
+  border-radius: 6rpx;
+  background-color: #39d87a;
+}
+
+.inspiration-no {
+  float: right;
+  font-size: 26rpx;
+  color: rgba(255, 255, 255, 0.34);
+}
+
+.inspiration-center {
+  position: relative;
+  text-align: center;
+  margin-bottom: 36rpx;
+}
+
+.inspiration-ring {
+  position: relative;
+  width: 164rpx;
+  height: 164rpx;
+  margin: 0 auto 24rpx;
+  border-radius: 82rpx;
+  border: 1rpx solid rgba(57, 216, 122, 0.28);
+}
+
+.inspiration-ring-inner {
+  position: absolute;
+  inset: 20rpx;
+  border-radius: 62rpx;
+  border: 4rpx solid rgba(57, 216, 122, 0.8);
+}
+
+.inspiration-symbol {
+  display: block;
+  line-height: 164rpx;
+  text-align: center;
+  font-size: 74rpx;
+  color: #ffffff;
+}
+
+.inspiration-title {
+  display: block;
+  font-size: 50rpx;
+  line-height: 1.12;
+  color: #ffffff;
+}
+
+.inspiration-subtitle {
+  display: block;
+  margin-top: 12rpx;
+  font-size: 26rpx;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.inspiration-copy {
+  position: relative;
+  min-height: 126rpx;
+  padding: 26rpx 26rpx 24rpx 62rpx;
+  border-radius: 24rpx;
+  background-color: rgba(0, 0, 0, 0.34);
+}
+
+.inspiration-quote {
+  position: absolute;
+  left: 34rpx;
+  top: 28rpx;
+  font-size: 44rpx;
+  color: #39d87a;
+}
+
+.inspiration-text {
+  display: block;
+  font-size: 26rpx;
+  line-height: 1.5;
+  color: rgba(220, 252, 231, 0.92);
+}
+
+.inspiration-back {
+  display: none;
+  position: relative;
+  height: 100%;
+  min-height: 100%;
+  padding-top: 154rpx;
+  text-align: center;
+  background-color: #0a120f;
+  box-sizing: border-box;
+}
+
+.inspiration-card-flipped .inspiration-front {
+  display: none;
+}
+
+.inspiration-card-flipped .inspiration-back {
+  display: block;
+}
+
+.inspiration-back-core {
+  width: 120rpx;
+  height: 120rpx;
+  margin: 0 auto 30rpx;
+  border: 2rpx solid rgba(57, 216, 122, 0.4);
+  transform: rotate(45deg);
+}
+
+.inspiration-back-title,
+.inspiration-back-tip {
+  display: block;
+  color: rgba(57, 216, 122, 0.75);
+}
+
+.inspiration-back-title {
+  font-size: 26rpx;
+  letter-spacing: 6rpx;
+}
+
+.inspiration-back-tip {
+  margin-top: 24rpx;
+  font-size: 20rpx;
+  color: rgba(255, 255, 255, 0.26);
+}

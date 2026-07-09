@@ -1,0 +1,6 @@
+{
+  "component": true,
+  "usingComponents": {
+    "cycle-calendar-grid": "/subpackage/periodCalendar/components/cycle-calendar-grid/cycle-calendar-grid"
+  }
+}

@@ -1,0 +1,68 @@
+<view class="cycle-setup-mask" catchtap="onCloseTap">
+  <view class="cycle-setup-sheet" catchtap="noop">
+    <view class="cycle-setup-sheet__handle"></view>
+    <text class="cycle-setup-sheet__title">设置周期</text>
+    <text class="cycle-setup-sheet__desc">只做前端保存，设置完成后会直接显示参考日历与日期提醒。</text>
+
+    <view class="cycle-privacy-confirm" bindtap="onToggleCyclePrivacy">
+      <view class="cycle-privacy-confirm__box {{cyclePrivacyConfirmed ? 'cycle-privacy-confirm__box--checked' : ''}}">
+        <text wx:if="{{cyclePrivacyConfirmed}}" class="cycle-privacy-confirm__mark">✓</text>
+      </view>
+      <view class="cycle-privacy-confirm__copy">
+        <text class="cycle-privacy-confirm__title">我已知晓周期数据说明</text>
+        <text class="cycle-privacy-confirm__desc">周期记录仅保存在本机，不上传服务器，仅用于个人记录与日期展示参考；清除缓存或卸载可能导致数据丢失。</text>
+      </view>
+    </view>
+
+    <view class="setup-calendar-card">
+      <view class="setup-calendar-head">
+        <button class="setup-calendar-nav" bindtap="onSetupPrevMonth">‹</button>
+        <view class="setup-calendar-title-wrap">
+          <text class="setup-calendar-title">{{setupMonthLabel}}</text>
+          <text class="setup-calendar-subtitle">点选上次周期开始日</text>
+        </view>
+        <button class="setup-calendar-nav" bindtap="onSetupNextMonth">›</button>
+      </view>
+      <cycle-calendar-grid weeks="{{setupWeeks}}" compact="{{true}}" bind:selectday="onSetupSelectDay" />
+      <view class="setup-selected-date">
+        <text class="setup-selected-date__label">已选开始日</text>
+        <text class="setup-selected-date__value">{{draftProfile.lastPeriodDate}}</text>
+      </view>
+    </view>
+
+    <view class="cycle-field">
+      <view class="cycle-field__header">
+        <text class="cycle-field__label">平均周期</text>
+        <text class="cycle-field__hint">21-35天</text>
+      </view>
+      <view class="cycle-stepper">
+        <button class="cycle-stepper__button" bindtap="onCycleLengthMinus">-</button>
+        <view class="cycle-stepper__value">
+          <text class="cycle-stepper__number">{{draftProfile.cycleLength}}</text>
+          <text class="cycle-stepper__unit">天</text>
+        </view>
+        <button class="cycle-stepper__button" bindtap="onCycleLengthPlus">+</button>
+      </view>
+    </view>
+
+    <view class="cycle-field">
+      <view class="cycle-field__header">
+        <text class="cycle-field__label">持续天数</text>
+        <text class="cycle-field__hint">3-8天</text>
+      </view>
+      <view class="cycle-stepper">
+        <button class="cycle-stepper__button" bindtap="onPeriodLengthMinus">-</button>
+        <view class="cycle-stepper__value">
+          <text class="cycle-stepper__number">{{draftProfile.periodLength}}</text>
+          <text class="cycle-stepper__unit">天</text>
+        </view>
+        <button class="cycle-stepper__button" bindtap="onPeriodLengthPlus">+</button>
+      </view>
+    </view>
+
+    <view class="cycle-setup-sheet__actions">
+      <view class="cycle-setup-sheet__button cycle-setup-sheet__button--ghost" bindtap="onCloseTap">取消</view>
+      <view class="cycle-setup-sheet__button cycle-setup-sheet__button--primary {{isSavingCycle ? 'cycle-setup-sheet__button--disabled' : ''}}" bindtap="onSaveTap">{{isSavingCycle ? '保存中' : '保存并查看日历'}}</view>
+    </view>
+  </view>
+</view>

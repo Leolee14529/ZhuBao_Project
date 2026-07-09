@@ -10,7 +10,7 @@
   display: block;
   margin-bottom: 18rpx;
   font-size: 44rpx;
-  font-weight: 600;
+  font-weight: 500;
   color: #ffffff;
 }
 

@@ -6,9 +6,8 @@
       <view class="hero-row">
         <view class="hero-copy">
           <text class="hero-title">你好</text>
-          <text class="hero-subtitle">暂无真实五行数据</text>
+          <text class="hero-subtitle">暂无元素参考数据</text>
         </view>
-        <capsule-actions></capsule-actions>
       </view>
 
       <fortune-card flipped="{{fortuneFlipped}}" bind:toggle="handleFortuneToggle"></fortune-card>

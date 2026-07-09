@@ -4,6 +4,7 @@
     "calendar-topbar": "/subpackage/periodCalendar/components/calendar-topbar/calendar-topbar",
     "month-switcher": "/subpackage/periodCalendar/components/month-switcher/month-switcher",
     "cycle-calendar-grid": "/subpackage/periodCalendar/components/cycle-calendar-grid/cycle-calendar-grid",
-    "cycle-legend": "/subpackage/periodCalendar/components/cycle-legend/cycle-legend"
+    "cycle-legend": "/subpackage/periodCalendar/components/cycle-legend/cycle-legend",
+    "cycle-setup-sheet": "/subpackage/periodCalendar/components/cycle-setup-sheet/cycle-setup-sheet"
   }
 }

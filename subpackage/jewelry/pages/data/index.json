@@ -1,7 +1,8 @@
 {
   "navigationStyle": "custom",
+  "backgroundColor": "#121319",
+  "backgroundTextStyle": "light",
   "usingComponents": {
-    "bottom-nav": "/subpackage/jewelry/components/bottom-nav/bottom-nav",
-    "element-radar-card": "/subpackage/jewelry/components/element-radar-card/element-radar-card"
+    "bottom-nav": "/subpackage/jewelry/components/bottom-nav/bottom-nav"
   }
 }

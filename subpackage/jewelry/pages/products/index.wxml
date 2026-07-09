@@ -1,0 +1,84 @@
+<view class="products-page">
+  <scroll-view class="products-scroll" scroll-y="true" enhanced="true" bounces="true" show-scrollbar="false">
+    <view class="products-body">
+      <view class="page-top-spacer" style="height: {{topSpacer}}px;"></view>
+
+      <view class="topbar">
+        <button class="icon-button back-button" bindtap="goBack" aria-label="返回">
+          <view class="back-chevron"></view>
+        </button>
+        <view class="title-block">
+          <text class="page-title">风格参考</text>
+          <text class="page-subtitle">色彩与材质参考</text>
+        </view>
+        <button class="icon-button search-button" bindtap="showSearchHint" aria-label="搜索">
+          <view class="search-ring"></view>
+          <view class="search-line"></view>
+        </button>
+      </view>
+
+      <view class="feature-band">
+        <view class="feature-copy">
+          <text class="feature-kicker">STYLE REFERENCE</text>
+          <text class="feature-title">珠宝风格灵感</text>
+        </view>
+      </view>
+
+      <scroll-view class="filter-scroll" scroll-x="true" enhanced="true" show-scrollbar="false">
+        <view class="filter-row">
+          <block wx:for="{{filters}}" wx:key="id">
+            <button
+              class="filter-pill {{item.itemClass}}"
+              data-filter="{{item.id}}"
+              bindtap="changeFilter"
+            >{{item.label}}</button>
+          </block>
+        </view>
+      </scroll-view>
+
+      <view class="product-waterfall">
+        <view class="waterfall-col waterfall-left">
+          <block wx:for="{{leftProducts}}" wx:key="id">
+            <view class="product-tile {{item.cardClass}}" bindtap="previewProduct" data-id="{{item.id}}">
+              <view class="product-image-wrap">
+                <image class="product-image" src="{{item.image}}" mode="aspectFill"></image>
+                <view class="image-shade"></view>
+                <text wx:if="{{item.tag}}" class="product-badge">{{item.tag}}</text>
+              </view>
+              <view class="product-info">
+                <text class="product-name">{{item.name}}</text>
+                <text class="product-type">{{item.type}}</text>
+                <text class="product-desc">{{item.desc}}</text>
+                <view class="product-foot">
+                  <text class="product-more">风格说明</text>
+                </view>
+              </view>
+            </view>
+          </block>
+        </view>
+
+        <view class="waterfall-col waterfall-right">
+          <block wx:for="{{rightProducts}}" wx:key="id">
+            <view class="product-tile {{item.cardClass}}" bindtap="previewProduct" data-id="{{item.id}}">
+              <view class="product-image-wrap">
+                <image class="product-image" src="{{item.image}}" mode="aspectFill"></image>
+                <view class="image-shade"></view>
+                <text wx:if="{{item.tag}}" class="product-badge">{{item.tag}}</text>
+              </view>
+              <view class="product-info">
+                <text class="product-name">{{item.name}}</text>
+                <text class="product-type">{{item.type}}</text>
+                <text class="product-desc">{{item.desc}}</text>
+                <view class="product-foot">
+                  <text class="product-more">风格说明</text>
+                </view>
+              </view>
+            </view>
+          </block>
+        </view>
+      </view>
+
+      <view class="safe-bottom-space"></view>
+    </view>
+  </scroll-view>
+</view>

@@ -20,6 +20,8 @@ pnpm-debug.log*
 *.tmp
 *.temp
 .cache/
+.tmp/
+UI修复方案-顶部与截图残影.md
 dist/
 build/
 

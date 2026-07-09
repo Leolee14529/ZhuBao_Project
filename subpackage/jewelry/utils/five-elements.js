@@ -5,41 +5,46 @@ var ELEMENT_META = {
     key: "wood",
     cn: "木",
     en: "Wood",
+    label: "翠绿色",
     color: "#10b981",
     jade: "翠绿/碧玉",
-    suit: "适合增强成长与舒展能量"
+    suit: "适合呈现舒展、清新的视觉感受"
   },
   fire: {
     key: "fire",
     cn: "火",
     en: "Fire",
+    label: "红紫色",
     color: "#f43f5e",
     jade: "红翡/紫罗兰",
-    suit: "适合提升热情与行动表现"
+    suit: "适合突出明亮、醒目的风格"
   },
   earth: {
     key: "earth",
     cn: "土",
     en: "Earth",
+    label: "蜜糖色",
     color: "#d97706",
     jade: "黄翡/蜜糖",
-    suit: "适合加强稳定与承载气场"
+    suit: "适合增加温润、沉稳的层次"
   },
   metal: {
     key: "metal",
     cn: "金",
     en: "Metal",
+    label: "银白色",
     color: "#e2e8f0",
     jade: "冰种/白底青",
-    suit: "适合强化决断与清透气质"
+    suit: "适合呈现清透、利落的质感"
   },
   water: {
     key: "water",
     cn: "水",
     en: "Water",
+    label: "蓝黑色",
     color: "#3b82f6",
     jade: "墨翠/蓝水",
-    suit: "适合沉静思考与灵感流动"
+    suit: "适合呈现冷静、柔和的色彩感"
   }
 };
 var ELEMENT_ORDER = ["wood", "fire", "earth", "metal", "water"];
@@ -71,8 +76,24 @@ function getSavedBirthInput() {
 function saveBirthInput(birthInput) {
   auth.setPersonalData(STORAGE_KEY, birthInput);
 }
+function sanitizeWuxingResult(result) {
+  var source = result || {};
+  var elements = {};
+  ELEMENT_ORDER.forEach(function (key) {
+    elements[key] = Number(source.elements && source.elements[key] || 0);
+  });
+  return {
+    userId: source.userId,
+    birthDate: source.birthDate,
+    birthTime: source.birthTime,
+    gender: source.gender,
+    elements: elements,
+    dominant: source.dominant
+  };
+}
 function saveWuxingResult(result) {
-  auth.setPersonalData(auth.WUXING_KEY, result);
+  var safeResult = sanitizeWuxingResult(result);
+  auth.setPersonalData(auth.WUXING_KEY, safeResult);
   if (result && result.birthDate && result.birthTime) {
     saveBirthInput({
       date: result.birthDate,
@@ -89,9 +110,9 @@ function buildEmptyElements() {
     var meta = ELEMENT_META[key];
     return {
       key: key,
-      name: meta.cn + " (" + meta.en + ")",
-      jade: "暂无真实数据",
-      suitable: "0% · 暂无真实数据",
+      name: meta.label,
+      jade: "暂无参考数据",
+      suitable: "0% · 暂无色彩参考数据",
       color: meta.color,
       rowClass: index === ELEMENT_ORDER.length - 1 ? "element-row-last" : ""
     };
@@ -102,12 +123,15 @@ function buildEmptyProfile(birthInput) {
     birthInput: birthInput || getDefaultBirthInput(),
     focusElement: "无",
     focusKey: "",
-    destinyLine: "暂无真实五行数据",
-    summaryText: "暂无真实五行数据",
+    destinyLine: "暂无色彩参考数据",
+    summaryText: "暂无色彩参考数据",
     radarValues: [0, 0, 0, 0, 0],
-    radarNote: "暂无真实五行数据。",
+    radarNote: "暂无色彩参考数据。",
     elements: buildEmptyElements()
   };
+}
+function buildResultSummary(dominantMeta, weakestMeta) {
+  return dominantMeta.label + "倾向更明显，可搭配" + weakestMeta.label + "丰富整体风格层次";
 }
 function buildProfileFromResult(result) {
   if (!result || !result.elements) return null;
@@ -127,7 +151,7 @@ function buildProfileFromResult(result) {
     var meta = ELEMENT_META[item.key];
     return {
       key: item.key,
-      name: meta.cn + " (" + meta.en + ")",
+      name: meta.label,
       jade: meta.jade,
       suitable: item.score + "% · " + meta.suit,
       color: meta.color,
@@ -137,18 +161,19 @@ function buildProfileFromResult(result) {
   var radarValues = ELEMENT_ORDER.map(function (key) {
     return Number((0.55 + Number(result.elements[key] || 0) * 0.004).toFixed(2));
   });
+  var summary = buildResultSummary(dominantMeta, weakestMeta);
   return {
     birthInput: {
       date: result.birthDate,
       time: result.birthTime,
       gender: result.gender
     },
-    focusElement: dominantMeta.cn,
+    focusElement: dominantMeta.label,
     focusKey: dominantKey,
-    destinyLine: dominantMeta.cn + "势偏强 · " + weakestMeta.cn + "需补足",
-    summaryText: result.analysis || "五行结果已由服务器计算",
+    destinyLine: dominantMeta.label + "倾向更明显 · " + weakestMeta.label + "可作平衡参考",
+    summaryText: summary,
     radarValues: radarValues,
-    radarNote: result.analysis || "",
+    radarNote: summary,
     elements: elements
   };
 }
@@ -224,13 +249,13 @@ function buildProfile(birthInput) {
     var meta = ELEMENT_META[item.key];
     var suitable = meta.suit;
     if (item.key === dominantKey) {
-      suitable = "当前主势，适合继续增强优势";
+      suitable = "当前色彩更明显，适合突出视觉感受";
     } else if (item.key === weakestKey) {
-      suitable = "当前偏弱，建议重点补足平衡";
+      suitable = "当前较少，可作平衡参考";
     }
     return {
       key: item.key,
-      name: meta.cn + " (" + meta.en + ")",
+      name: meta.label,
       jade: meta.jade,
       suitable: suitable,
       color: meta.color,
@@ -246,16 +271,16 @@ function buildProfile(birthInput) {
     });
     return current ? current.value : 0.65;
   });
-  var note = "当前状态：五行能量分布均衡，身心状态稳定。";
+  var note = "整体色彩分布较均衡。";
   if (highest - lowest >= 10) {
-    note = "当前状态：" + dominantMeta.cn + "偏旺，" + weakestMeta.cn + "偏弱，建议佩戴" + weakestMeta.jade + "调和气场。";
+    note = dominantMeta.label + "倾向更明显，" + weakestMeta.label + "可作平衡参考，可用" + weakestMeta.jade + "丰富整体风格层次。";
   }
   return {
     birthInput: safeInput,
-    focusElement: dominantMeta.cn,
+    focusElement: dominantMeta.label,
     focusKey: dominantKey,
-    destinyLine: dominantMeta.cn + "势偏强 · " + weakestMeta.cn + "需补足",
-    summaryText: "出生时间已录入，可按命理偏向查看五行分布",
+    destinyLine: dominantMeta.label + "倾向更明显 · " + weakestMeta.label + "可作平衡参考",
+    summaryText: "风格资料已保存，可查看色彩偏好与珠宝风格参考",
     radarValues: radarValues,
     radarNote: note,
     elements: elements
@@ -268,6 +293,6 @@ module.exports = {
   getSavedWuxingResult: getSavedWuxingResult, normalizeBirthInput: normalizeBirthInput,
   isResultForBirthInput: isResultForBirthInput, buildEmptyProfile: buildEmptyProfile,
   buildProfileFromResult: buildProfileFromResult, buildProfileForInput: buildProfileForInput,
-  buildCurrentProfile: buildCurrentProfile,
+  buildCurrentProfile: buildCurrentProfile, sanitizeWuxingResult: sanitizeWuxingResult,
   buildProfile: buildProfile
 };

@@ -66,7 +66,7 @@ async function main() {
     }), 400, "wechat auth route");
     assertStatus(await request("/api/auth/logout", { method: "POST" }), 401, "logout route auth guard");
     assertStatus(await request("/api/wuxing/latest"), 401, "wuxing auth guard");
-    assertSuccess(await request("/api/fortunes/random"), "fortune random");
+    assertSuccess(await request("/api/inspirations/random"), "inspiration random");
 
     const register = await request("/api/auth/account-register", {
       method: "POST",

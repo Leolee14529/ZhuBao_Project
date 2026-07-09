@@ -61,13 +61,6 @@ Page({
     });
   },
 
-  onCapsuleTap() {
-    wx.showToast({
-      title: "更多功能待接入",
-      icon: "none"
-    });
-  },
-
   onCancelConnect() {
     this.clearSuccessTimer();
     const pages = getCurrentPages();

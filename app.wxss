@@ -5,6 +5,7 @@ page {
   color: #ffffff;
 }
 
+page,
 view,
 text,
 button,
@@ -15,9 +16,11 @@ label,
 navigator,
 scroll-view,
 swiper,
-swiper-item {
+swiper-item,
+cover-view {
   box-sizing: border-box;
-  font-family: "SimHei", "STHeiti", "Heiti SC", "PingFang SC", "Microsoft YaHei", sans-serif !important;
+  font-family: "STSongti-SC-Regular", "Songti SC", "Noto Serif CJK SC", "Source Han Serif SC", "SimSun", "NSimSun", serif !important;
+  font-variant-numeric: lining-nums tabular-nums;
 }
 
 image { box-sizing: border-box; }

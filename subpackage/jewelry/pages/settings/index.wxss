@@ -1,26 +1,10 @@
-.settings-page {
-  position: relative;
-  min-height: 100vh;
-  background-color: #040505;
-  color: #ffffff;
-}
+.settings-page { position: relative; width: 100%; height: 100vh; min-height: 100vh; overflow: hidden; background: #040505; color: #ffffff; }
 
-.scroll-container {
-  position: absolute;
-  left: 0;
-  top: 0;
-  right: 0;
-  bottom: 146rpx;
-}
+.scroll-container { position: absolute; left: 0; top: 0; right: 0; bottom: 0; background-color: #040505; overflow: hidden; }
 
-.settings-scroll {
-  height: 100%;
-  background-color: #040505;
-}
+.settings-scroll { height: 100vh; min-height: 100%; background-color: #040505; }
 
-.page-body {
-  padding: 52rpx 20rpx 228rpx;
-}
+.page-body { min-height: 100%; padding: 36rpx 20rpx 228rpx; padding-bottom: calc(228rpx + constant(safe-area-inset-bottom)); padding-bottom: calc(228rpx + env(safe-area-inset-bottom)); background-color: #040505; box-sizing: border-box; }
 
 .page-top-spacer {
   width: 100%;
@@ -58,7 +42,7 @@
 .profile-title {
   display: block;
   font-size: 42rpx;
-  font-weight: 600;
+  font-weight: 500;
   color: #ffffff;
 }
 
@@ -70,7 +54,7 @@
 .profile-subtitle {
   float: left;
   font-size: 24rpx;
-  font-weight: 600;
+  font-weight: 500;
   color: #00c58b;
 }
 
@@ -91,7 +75,7 @@
   display: block;
   margin: 0 0 18rpx 24rpx;
   font-size: 18rpx;
-  font-weight: 700;
+  font-weight: 500;
   letter-spacing: 2rpx;
   color: rgba(255, 255, 255, 0.3);
 }
@@ -135,7 +119,7 @@
   display: block;
   line-height: 48rpx;
   font-size: 26rpx;
-  font-weight: 600;
+  font-weight: 500;
   color: rgba(255, 255, 255, 0.94);
 }
 

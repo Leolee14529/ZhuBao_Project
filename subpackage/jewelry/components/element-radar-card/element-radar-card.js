@@ -2,15 +2,15 @@ Component({
   properties: {
     title: {
       type: String,
-      value: "五行能量平衡"
+      value: "色彩分布参考"
     },
     subtitle: {
       type: String,
-      value: "实时能量分布雷达"
+      value: "实时色彩分布参考"
     },
     note: {
       type: String,
-      value: "当前状态：五行能量分布均衡，身心状态稳定。"
+      value: "整体色彩分布较均衡。"
     },
     values: {
       type: Array,

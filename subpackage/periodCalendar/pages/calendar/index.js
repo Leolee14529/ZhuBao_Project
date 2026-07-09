@@ -1,12 +1,12 @@
 const cycleEngine = require("../../utils/cycle-engine");
 const cycleProfileService = require("../../utils/cycle-profile");
-const auth = require("../../../../utils/auth");
-const privacy = require("../../../../utils/privacy");
+const auth = require("../../../../utils/auth"); const privacy = require("../../../../utils/privacy"); const share = require("../../../../utils/share");
 Page({
   cycleStorageKey: auth.CYCLE_KEY,
   data: {
     statusBarHeight: 47,
     topbarHeight: 52,
+    contentTopOffset: 60,
     backButtonTop: 26,
     monthLabel: "",
     viewYear: 0,
@@ -17,14 +17,15 @@ Page({
     selectedDateKey: "",
     selectedDetail: null,
     summaryDays: "--",
-    summaryNextStart: "暂无预测结果",
+    summaryNextStart: "暂无参考日期",
     cyclePrivacyConfirmed: false,
     isSavingCycle: false,
     cycleProfile: { lastPeriodDate: "", cycleLength: "28", periodLength: "5", todayPeriodStartEnabled: false, adjustments: {} },
     weeks: [],
-    legendItems: [{ key: "period", label: "经期" }, { key: "periodForecast", label: "预测经期" }, { key: "ovulation", label: "参考日" }, { key: "fertile", label: "参考窗口" }, { key: "safe", label: "其他日期" }]
+    legendItems: [{ key: "period", label: "周期" }, { key: "periodForecast", label: "参考周期" }, { key: "ovulation", label: "参考日" }, { key: "fertile", label: "参考窗口" }, { key: "safe", label: "其他日期" }]
   },
   onLoad() {
+    share.enableShareMenu();
     if (!auth.requireLogin({ source: "/subpackage/periodCalendar/pages/calendar/index" })) return;
     this.updateSafeArea();
     const todayDate = cycleEngine.getTodayDate();
@@ -35,6 +36,8 @@ Page({
     this.initializeViewMonth();
   },
   onShow() { auth.requireLogin({ source: "/subpackage/periodCalendar/pages/calendar/index" }); },
+  onShareAppMessage() { return share.getPageShareAppMessage("/subpackage/periodCalendar/pages/calendar/index"); },
+  onShareTimeline() { return share.getPageShareTimeline("/subpackage/periodCalendar/pages/calendar/index"); },
   initializeViewMonth() {
     const today = cycleEngine.getTodayDate();
     const year = today.getFullYear();
@@ -55,7 +58,12 @@ Page({
       topbarHeight = Math.max(menuButton.bottom + 8, statusBarHeight + 44);
       backButtonTop = menuButton.top + (menuButton.height - backButtonHeight) / 2 + 2;
     }
-    this.setData({ statusBarHeight: statusBarHeight, topbarHeight: Math.round(topbarHeight), backButtonTop: Math.round(backButtonTop) });
+    this.setData({
+      statusBarHeight: statusBarHeight,
+      topbarHeight: Math.round(topbarHeight),
+      contentTopOffset: Math.round(topbarHeight + 8),
+      backButtonTop: Math.round(backButtonTop)
+    });
   },
   loadCycleProfile() {
     const profile = auth.getPersonalData(this.cycleStorageKey);
@@ -64,11 +72,18 @@ Page({
   },
   refreshCalendar(year, month) {
     const monthLabel = cycleEngine.formatMonthLabel(year, month);
+    const profile = cycleEngine.normalizeProfile(this.data.cycleProfile);
+    const built = cycleEngine.buildWeeks(profile, year, month, this.data.selectedDateKey);
     if (!this.data.hasCycleData) {
-      this.setData({ monthLabel, weeks: [], selectedDetail: null, summaryDays: "--", summaryNextStart: "暂无预测结果" });
+      this.setData({
+        monthLabel,
+        weeks: built.weeks,
+        selectedDetail: null,
+        summaryDays: "--",
+        summaryNextStart: "设置后生成周期参考"
+      });
       return;
     }
-    const built = cycleEngine.buildWeeks(this.data.cycleProfile, year, month, this.data.selectedDateKey);
     const todayDate = cycleEngine.getTodayDate();
     const summary = cycleEngine.buildSummary(built.cycleStarts, todayDate);
     const selectedDetail = cycleEngine.buildSelectedDetail(built.weeks, this.data.selectedDateKey, todayDate);
@@ -83,7 +98,6 @@ Page({
     console.warn("[ROUTE]", "from subpackage/periodCalendar/pages/calendar/index.js/onBackTap", "to", "/subpackage/jewelry/pages/data/index", "reason", "fallback back");
     wx.redirectTo({ url: "/subpackage/jewelry/pages/data/index" });
   },
-  onCapsuleTap() { wx.showToast({ title: "更多功能待接入", icon: "none" }); },
   onPrevMonth() {
     let { viewYear, viewMonth } = this.data;
     viewMonth -= 1;
@@ -114,32 +128,26 @@ Page({
   onSetupCycle() {
     this.setData({
       showCycleSetup: true,
-      cyclePrivacyConfirmed: !!auth.getPersonalData(auth.PERIOD_PRIVACY_KEY)
+      cyclePrivacyConfirmed: !!auth.getPersonalData(auth.PERIOD_PRIVACY_KEY),
+      cycleProfile: cycleEngine.normalizeProfile(this.data.cycleProfile)
     });
   },
-  noop() {},
   onCloseCycleSetup() { this.setData({ showCycleSetup: false }); },
-  onCycleDateChange(event) { this.setData({ "cycleProfile.lastPeriodDate": event.detail.value }); },
-  onCycleLengthInput(event) {
-    const value = (event.detail.value || "").replace(/[^\d]/g, "").slice(0, 2);
-    this.setData({ "cycleProfile.cycleLength": value });
-  },
-  onPeriodLengthInput(event) {
-    const value = (event.detail.value || "").replace(/[^\d]/g, "").slice(0, 2);
-    this.setData({ "cycleProfile.periodLength": value });
-  },
   onToggleCyclePrivacy() {
     this.setData({
       cyclePrivacyConfirmed: !this.data.cyclePrivacyConfirmed
     });
   },
-  onSaveCycleSetup() {
+  onSaveCycleSetup(event) {
     if (!auth.requireLogin({ source: "/subpackage/periodCalendar/pages/calendar/index" })) return;
     if (this.data.isSavingCycle) return;
     const todayDate = cycleEngine.getTodayDate();
     const todayDateKey = this.data.todayDateKey;
+    const sourceProfile = event && event.detail && event.detail.profile ?
+      event.detail.profile :
+      this.data.cycleProfile;
     const prepared = cycleProfileService.prepareSavedProfile(
-      this.data.cycleProfile,
+      sourceProfile,
       todayDate
     );
     if (prepared.error) {
@@ -153,24 +161,16 @@ Page({
       .then(() => {
         auth.setPersonalData(this.cycleStorageKey, profile);
         auth.setPersonalData(auth.PERIOD_PRIVACY_KEY, true);
-    this.setData({
-      hasCycleData: true,
-      showCycleSetup: false,
-      selectedDateKey: todayDateKey,
-      cycleProfile: profile
-    });
-    this.refreshCalendar(this.data.viewYear, this.data.viewMonth);
-    wx.showToast({
-      title: "周期设置完成",
-      icon: "success"
-        });
+        this.setData({ hasCycleData: true, showCycleSetup: false, selectedDateKey: todayDateKey, cycleProfile: profile });
+        this.refreshCalendar(this.data.viewYear, this.data.viewMonth);
+        wx.showToast({ title: "周期设置完成", icon: "success" });
       })
       .then(() => {
         this.setData({ isSavingCycle: false });
       })
       .catch((error) => {
         wx.showToast({
-          title: error && error.message ? error.message : "请先确认经期数据说明",
+          title: error && error.message ? error.message : "请先确认周期数据说明",
           icon: "none"
         });
         this.setData({ isSavingCycle: false });
@@ -180,7 +180,7 @@ Page({
     if (this.data.showCycleSetup) {
       return this.data.cyclePrivacyConfirmed ?
         Promise.resolve(true) :
-        Promise.reject(new Error("请先勾选经期数据说明"));
+        Promise.reject(new Error("请先勾选周期数据说明"));
     }
     if (this.data.cyclePrivacyConfirmed || auth.getPersonalData(auth.PERIOD_PRIVACY_KEY)) {
       return Promise.resolve(true);
@@ -191,7 +191,7 @@ Page({
         cyclePrivacyConfirmed: false
       });
     }
-    return Promise.reject(new Error("请先勾选经期数据说明"));
+    return Promise.reject(new Error("请先勾选周期数据说明"));
   },
   ensureCyclePrivacyReady() {
     return this.confirmCyclePrivacy()
@@ -221,7 +221,7 @@ Page({
       this.refreshCalendar(this.data.viewYear, this.data.viewMonth);
     }).catch((error) => {
       wx.showToast({
-        title: error && error.message ? error.message : "请先确认经期数据说明",
+        title: error && error.message ? error.message : "请先确认周期数据说明",
         icon: "none"
       });
     });
@@ -243,7 +243,7 @@ Page({
     );
     if (!nextProfile) {
       wx.showToast({
-        title: "当前日期无法调整预测",
+        title: "当前日期无法调整参考日期",
         icon: "none"
       });
       return;
@@ -255,20 +255,20 @@ Page({
       });
       this.refreshCalendar(this.data.viewYear, this.data.viewMonth);
       wx.showToast({
-        title: "已重新预测后续周期",
+        title: "已更新后续参考日期",
         icon: "success"
       });
     }).catch((error) => {
       wx.showToast({
-        title: error && error.message ? error.message : "请先确认经期数据说明",
+        title: error && error.message ? error.message : "请先确认周期数据说明",
         icon: "none"
       });
     });
   },
   onClearCycleData() {
     wx.showModal({
-      title: "清除经期记录",
-      content: "将清除本机保存的经期记录和确认状态，不会影响服务器账号。",
+      title: "清除周期记录",
+      content: "将清除本机保存的周期记录和确认状态，不会影响服务器账号。",
       confirmText: "清除",
       success: (res) => {
         if (!res.confirm) return;
@@ -290,7 +290,7 @@ Page({
           cycleProfile: profile
         });
         this.refreshCalendar(this.data.viewYear, this.data.viewMonth);
-        wx.showToast({ title: "已清除本机经期记录", icon: "success" });
+        wx.showToast({ title: "已清除本机周期记录", icon: "success" });
       }
     });
   }

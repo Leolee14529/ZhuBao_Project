@@ -1,0 +1,48 @@
+<view class="product-detail-page">
+  <scroll-view class="detail-scroll" scroll-y="true" enhanced="true" bounces="true" show-scrollbar="false">
+    <view class="detail-body" wx:if="{{product}}">
+      <view class="page-top-spacer" style="height: {{topSpacer}}px;"></view>
+
+      <view class="detail-topbar">
+        <button class="icon-button back-button" bindtap="goBack" aria-label="返回">
+          <view class="back-chevron"></view>
+        </button>
+        <view class="title-block">
+          <text class="page-title">风格展示</text>
+          <text class="page-subtitle">完整图文参考</text>
+        </view>
+      </view>
+
+      <view class="hero-image-wrap">
+        <image class="hero-image" src="{{product.image}}" mode="aspectFit"></image>
+        <text wx:if="{{product.tag}}" class="hero-badge">{{product.tag}}</text>
+      </view>
+
+      <view class="detail-panel">
+        <text class="detail-kicker">{{product.type}}</text>
+        <text class="detail-title">{{product.name}}</text>
+        <text class="detail-desc">{{product.desc}}</text>
+        <text class="detail-long">{{product.detail}}</text>
+      </view>
+
+      <view class="color-panel">
+        <text class="section-title">色彩与材质</text>
+        <view class="palette-list">
+          <block wx:for="{{palette}}" wx:key="label">
+            <view class="palette-item">
+              <view class="palette-swatch" style="background-color: {{item.color}};"></view>
+              <text class="palette-label">{{item.label}}</text>
+            </view>
+          </block>
+        </view>
+      </view>
+
+      <view class="style-panel">
+        <text class="section-title">搭配参考</text>
+        <text class="style-text">{{product.scene}}</text>
+      </view>
+
+      <view class="safe-bottom-space"></view>
+    </view>
+  </scroll-view>
+</view>

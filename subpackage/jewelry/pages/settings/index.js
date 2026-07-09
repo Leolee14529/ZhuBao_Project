@@ -1,6 +1,7 @@
 const request = require("../../../../utils/request");
 const auth = require("../../../../utils/auth");
 const privacy = require("../../../../utils/privacy");
+const share = require("../../../../utils/share");
 
 Page({
   data: {
@@ -18,7 +19,7 @@ Page({
         title: "DEVICE",
         items: [
           { isRing: true, label: "指环连接 (Ring)", arrow: false, rowClass: "", valueClass: "row-value-shifted" },
-          { isSleep: true, label: "睡眠模式", toggle: true, toggleClass: "toggle-off", rowClass: "setting-row-last" }
+          { isSleep: true, label: "夜间提醒", toggle: true, toggleClass: "toggle-off", rowClass: "setting-row-last" }
         ]
       },
       {
@@ -31,6 +32,7 @@ Page({
     ]
   },
   onLoad() {
+    share.enableShareMenu();
     if (!auth.requireLogin({ source: "/subpackage/jewelry/pages/settings/index" })) return;
     const app = getApp();
     const navLayout = app.getNavLayout ? app.getNavLayout() : app.globalData.navLayout;
@@ -41,6 +43,8 @@ Page({
     }
     this.loadCurrentUser();
   },
+  onShareAppMessage() { return share.getPageShareAppMessage("/subpackage/jewelry/pages/settings/index"); },
+  onShareTimeline() { return share.getPageShareTimeline("/subpackage/jewelry/pages/settings/index"); },
   onShow() {
     auth.requireLogin({ source: "/subpackage/jewelry/pages/settings/index" });
   },
@@ -60,9 +64,9 @@ Page({
       });
   },
   goHome() {
-    console.warn("[ROUTE]", "from subpackage/jewelry/pages/settings/index.js/goHome", "to", "/subpackage/jewelry/pages/home/index", "reason", "tab home");
+    console.warn("[ROUTE]", "from subpackage/jewelry/pages/settings/index.js/goHome", "to", "/pages/home/index", "reason", "tab home");
     wx.redirectTo({
-      url: "/subpackage/jewelry/pages/home/index"
+      url: "/pages/home/index"
     });
   },
   goData() {
@@ -111,34 +115,13 @@ Page({
   },
   clearCycleData() {
     wx.showModal({
-      title: "清除经期记录",
-      content: "将清除本机保存的经期记录和确认状态，不会影响服务器账号。",
+      title: "清除周期记录",
+      content: "将清除本机保存的周期记录和确认状态，不会影响服务器账号。",
       confirmText: "清除",
       success: (res) => {
         if (!res.confirm) return;
         auth.clearCycleData();
-        wx.showToast({ title: "已清除本机经期记录", icon: "success" });
-      }
-    });
-  },
-  deleteWuxingProfile() {
-    wx.showModal({
-      title: "删除出生资料",
-      content: "将删除出生资料和五行结果，本地和服务器记录都会清空。",
-      confirmText: "删除",
-      success: (res) => {
-        if (!res.confirm) return;
-        request.delete("/api/wuxing/profile")
-          .then(() => {
-            auth.clearWuxingLocalData();
-            wx.showToast({ title: "已删除五行资料", icon: "success" });
-          })
-          .catch((error) => {
-            wx.showToast({
-              title: error && error.message ? error.message : "删除失败，请重试",
-              icon: "none"
-            });
-          });
+        wx.showToast({ title: "已清除本机周期记录", icon: "success" });
       }
     });
   },
@@ -159,7 +142,7 @@ Page({
   deleteAccount() {
     wx.showModal({
       title: "注销账号",
-      content: "将删除账号、全部服务器业务数据、出生资料、五行结果，并清除本机经期记录。该操作不可恢复。",
+      content: "将删除账号、全部服务器业务数据，并清除本机周期记录。该操作不可恢复。",
       confirmText: "注销",
       success: (res) => {
         if (!res.confirm) return;

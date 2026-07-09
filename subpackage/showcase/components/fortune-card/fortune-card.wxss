@@ -1,4 +1,4 @@
-﻿.fortune-card {
+.fortune-card {
   position: relative;
   min-height: 760rpx;
   border-radius: 34rpx;
@@ -74,7 +74,7 @@
   gap: 12rpx;
   color: #34dd88;
   font-size: 26rpx;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .fortune-dot {
@@ -88,7 +88,7 @@
 .fortune-no {
   color: rgba(219, 226, 222, 0.48);
   font-size: 24rpx;
-  font-weight: 700;
+  font-weight: 500;
 }
 
 .fortune-center {
@@ -131,7 +131,7 @@
 
 .fortune-symbol {
   font-size: 62rpx;
-  font-weight: 700;
+  font-weight: 500;
   letter-spacing: 4rpx;
 }
 
@@ -139,7 +139,7 @@
   margin-top: 64rpx;
   font-size: 74rpx;
   line-height: 1;
-  font-weight: 700;
+  font-weight: 500;
 }
 
 .fortune-subtitle {
@@ -161,7 +161,7 @@
   top: 12rpx;
   color: #30dc86;
   font-size: 44rpx;
-  font-weight: 700;
+  font-weight: 500;
 }
 
 .fortune-quote-text {
@@ -174,7 +174,7 @@
 
 .fortune-back-title {
   font-size: 44rpx;
-  font-weight: 700;
+  font-weight: 500;
   letter-spacing: 6rpx;
 }
 

@@ -1,20 +1,15 @@
 Component({
-  data: { time: "09:41" },
+  data: {
+    height: 20
+  },
   lifetimes: {
     attached() {
-      this.updateTime();
-      this.timer = setInterval(() => this.updateTime(), 30000);
-    },
-    detached() {
-      if (this.timer) clearInterval(this.timer);
-    }
-  },
-  methods: {
-    updateTime() {
-      const now = new Date();
-      const h = String(now.getHours()).padStart(2, "0");
-      const m = String(now.getMinutes()).padStart(2, "0");
-      this.setData({ time: `${h}:${m}` });
+      try {
+        const info = wx.getSystemInfoSync();
+        this.setData({ height: info.statusBarHeight || 20 });
+      } catch (error) {
+        this.setData({ height: 20 });
+      }
     }
   }
 });

@@ -32,10 +32,11 @@ test("server result is converted into page profile data", () => {
     analysis: "server analysis"
   });
 
-  assert.equal(profile.focusElement, "水");
+  assert.equal(profile.focusElement, "蓝黑色");
   assert.equal(profile.radarValues.length, 5);
   assert.equal(profile.elements.length, 5);
-  assert.equal(profile.summaryText, "server analysis");
+  assert.equal(profile.summaryText.includes("倾向更明显"), true);
+  assert.equal(profile.summaryText.includes("server analysis"), false);
 });
 
 test("matching saved server result is used for customization preview", () => {
@@ -63,10 +64,45 @@ test("matching saved server result is used for customization preview", () => {
     }
   );
 
-  assert.equal(profile.focusElement, "土");
-  assert.equal(profile.summaryText, "earth server analysis");
+  assert.equal(profile.focusElement, "蜜糖色");
+  assert.equal(profile.summaryText.includes("倾向更明显"), true);
+  assert.equal(profile.summaryText.includes("earth server analysis"), false);
   assert.equal(profile.elements[0].key, "earth");
   assert.match(profile.elements[0].suitable, /^62%/);
+});
+
+test("saved wuxing result strips server prose before local storage", () => {
+  storage.clear();
+  fiveElements.saveWuxingResult({
+    userId: "u1",
+    birthDate: "1998-08-08",
+    birthTime: "08:30",
+    gender: "female",
+    elements: {
+      wood: 13,
+      fire: 13,
+      earth: 62,
+      metal: 0,
+      water: 12
+    },
+    analysis: "旧服务文案",
+    suggestion: "旧建议文案",
+    bazi: { year: "x" },
+    raw: { stems: [] }
+  });
+
+  const stored = auth.getPersonalData(auth.WUXING_KEY);
+  assert.equal(stored.analysis, undefined);
+  assert.equal(stored.suggestion, undefined);
+  assert.equal(stored.bazi, undefined);
+  assert.equal(stored.raw, undefined);
+  assert.deepEqual(stored.elements, {
+    wood: 13,
+    fire: 13,
+    earth: 62,
+    metal: 0,
+    water: 12
+  });
 });
 
 test("customization preview avoids local heuristic when server result is missing", () => {
@@ -83,17 +119,20 @@ test("customization preview avoids local heuristic when server result is missing
   );
 
   assert.equal(profile.focusElement, "无");
-  assert.equal(profile.destinyLine, "暂无真实五行数据");
+  assert.equal(profile.destinyLine, "暂无色彩参考数据");
 });
 
-test("customization preview requires prior birth-data notice before upload", () => {
+test("retired customization page redirects home without uploading birth data", () => {
   const pageLogic = require("node:fs").readFileSync(
     require("node:path").resolve(__dirname, "../../subpackage/jewelry/pages/five-elements/index.js"),
     "utf8"
   );
 
-  assert.ok(pageLogic.includes("auth.getPersonalData(auth.BIRTH_NOTICE_KEY)"));
-  assert.ok(pageLogic.includes("auth.hasPrivacyConsent()"));
+  assert.ok(pageLogic.includes("returnHome"));
+  assert.ok(pageLogic.includes("wx.reLaunch"));
+  assert.equal(pageLogic.includes("/api/wuxing/save"), false);
+  assert.equal(pageLogic.includes("auth.getPersonalData(auth.BIRTH_NOTICE_KEY)"), false);
+  assert.equal(pageLogic.includes("auth.hasPrivacyConsent()"), false);
 });
 
 test("current profile does not fall back to local heuristic without server result", () => {
@@ -107,5 +146,5 @@ test("current profile does not fall back to local heuristic without server resul
   const profile = fiveElements.buildCurrentProfile();
 
   assert.equal(profile.focusElement, "无");
-  assert.equal(profile.destinyLine, "暂无真实五行数据");
+  assert.equal(profile.destinyLine, "暂无色彩参考数据");
 });

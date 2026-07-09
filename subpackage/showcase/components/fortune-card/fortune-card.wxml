@@ -4,7 +4,7 @@
     <view class="fortune-head">
       <view class="fortune-label">
         <view class="fortune-dot"></view>
-        <text>每日灵签</text>
+        <text>今日灵感</text>
       </view>
       <text class="fortune-no">NO.88</text>
     </view>
@@ -17,19 +17,19 @@
           </view>
         </view>
       </view>
-      <text class="fortune-title">中吉</text>
+      <text class="fortune-title">清润</text>
       <text class="fortune-subtitle">Wind / Wood</text>
     </view>
 
     <view class="fortune-quote-box">
       <text class="fortune-quote-mark">“</text>
-      <text class="fortune-quote-text">风行水上，自然成纹。今日灵感如风，宜顺势而为。指环监测显示心流状态极佳。</text>
+      <text class="fortune-quote-text">把注意力放回手边的一件小事。慢慢呼吸 6 次。今日色彩：青绿色。</text>
     </view>
   </view>
 
   <view class="fortune-face fortune-back">
     <view class="fortune-grid"></view>
-    <text class="fortune-back-title">DAILY FORTUNE</text>
+    <text class="fortune-back-title">DAILY INSPIRATION</text>
     <text class="fortune-back-copy">点击卡片可切换正反面</text>
   </view>
 </view>

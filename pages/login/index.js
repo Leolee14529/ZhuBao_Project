@@ -2,8 +2,9 @@ const request = require("../../utils/request");
 const auth = require("../../utils/auth");
 const privacy = require("../../utils/privacy");
 const config = require("../../utils/config");
+const share = require("../../utils/share");
 
-const HOME_URL = "/subpackage/jewelry/pages/home/index";
+const HOME_URL = "/pages/home/index";
 const DEFAULT_LOGIN_ERROR = "登录暂时不可用，请稍后再试";
 const WX_LOGIN_TIMEOUT_MS = 12000;
 const WX_LOGIN_MAX_ATTEMPTS = 2;
@@ -23,6 +24,7 @@ Page({
     redirect: ""
   },
   onLoad(options) {
+    share.enableShareMenu();
     this.setData({
       agreed: false,
       accountAuthEnabled: config.isAccountAuthEnabled(),
@@ -32,6 +34,8 @@ Page({
       this.goHome().catch(() => null);
     }
   },
+  onShareAppMessage() { return share.getPageShareAppMessage("/pages/login/index"); },
+  onShareTimeline() { return share.getPageShareTimeline("/pages/login/index"); },
   login() {
     if (this.isAuthBusy()) {
       return;
@@ -200,7 +204,6 @@ Page({
     const redirect = this.data.redirect;
     if (redirect === "/subpackage/jewelry/pages/data/index" ||
       redirect === "/subpackage/jewelry/pages/settings/index" ||
-      redirect === "/subpackage/jewelry/pages/five-elements/index" ||
       redirect === "/subpackage/periodCalendar/pages/calendar/index") {
       return redirect;
     }
@@ -249,7 +252,7 @@ Page({
   },
   enterGuest() {
     if (this.isAuthBusy()) return;
-    auth.enterGuestMode();
+    auth.clearGuestMode();
     wx.reLaunch({ url: HOME_URL });
   },
   isAuthBusy() {

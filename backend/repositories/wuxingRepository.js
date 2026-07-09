@@ -4,13 +4,16 @@ const {
   getLatestResult: getJsonResult,
   deleteProfile: deleteJsonResult
 } = require("../services/wuxingJsonStore");
+const { sanitizeWuxingResult } = require("../services/wuxingResultPresenter");
 const { hasDatabase, getPool } = require("../db/pool");
 
 const ALGORITHM_VERSION = "1.0.0";
 
 async function saveLatestResult(userId, input, result) {
+  const safeResult = sanitizeWuxingResult(result);
+
   if (!hasDatabase()) {
-    return saveJsonResult(userId, result);
+    return saveJsonResult(userId, safeResult);
   }
 
   const client = await getPool().connect();
@@ -39,7 +42,7 @@ async function saveLatestResult(userId, input, result) {
         userId,
         profile.rows[0].id,
         ALGORITHM_VERSION,
-        JSON.stringify(result)
+        JSON.stringify(safeResult)
       ]
     );
     await client.query("COMMIT");
@@ -48,7 +51,7 @@ async function saveLatestResult(userId, input, result) {
       message: "Latest wuxing result saved successfully",
       userId,
       savedAt: new Date(saved.rows[0].created_at).toISOString(),
-      result
+      result: safeResult
     };
   } catch (error) {
     await client.query("ROLLBACK");
@@ -60,7 +63,10 @@ async function saveLatestResult(userId, input, result) {
 
 async function getLatestResult(userId) {
   if (!hasDatabase()) {
-    return getJsonResult(userId);
+    const jsonResult = await getJsonResult(userId);
+    return Object.assign({}, jsonResult, {
+      result: sanitizeWuxingResult(jsonResult.result)
+    });
   }
 
   const result = await getPool().query(
@@ -82,7 +88,7 @@ async function getLatestResult(userId) {
   return {
     userId,
     savedAt: new Date(result.rows[0].created_at).toISOString(),
-    result: result.rows[0].result_json
+    result: sanitizeWuxingResult(result.rows[0].result_json)
   };
 }
 

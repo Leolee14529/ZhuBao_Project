@@ -36,7 +36,7 @@
 .device-name {
   margin-top: 12rpx;
   font-size: 34rpx;
-  font-weight: 700;
+  font-weight: 500;
 }
 
 .device-status {
@@ -99,7 +99,7 @@
 
 .device-copy-title {
   font-size: 30rpx;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .device-copy-desc {
@@ -135,5 +135,5 @@
 .metric-value {
   margin-top: 12rpx;
   font-size: 28rpx;
-  font-weight: 600;
+  font-weight: 500;
 }

@@ -1,5 +1,6 @@
 {
   "pages": [
+    "pages/home/index",
     "pages/login/index",
     "pages/legal/agreement/index",
     "pages/legal/privacy/index"
@@ -8,7 +9,7 @@
     {
       "root": "subpackage/jewelry",
       "name": "jewelry",
-      "pages": ["pages/home/index", "pages/data/index", "pages/settings/index", "pages/five-elements/index"]
+      "pages": ["pages/data/index", "pages/settings/index", "pages/five-elements/index", "pages/products/index", "pages/product-detail/index"]
     },
     {
       "root": "subpackage/periodCalendar",

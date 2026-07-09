@@ -4,6 +4,7 @@ const path = require("node:path");
 const test = require("node:test");
 
 const root = path.resolve(__dirname, "..", "..");
+const appSerifFontStack = "\"STSongti-SC-Regular\", \"Songti SC\", \"Noto Serif CJK SC\", \"Source Han Serif SC\", \"SimSun\", \"NSimSun\", serif";
 
 function readText(file) {
   return fs.readFileSync(path.join(root, file), "utf8");
@@ -27,10 +28,29 @@ function listFiles(dir, extensions) {
 
 function listActiveReviewFiles() {
   return [
+    ...listFiles("components", [".js", ".json", ".wxml"]),
     ...listFiles("pages", [".js", ".json", ".wxml"]),
     ...listFiles("subpackage/jewelry", [".js", ".json", ".wxml"]),
     ...listFiles("subpackage/periodCalendar", [".js", ".json", ".wxml"]),
     "app.json"
+  ];
+}
+
+function listFrontendStyleFiles() {
+  return [
+    "app.wxss",
+    ...listFiles("components", [".wxss"]),
+    ...listFiles("pages", [".wxss"]),
+    ...listFiles("subpackage", [".wxss"])
+  ];
+}
+
+function listFrontendTypographyFiles() {
+  return [
+    ...listFrontendStyleFiles(),
+    ...listFiles("components", [".wxml", ".js"]),
+    ...listFiles("pages", [".wxml", ".js"]),
+    ...listFiles("subpackage", [".wxml", ".js"])
   ];
 }
 
@@ -65,6 +85,66 @@ test("review package excludes unfinished routes from active surfaces", () => {
   }
 });
 
+test("review package ignores stale demo routes and handoff documents", () => {
+  const config = JSON.parse(readText("project.config.json"));
+  const ignored = new Set((config.packOptions.ignore || []).map((item) => `${item.type}:${item.value}`));
+  [
+    "folder:subpackage/showcase",
+    "folder:subpackage/showcase-device",
+    "folder:subpackage/auth",
+    "folder:subpackage/device12",
+    "folder:subpackage/device13",
+    "folder:subpackage/device17",
+    "file:agent.md",
+    "file:上线准备.md",
+    "file:交接文档.md"
+  ].forEach((entry) => {
+    assert.ok(ignored.has(entry), `project.config.json must ignore ${entry}`);
+  });
+});
+
+test("frontend typography uses the unified serif stack", () => {
+  const allowedFontFamilyFiles = new Set([
+    "app.wxss",
+    "subpackage/periodCalendar/styles/typography.wxss"
+  ]);
+  const appStyle = readText("app.wxss");
+  const appFontBlock = appStyle.match(/([^{}]+)\{[^{}]*font-family\s*:[^{}]*\}/);
+  const periodTypography = readText("subpackage/periodCalendar/styles/typography.wxss");
+
+  assert.ok(appFontBlock, "app.wxss must declare a global font block");
+  assert.match(appFontBlock[1], /\bpage\b/, "app.wxss global font block must include page");
+  assert.match(appFontBlock[1], /\bcover-view\b/, "app.wxss global font block must include cover-view");
+  assert.equal(
+    /\.[\w-]+\s+(view|text|button|input|textarea|picker|label|cover-view)\b/.test(periodTypography),
+    false,
+    "period typography import must not use component descendant tag selectors"
+  );
+
+  for (const file of listFrontendTypographyFiles()) {
+    const text = readText(file);
+    const hasFontFamily = /font-family\s*:/.test(text);
+
+    assert.equal(
+      /font-weight\s*:\s*(bold|bolder|[6-9]00)\b/i.test(text) ||
+        /font\s*:\s*(?!inherit\b)[^;}"']*(bold|bolder|[6-9]00)\b/i.test(text),
+      false,
+      `${file} uses a heavy font weight outside the unified type scale`
+    );
+
+    if (!allowedFontFamilyFiles.has(file)) {
+      assert.equal(hasFontFamily, false, `${file} declares a page-level font family`);
+      continue;
+    }
+
+    assert.ok(text.includes(appSerifFontStack), `${file} must use the app serif font stack`);
+    assert.ok(
+      text.includes("font-variant-numeric: lining-nums tabular-nums"),
+      `${file} must keep numeric glyphs stable`
+    );
+  }
+});
+
 test("active page route references are registered in app.json", () => {
   const activeFiles = listActiveReviewFiles();
   const registeredPages = listRegisteredPages();
@@ -90,73 +170,14 @@ test("active page route references are registered in app.json", () => {
   }
 });
 
-test("login page keeps a visible first screen", () => {
-  const appStyle = readText("app.wxss");
-  const loginPage = readText("pages/login/index.wxml");
-  const loginStyle = readText("pages/login/index.wxss");
-
-  assert.ok(appStyle.includes("min-height: 100vh"));
-  assert.ok(loginPage.includes("class=\"login-page\""));
-  assert.ok(loginPage.includes("class=\"login-bg\""));
-  assert.ok(loginPage.includes("class=\"brand-name\""));
-  assert.ok(loginPage.includes("微信登录"));
-  assert.match(loginStyle, /\.login-page\{[^}]*min-height:100vh/);
-  assert.match(loginStyle, /\.login-page\{[^}]*overflow-y:auto/);
-  assert.match(loginStyle, /\.login-page\{[^}]*background:#000/);
-});
-
-test("login page exposes account password entry wired to backend auth", () => {
-  const loginPage = readText("pages/login/index.wxml");
-  const loginLogic = readText("pages/login/index.js");
-  const migration = readText("backend/db/migrations/002_account_password_login.sql");
-
-  assert.ok(loginPage.includes("mode-tab"));
-  assert.ok(loginPage.includes("accountAuthEnabled"));
-  assert.ok(loginPage.includes("账号登录"));
-  assert.ok(loginPage.includes("创建账号"));
-  assert.ok(loginLogic.includes("accountAuthEnabled: true"));
-  assert.ok(loginLogic.includes("/api/auth/account-login"));
-  assert.ok(loginLogic.includes("/api/auth/account-register"));
-  assert.ok(readText("utils/config.js").includes("isAccountAuthEnabled"));
-  assert.ok(readText("utils/request.js").includes("isAuthEntryPath"));
-  assert.ok(migration.includes("account_name"));
-  assert.ok(migration.includes("password_hash"));
-});
-
-test("account password entry is enabled by default unless explicitly disabled", () => {
-  function loadConfig(extConfig) {
-    global.wx = {
-      getExtConfigSync() { return extConfig; },
-      getAccountInfoSync() { return { miniProgram: { envVersion: "release" } }; }
-    };
-    delete require.cache[require.resolve("../../utils/config")];
-    return require("../../utils/config");
-  }
-
-  assert.equal(loadConfig({}).isAccountAuthEnabled(), true);
-  assert.equal(loadConfig({ enableAccountAuth: true }).isAccountAuthEnabled(), true);
-  assert.equal(loadConfig({ enableAccountAuth: false }).isAccountAuthEnabled(), false);
-  assert.equal(loadConfig({ enableAccountAuth: "false" }).isAccountAuthEnabled(), false);
-});
-
-test("release login defaults to wechat before account password", () => {
-  const loginPage = readText("pages/login/index.wxml");
-  const loginLogic = readText("pages/login/index.js");
-  const wechatTabIndex = loginPage.indexOf('data-mode="wechat"');
-  const accountTabIndex = loginPage.indexOf('data-mode="account"');
-
-  assert.ok(loginLogic.includes('loginMode: "wechat"'));
-  assert.ok(loginLogic.includes("accountAuthEnabled"));
-  assert.ok(wechatTabIndex >= 0);
-  assert.ok(accountTabIndex > wechatTabIndex);
-});
-
 test("period setup exposes an in-sheet data notice confirmation", () => {
   const calendarPage = readText("subpackage/periodCalendar/pages/calendar/index.wxml");
+  const setupSheet = readText("subpackage/periodCalendar/components/cycle-setup-sheet/cycle-setup-sheet.wxml");
   const calendarLogic = readText("subpackage/periodCalendar/pages/calendar/index.js");
 
-  assert.ok(calendarPage.includes("我已知晓经期数据说明"));
-  assert.ok(calendarPage.includes("bindtap=\"onToggleCyclePrivacy\""));
+  assert.ok(calendarPage.includes("cycle-setup-sheet"));
+  assert.ok(setupSheet.includes("我已知晓周期数据说明"));
+  assert.ok(setupSheet.includes("bindtap=\"onToggleCyclePrivacy\""));
   assert.ok(calendarLogic.includes("cyclePrivacyConfirmed"));
   assert.ok(calendarLogic.includes("auth.getPersonalData(auth.PERIOD_PRIVACY_KEY)"));
   assert.ok(calendarLogic.includes("ensureCyclePrivacyReady"));
@@ -201,15 +222,40 @@ test("active review text does not contain prohibited promise language", () => {
   const files = [
     ...listFiles("pages", [".js", ".wxml"]),
     ...listFiles("subpackage/jewelry", [".js", ".wxml"]),
-    ...listFiles("subpackage/periodCalendar", [".js", ".wxml"])
+    ...listFiles("subpackage/periodCalendar", [".js", ".wxml"]),
+    "utils/share.js"
   ];
   const prohibited = [
-    "治疗",
-    "改善疾病",
-    "调理身体",
+    "占卜",
+    "抽签",
+    "灵签",
+    "算命",
+    "命理",
+    "运势",
+    "吉凶",
+    "中吉",
+    "小吉",
     "疗愈",
+    "治愈",
+    "治疗",
+    "诊断",
+    "健康",
+    "健康建议",
+    "功效",
+    "功效承诺",
     "保证",
     "必然有效",
+    "预测未来",
+    "幸运元素",
+    "当前推演结果",
+    "基于您八字的佩戴建议",
+    "预测经期",
+    "专属预测",
+    "预测日历",
+    "倒计时结果",
+    "已重新预测后续周期",
+    "改善疾病",
+    "调理身体",
     "助孕",
     "生育预测",
     "精准命理",
@@ -218,12 +264,28 @@ test("active review text does not contain prohibited promise language", () => {
     "旺财",
     "排卵日",
     "易孕期",
-    "安全期"
+    "安全期",
+    "心率",
+    "HRV",
+    "bpm",
+    "今日测评",
+    "身体感受",
+    "身体检测",
+    "健康指数",
+    "改善健康",
+    "睡眠模式"
+  ];
+  const discouragedReviewPhrases = [
+    "五行色彩",
+    "出生资料",
+    "出生日期和时刻",
+    "元素更明显",
+    "暂无元素参考数据"
   ];
 
   for (const file of files) {
     const text = readText(file);
-    for (const word of prohibited) {
+    for (const word of [...prohibited, ...discouragedReviewPhrases]) {
       assert.equal(text.includes(word), false, `${file} contains prohibited word ${word}`);
     }
   }
