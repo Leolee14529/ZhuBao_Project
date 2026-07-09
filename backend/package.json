@@ -7,7 +7,7 @@
     "start": "node server.js",
     "dev": "node server.js",
     "db:migrate": "node db/migrate.js",
-    "test": "node --test test/**/*.test.js",
+    "test": "node scripts/run-tests.js",
     "check:syntax": "node scripts/check-syntax.js",
     "check:lines": "node scripts/check-max-lines.js",
     "smoke:production-auth": "node scripts/smoke-production-auth.js"
