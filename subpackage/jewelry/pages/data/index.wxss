@@ -1,6 +1,6 @@
-.data-page{min-height:100vh;background-color:#121319;color:#ffffff}
-.data-scroll{height:100vh;background-color:#121319}
-.page-body{padding:34rpx 24rpx calc(158rpx + constant(safe-area-inset-bottom));padding:34rpx 24rpx calc(158rpx + env(safe-area-inset-bottom));box-sizing:border-box}
+.data-page{position:relative;width:100%;height:100vh;min-height:100vh;overflow:hidden;background:#121319;background-color:#121319;color:#ffffff}
+.data-scroll{height:100vh;min-height:100%;background-color:#121319}
+.page-body{min-height:100%;padding:34rpx 24rpx calc(158rpx + constant(safe-area-inset-bottom));padding:34rpx 24rpx calc(158rpx + env(safe-area-inset-bottom));background-color:#121319;box-sizing:border-box}
 .page-top-spacer{width:100%}
 .page-header{margin-bottom:28rpx}
 .page-title{display:block;font-size:38rpx;font-weight:300;color:#ffffff}

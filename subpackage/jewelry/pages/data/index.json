@@ -1,5 +1,7 @@
 {
   "navigationStyle": "custom",
+  "backgroundColor": "#121319",
+  "backgroundTextStyle": "light",
   "usingComponents": {
     "bottom-nav": "/subpackage/jewelry/components/bottom-nav/bottom-nav"
   }

@@ -3,6 +3,13 @@ const routeDebug = require("./utils/route-debug");
 App({
   onLaunch() {
     routeDebug.installRouteDebug();
+    if (wx.setBackgroundColor) {
+      wx.setBackgroundColor({
+        backgroundColor: "#050505",
+        backgroundColorTop: "#050505",
+        backgroundColorBottom: "#050505"
+      });
+    }
     this.globalData.navLayout = this.getNavLayout();
   },
   getNavLayout() {

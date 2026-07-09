@@ -5,8 +5,10 @@
 
 .home-page {
   position: relative;
+  width: 100%;
   height: 100vh;
   min-height: 100vh;
+  background: #050806;
   background-color: #050806;
   color: #ffffff;
   overflow: hidden;
@@ -18,11 +20,13 @@
   top: 0;
   right: 0;
   bottom: 0;
+  background-color: #050806;
   overflow: hidden;
 }
 
 .home-scroll {
-  height: 100%;
+  height: 100vh;
+  min-height: 100%;
   background-color: #050806;
 }
 
@@ -30,6 +34,7 @@
   min-height: 100%;
   padding: 30rpx 28rpx calc(150rpx + constant(safe-area-inset-bottom));
   padding: 30rpx 28rpx calc(150rpx + env(safe-area-inset-bottom));
+  background-color: #050806;
   box-sizing: border-box;
 }
 
