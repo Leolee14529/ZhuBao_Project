@@ -43,7 +43,13 @@ fi
 pnpm install --frozen-lockfile
 pnpm run check:syntax
 pnpm run check:lines
-pnpm test
+env \
+  NODE_ENV=test \
+  DATABASE_URL= \
+  WECHAT_APPID= \
+  WECHAT_SECRET= \
+  WECHAT_APP_SECRET= \
+  pnpm test
 pnpm run db:migrate
 
 if [[ -n "${ZHUBAO_RESTART_CMD:-}" ]]; then
