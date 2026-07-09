@@ -122,14 +122,17 @@ test("customization preview avoids local heuristic when server result is missing
   assert.equal(profile.destinyLine, "暂无色彩参考数据");
 });
 
-test("customization preview requires prior birth-data notice before upload", () => {
+test("retired customization page redirects home without uploading birth data", () => {
   const pageLogic = require("node:fs").readFileSync(
     require("node:path").resolve(__dirname, "../../subpackage/jewelry/pages/five-elements/index.js"),
     "utf8"
   );
 
-  assert.ok(pageLogic.includes("auth.getPersonalData(auth.BIRTH_NOTICE_KEY)"));
-  assert.ok(pageLogic.includes("auth.hasPrivacyConsent()"));
+  assert.ok(pageLogic.includes("returnHome"));
+  assert.ok(pageLogic.includes("wx.reLaunch"));
+  assert.equal(pageLogic.includes("/api/wuxing/save"), false);
+  assert.equal(pageLogic.includes("auth.getPersonalData(auth.BIRTH_NOTICE_KEY)"), false);
+  assert.equal(pageLogic.includes("auth.hasPrivacyConsent()"), false);
 });
 
 test("current profile does not fall back to local heuristic without server result", () => {

@@ -91,33 +91,6 @@
         <text class="energy-value">暂无</text>
       </view>
 
-      <view class="panel">
-        <text class="panel-title">色彩风格参考</text>
-        <text class="panel-subtitle">{{hasWuxingResult ? '基于风格资料的珠宝参考' : '保存风格资料后生成参考'}}</text>
-        <view class="element-ring">
-          <view class="element-ring-core">
-            <text class="ring-small">主推</text>
-            <text class="ring-main">{{focusElement}}</text>
-          </view>
-        </view>
-        <view class="element-list">
-          <block wx:for="{{elements}}" wx:key="name">
-            <view class="element-row {{item.rowClass}}">
-              <view class="element-left">
-                <view class="element-dot" style="background-color: {{item.color}};"></view>
-                <view class="element-copy">
-                  <text class="element-name">{{item.name}}</text>
-                  <text class="element-jade">{{item.jade}}</text>
-                </view>
-              </view>
-              <text class="element-suitable">{{item.suitable}}</text>
-            </view>
-          </block>
-        </view>
-      </view>
-
-      <element-radar-card values="{{radarValues}}" note="{{radarNote}}"></element-radar-card>
-
       <view class="bottom-space"></view>
     </view>
   </scroll-view>

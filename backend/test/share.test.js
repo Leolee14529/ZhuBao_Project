@@ -32,6 +32,9 @@ test("registered pages support WeChat friend and timeline sharing", () => {
     assert.ok(pageLogic.includes("share.enableShareMenu()"), `${page} must show the share menu`);
     assert.match(pageLogic, /onShareAppMessage\s*(?:\(|:)/, `${page} must support friend sharing`);
     assert.match(pageLogic, /onShareTimeline\s*(?:\(|:)/, `${page} must support timeline sharing`);
-    assert.ok(shareUtil.includes(route), `utils/share.js must configure ${route}`);
+    assert.ok(
+      shareUtil.includes(route) || pageLogic.includes("getHomeShareAppMessage"),
+      `utils/share.js must configure ${route} or the retired page must use home sharing`
+    );
   }
 });

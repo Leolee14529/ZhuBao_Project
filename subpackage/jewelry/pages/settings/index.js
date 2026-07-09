@@ -125,27 +125,6 @@ Page({
       }
     });
   },
-  deleteWuxingProfile() {
-    wx.showModal({
-      title: "删除风格资料",
-      content: "将删除风格资料和色彩参考，本地和服务器记录都会清空。",
-      confirmText: "删除",
-      success: (res) => {
-        if (!res.confirm) return;
-        request.delete("/api/wuxing/profile")
-          .then(() => {
-            auth.clearWuxingLocalData();
-            wx.showToast({ title: "已删除参考资料", icon: "success" });
-          })
-          .catch((error) => {
-            wx.showToast({
-              title: error && error.message ? error.message : "删除失败，请重试",
-              icon: "none"
-            });
-          });
-      }
-    });
-  },
   withdrawConsent() {
     wx.showModal({
       title: "撤回同意",
@@ -163,7 +142,7 @@ Page({
   deleteAccount() {
     wx.showModal({
       title: "注销账号",
-      content: "将删除账号、全部服务器业务数据、风格资料、色彩参考，并清除本机周期记录。该操作不可恢复。",
+      content: "将删除账号、全部服务器业务数据，并清除本机周期记录。该操作不可恢复。",
       confirmText: "注销",
       success: (res) => {
         if (!res.confirm) return;

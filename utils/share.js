@@ -8,7 +8,6 @@ const PAGE_SHARE_CONFIGS = {
   "/pages/legal/privacy/index": { title: "海米算力 | 隐私政策" },
   "/subpackage/jewelry/pages/data/index": { title: "海米算力 | 记录中心" },
   "/subpackage/jewelry/pages/settings/index": { title: "海米算力 | 设置中心" },
-  "/subpackage/jewelry/pages/five-elements/index": { title: "海米算力 | 色彩风格" },
   "/subpackage/jewelry/pages/products/index": {
     title: "海米算力 | 风格参考",
     imageUrl: "/subpackage/jewelry/assets/product-6.jpg"
@@ -39,10 +38,11 @@ function getHomeShareTimeline() {
 
 function getPageShareConfig(path) {
   const pagePath = path || HOME_SHARE_PATH;
-  const config = PAGE_SHARE_CONFIGS[pagePath] || PAGE_SHARE_CONFIGS[HOME_SHARE_PATH];
+  const hasPageConfig = !!PAGE_SHARE_CONFIGS[pagePath];
+  const config = hasPageConfig ? PAGE_SHARE_CONFIGS[pagePath] : PAGE_SHARE_CONFIGS[HOME_SHARE_PATH];
   return {
     title: config.title || HOME_SHARE_TITLE,
-    path: pagePath,
+    path: hasPageConfig ? pagePath : HOME_SHARE_PATH,
     imageUrl: config.imageUrl || HOME_SHARE_IMAGE
   };
 }

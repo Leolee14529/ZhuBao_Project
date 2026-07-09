@@ -59,7 +59,7 @@
           <view class="stat-card stat-right">
             <text class="stat-caption stat-pink">· 今日色彩</text>
             <text class="stat-value">无</text>
-            <text class="stat-desc">暂无色彩参考数据</text>
+            <text class="stat-desc">浏览珠宝风格参考</text>
           </view>
         </view>
 
@@ -108,17 +108,6 @@
               </view>
             </block>
           </view>
-        </view>
-
-        <view class="custom-card" bindtap="openFiveElementCustomizer">
-          <view class="custom-icon">
-            <text>GEM</text>
-          </view>
-          <view class="custom-copy">
-            <text class="custom-title">色彩风格</text>
-            <text class="custom-desc">{{customDesc}}</text>
-          </view>
-          <text class="custom-arrow">›</text>
         </view>
 
         <view class="bottom-space"></view>

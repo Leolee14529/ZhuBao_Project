@@ -1,14 +1,6 @@
 const auth = require("../../utils/auth");
 const share = require("../../utils/share");
 
-const ELEMENT_LABELS = {
-  wood: "翠绿色",
-  fire: "红紫色",
-  earth: "蜜糖色",
-  metal: "银白色",
-  water: "蓝黑色"
-};
-
 const DEFAULT_INSPIRATION = {
   id: "inspiration-01",
   no: "NO.01",
@@ -75,33 +67,10 @@ function getDailyInspiration() {
   return INSPIRATIONS[daySeed % INSPIRATIONS.length] || DEFAULT_INSPIRATION;
 }
 
-function buildHomeProfile() {
-  const result = auth.getPersonalData(auth.WUXING_KEY);
-  if (!result || !result.elements) {
-    return {
-      destinyLine: "暂无色彩参考数据",
-      customDesc: "暂无色彩参考数据"
-    };
-  }
-
-  const ranked = Object.keys(ELEMENT_LABELS).map((key) => ({
-    key,
-    score: Number(result.elements[key] || 0)
-  })).sort((left, right) => right.score - left.score);
-  const dominant = ELEMENT_LABELS[ranked[0].key];
-  const weakest = ELEMENT_LABELS[ranked[ranked.length - 1].key];
-
-  return {
-    destinyLine: dominant + "倾向更明显 · " + weakest + "可作平衡参考",
-    customDesc: dominant + "倾向更明显，可搭配" + weakest + "丰富整体风格层次"
-  };
-}
-
 Page({
   data: {
     topSpacer: 40,
-    destinyLine: "暂无色彩参考数据",
-    customDesc: "暂无色彩参考数据",
+    destinyLine: "今日灵感与珠宝风格参考",
     flipped: false,
     cardClass: "",
     inspiration: DEFAULT_INSPIRATION,
@@ -151,11 +120,9 @@ Page({
     }
     this.refreshInspiration();
     this.refreshMoodRecord();
-    this.applyBirthProfile();
   },
   onShow() {
     this.refreshMoodRecord();
-    this.applyBirthProfile();
   },
   onShareAppMessage() {
     return share.getHomeShareAppMessage();
@@ -224,19 +191,6 @@ Page({
     wx.showToast({
       title: "功能暂未开放",
       icon: "none"
-    });
-  },
-  openFiveElementCustomizer() {
-    if (!auth.requireLogin({ source: "/subpackage/jewelry/pages/five-elements/index" })) return;
-    wx.navigateTo({
-      url: "/subpackage/jewelry/pages/five-elements/index"
-    });
-  },
-  applyBirthProfile() {
-    const profile = buildHomeProfile();
-    this.setData({
-      destinyLine: profile.destinyLine,
-      customDesc: profile.customDesc
     });
   }
 });
