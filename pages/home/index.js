@@ -65,66 +65,15 @@ const FALLBACK_MOOD = {
   encouragement: "先从一件很小的事开始。"
 };
 
-function normalizeHexColor(color, fallback) {
-  const value = typeof color === "string" ? color.trim() : "";
-  return /^#[0-9a-fA-F]{6}$/.test(value) ? value : fallback;
-}
-
 function delayMoodRetry(page, cycleDate) {
   page.moodRetryCycleDate = cycleDate;
   page.moodRetryAfter = Date.now() + MOOD_RETRY_DELAY_MS;
 }
 
-function colorToRgba(color, alpha, fallback) {
-  const value = typeof color === "string" ? color.trim() : "";
-  const match = value.match(/^#([0-9a-fA-F]{6})$/);
-  if (!match) return fallback;
-  const hex = match[1];
-  const red = parseInt(hex.slice(0, 2), 16);
-  const green = parseInt(hex.slice(2, 4), 16);
-  const blue = parseInt(hex.slice(4, 6), 16);
-  return `rgba(${red}, ${green}, ${blue}, ${alpha})`;
-}
-
-function normalizeMood(rawMood) {
-  const mood = rawMood || {};
-  return {
-    mood_id: mood.mood_id || mood.id || DEFAULT_MOOD.mood_id,
-    name: mood.name || DEFAULT_MOOD.name,
-    description: mood.description || DEFAULT_MOOD.description,
-    tag: mood.tag || DEFAULT_MOOD.tag,
-    emoji: mood.emoji || DEFAULT_MOOD.emoji,
-    theme_color: normalizeHexColor(mood.theme_color, DEFAULT_MOOD.theme_color),
-    bg_color: normalizeHexColor(mood.bg_color, DEFAULT_MOOD.bg_color),
-    text_color: normalizeHexColor(mood.text_color, DEFAULT_MOOD.text_color),
-    icon_url: mood.icon_url || "",
-    background_url: mood.background_url || "",
-    background_mood: mood.background_mood || DEFAULT_MOOD.background_mood,
-    encouragement: mood.encouragement || DEFAULT_MOOD.encouragement,
-    date: mood.date || "",
-    updated_at: mood.updated_at || "",
-    generated_at: mood.generated_at || ""
-  };
-}
-
-function buildMoodView(rawMood) {
-  const mood = normalizeMood(rawMood);
-  const accent = mood.theme_color || DEFAULT_MOOD.theme_color;
-  const accentSoft = colorToRgba(accent, 0.16, "rgba(57, 216, 122, 0.16)");
-  const accentFaint = colorToRgba(accent, 0.09, "rgba(57, 216, 122, 0.09)");
-  const bgFaint = colorToRgba(mood.bg_color, 0.08, "rgba(57, 216, 122, 0.08)");
-
-  return {
-    mood,
-    moodCardStyle: `border-color: ${accentSoft}; background: linear-gradient(135deg, ${bgFaint}, transparent 64%), linear-gradient(180deg, rgba(23, 25, 32, .96), rgba(12, 17, 15, .94));`,
-    moodColorCardStyle: `border-color: ${accentSoft}; background: linear-gradient(135deg, ${accentFaint}, transparent 62%), #171920;`,
-    moodAccentStyle: `color: ${accent};`,
-    moodDotStyle: `background-color: ${accent}; box-shadow: 0 0 16rpx ${accentSoft};`,
-    moodTagStyle: `color: ${accent}; border-color: ${accentSoft}; background-color: ${accentFaint};`,
-    colorSwatchStyle: `background-color: ${accent}; box-shadow: 0 10rpx 26rpx ${accentSoft};`,
-    moodColorTitle: mood.background_mood || (mood.tag ? mood.tag + "色彩" : "今日色彩"),
-    moodColorDesc: "随今日心情同步"
-  };
+function canUseMoodResult(page, requestId, result) {
+  if (!result || page.isPageUnloaded || page.moodRequestId !== requestId) return false;
+  if (auth.getPersonalOwner() !== result.owner) return false;
+  return result.skipped || result.owner !== "anonymous" || auth.hasPrivacyConsent();
 }
 
 function getDailyInspiration() {
@@ -150,7 +99,7 @@ Page({
     flipped: false,
     cardClass: "",
     inspiration: DEFAULT_INSPIRATION,
-    ...buildMoodView(DEFAULT_MOOD),
+    ...moodRuntime.buildView(DEFAULT_MOOD, DEFAULT_MOOD),
     device: {
       title: "设备",
       name: "暂无设备",
@@ -201,6 +150,7 @@ Page({
   },
   onUnload() {
     this.isPageUnloaded = true;
+    this.moodRequestId = (this.moodRequestId || 0) + 1;
   },
   onShareAppMessage() {
     return share.getHomeShareAppMessage();
@@ -220,12 +170,18 @@ Page({
   },
   applyMood(mood, cycleDate) {
     if (this.isPageUnloaded) return;
-    this.setData(buildMoodView(mood));
+    this.setData(moodRuntime.buildView(mood, DEFAULT_MOOD));
     if (cycleDate) this.moodCycleDate = cycleDate;
   },
   refreshTodayMood() {
     if (this.moodRequesting || this.isPageUnloaded) return;
     const cycleDate = moodRuntime.getCycleDate();
+    if (!auth.getToken() && !auth.hasPrivacyConsent()) {
+      if (this.moodCycleDate !== cycleDate || this.data.mood.mood_id !== DEFAULT_MOOD.mood_id) {
+        this.applyMood(FALLBACK_MOOD, cycleDate);
+      }
+      return;
+    }
     const cached = auth.getPersonalData(auth.DAILY_MOOD_KEY);
     if (cached && cached.mood && cached.date === cycleDate) {
       if (this.moodCycleDate !== cycleDate) {
@@ -240,12 +196,20 @@ Page({
       this.applyMood(DEFAULT_MOOD);
     }
 
+    const requestId = (this.moodRequestId || 0) + 1;
+    this.moodRequestId = requestId;
     this.moodRequesting = true;
     moodRuntime.fetchToday({
       path: MOOD_ENDPOINT,
       getGuestId: auth.getMoodGuestId
     })
-      .then((data) => {
+      .then((result) => {
+        if (!canUseMoodResult(this, requestId, result)) return;
+        if (result.skipped) {
+          this.applyMood(FALLBACK_MOOD, cycleDate);
+          return;
+        }
+        const data = result.data;
         const mood = data && data.mood ? data.mood : data;
         if (!mood || !mood.mood_id) {
           delayMoodRetry(this, cycleDate);
@@ -263,13 +227,14 @@ Page({
         this.applyMood(mood, moodDate);
       })
       .catch(() => {
+        if (this.isPageUnloaded || this.moodRequestId !== requestId) return;
         delayMoodRetry(this, cycleDate);
         if (this.moodCycleDate !== cycleDate) {
           this.applyMood(FALLBACK_MOOD, cycleDate);
         }
       })
       .then(() => {
-        this.moodRequesting = false;
+        if (this.moodRequestId === requestId) this.moodRequesting = false;
       });
   },
   goData() {

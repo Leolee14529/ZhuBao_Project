@@ -8,6 +8,7 @@ miniprogram_npm/
 backend/data/users.json
 backend/data/sessions.json
 backend/data/wuxing.json
+backend/data/moods.json
 backend/datasets/
 
 *.log

@@ -12,6 +12,7 @@ const BIRTH_NOTICE_KEY = "birthProfileNoticeConfirmed";
 const DAILY_MOOD_KEY = "dailyMoodRecord";
 const MOOD_GUEST_ID_KEY = "dailyMoodGuestId";
 const PRIVACY_CONSENT_KEY = "privacyConsentAccepted";
+const MOOD_GUEST_ID_PATTERN = /^guest_[a-zA-Z0-9_.:-]{8,80}$/;
 const PERSONAL_KEYS = [
   BIRTH_KEY,
   WUXING_KEY,
@@ -87,8 +88,9 @@ function createGuestMoodId() {
 }
 
 function getMoodGuestId() {
+  if (!hasPrivacyConsent()) return "";
   const guestId = safeGet(MOOD_GUEST_ID_KEY);
-  if (guestId && typeof guestId === "string") return guestId;
+  if (typeof guestId === "string" && MOOD_GUEST_ID_PATTERN.test(guestId)) return guestId;
 
   const nextGuestId = createGuestMoodId();
   safeSet(MOOD_GUEST_ID_KEY, nextGuestId);
@@ -126,6 +128,15 @@ function isLoggedIn() {
 function clearAuthState() {
   safeRemove(TOKEN_KEY);
   safeRemove(USER_KEY);
+}
+
+function invalidateAuthenticatedSession() {
+  const owner = getPersonalOwner();
+  if (owner !== "anonymous") clearPersonalDataForOwner(owner);
+  clearLegacyPersonalData();
+  clearAuthState();
+  clearGuestMode();
+  return owner;
 }
 
 function clearCycleData() {
@@ -217,6 +228,7 @@ module.exports = {
   MOOD_GUEST_ID_KEY,
   PRIVACY_CONSENT_KEY,
   getToken,
+  getPersonalOwner,
   getAuthState,
   isLoggedIn,
   getPersonalData,
@@ -225,6 +237,7 @@ module.exports = {
   getMoodGuestId,
   clearGuestMode,
   clearAuthState,
+  invalidateAuthenticatedSession,
   acceptAuthenticatedSession,
   clearCycleData,
   clearWuxingLocalData,
