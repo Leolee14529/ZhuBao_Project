@@ -63,6 +63,10 @@
         "type": "file"
       },
       {
+        "value": "CHANGELOG.md",
+        "type": "file"
+      },
+      {
         "value": "涓婄嚎鍑嗗.md",
         "type": "file"
       },

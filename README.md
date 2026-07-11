@@ -6,6 +6,9 @@
 - 版本名称：每日心情与首帧稳定版
 - 发布日期：`2026-07-11`
 - GitHub 分支：`agent/miniapp-stability-v1.1.0`
+- 固定交接标签：`v1.1.0-rc.1`（Pre-release）
+- GitHub Release：[ZhuBao v1.1.0-rc.1](https://github.com/Leolee14529/ZhuBao_Project/releases/tag/v1.1.0-rc.1)
+- 版本记录与 UI 故障路由：[`CHANGELOG.md`](./CHANGELOG.md)
 - PR 对比分支：`codex/share-audit-ui-polish`
 - 微信基础库：`3.15.2`（平台 SDK 版本，不是产品版本号）
 
@@ -31,7 +34,7 @@
 ## 验证结果
 
 - Node 24：JS 语法、67/67 测试和 300 行限制通过。
-- 86 个 JSON 文件解析通过，`git diff --check` 通过。
+- 68 个版本范围内 JSON 文件解析通过，`git diff --check` 通过。
 - 微信开发者工具 CLI `preview` 成功，总包约 1.4 MB。
 - 10 个注册路由全部可读取，新增 AppService 错误和异常为 0。
 - 6 组关键页面切换采样 47 帧，白帧 0、截图失败 0。
@@ -40,3 +43,16 @@
 ## 已知外部依赖
 
 生产环境需要部署当前后端的 mood 路由和数据库迁移。若线上 `/api/mood/today` 尚未部署，首页会显示本地安全兜底，不会白屏。
+
+## UI 协作者入口
+
+从固定候选标签创建新分支，不要移动或强推 `v1.1.0-rc.1`：
+
+```powershell
+git fetch origin --prune --tags
+git switch -c agent/ui-<主题>-v1.1.x v1.1.0-rc.1
+```
+
+PR #5 叠加在 PR #4 上；具体线程归属、症状到文件的定位表和最低回归要求见 [`CHANGELOG.md`](./CHANGELOG.md)。
+
+PR #4/#5 尚为 Draft 且没有 GitHub CI checks，所以稳定标签 `v1.1.0` 暂不创建；应在评审并合入默认分支后标记最终 merge SHA。
