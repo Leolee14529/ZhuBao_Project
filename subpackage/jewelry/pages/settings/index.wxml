@@ -95,7 +95,7 @@
           </view>
         </button>
 
-        <text class="version-text">0.0.1 Build A</text>
+        <text class="version-text">1.1.0 Build 20260711</text>
         <view class="bottom-space"></view>
       </view>
     </scroll-view>
