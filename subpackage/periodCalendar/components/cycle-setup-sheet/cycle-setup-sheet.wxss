@@ -35,7 +35,7 @@
 .cycle-setup-sheet__title {
   display: block;
   color: #ffffff;
-  font-size: 31rpx;
+  font-size: 32rpx;
   font-weight: 500;
   line-height: 1.2;
   text-align: center;
@@ -86,7 +86,7 @@
 .cycle-privacy-confirm__title {
   display: block;
   color: #d7fff1;
-  font-size: 23rpx;
+  font-size: 24rpx;
   font-weight: 500;
   line-height: 1.35;
 }
@@ -168,7 +168,7 @@
   display: block;
   max-width: 100%;
   color: #ffffff;
-  font-size: 29rpx;
+  font-size: 30rpx;
   font-weight: 500;
   line-height: 1.18;
   overflow: hidden;
@@ -198,7 +198,7 @@
 .cycle-field__hint {
   flex: none;
   color: rgba(255, 255, 255, 0.62);
-  font-size: 21rpx;
+  font-size: 22rpx;
 }
 .setup-selected-date__value {
   flex: 1;
@@ -213,7 +213,7 @@
 .cycle-field__label {
   display: block;
   color: rgba(255, 255, 255, 0.84);
-  font-size: 23rpx;
+  font-size: 24rpx;
   font-weight: 500;
 }
 .cycle-field__hint {

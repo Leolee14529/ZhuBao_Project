@@ -7,7 +7,7 @@
 .brand-mark{width:96rpx;height:96rpx;border-radius:50%;border:1rpx solid rgba(16,185,129,.36);display:flex;align-items:center;justify-content:center;margin-bottom:28rpx;background:rgba(6,78,59,.13);box-shadow:0 0 60rpx rgba(16,185,129,.25)}
 .brand-mark view{width:66rpx;height:66rpx;border:7rpx solid rgba(52,211,153,.85);border-radius:50%}
 .brand-name{display:block;color:#fff;font-size:78rpx;font-weight:300;line-height:1.05;letter-spacing:0}
-.brand-subtitle{display:block;margin-top:16rpx;color:#34d399;font-size:27rpx;font-weight: 500;letter-spacing:4rpx;text-transform:uppercase;line-height:1.45}
+.brand-subtitle{display:block;margin-top:16rpx;color:#34d399;font-size:28rpx;font-weight: 500;letter-spacing:4rpx;text-transform:uppercase;line-height:1.45}
 .login-form{position:relative;z-index:6;padding:8rpx;border-radius:36rpx;background:rgba(0,0,0,.12);backdrop-filter:blur(18rpx)}
 .login-form empty-state{display:block;margin-bottom:24rpx}
 .mode-tabs{display:flex;height:74rpx;margin-bottom:18rpx;padding:6rpx;border-radius:28rpx;background:rgba(255,255,255,.08);gap:6rpx}
@@ -26,6 +26,6 @@
 .agreement-row{display:flex;align-items:flex-start;gap:18rpx;padding:24rpx 12rpx 0;color:rgba(255,255,255,.72)}
 .agreement-check{flex:0 0 auto;width:34rpx;height:34rpx;margin-top:3rpx;border-radius:8rpx;border:1rpx solid rgba(209,250,229,.55);text-align:center;line-height:34rpx;font-size:22rpx;color:#fff}
 .agreement-check-on{background:#059669;border-color:#34d399}
-.agreement-copy{flex:1;min-width:0;font-size:23rpx;line-height:1.55}
+.agreement-copy{flex:1;min-width:0;font-size:24rpx;line-height:1.55}
 .agreement-link{color:#6ee7b7}
 .home-indicator{position:fixed;z-index:4;left:50%;bottom:14rpx;bottom:calc(14rpx + constant(safe-area-inset-bottom));bottom:calc(14rpx + env(safe-area-inset-bottom));width:220rpx;height:8rpx;transform:translateX(-50%);border-radius:999rpx;background:rgba(255,255,255,.22)}

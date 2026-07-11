@@ -21,7 +21,7 @@
 
 .stat-caption {
   display: block;
-  font-size: 18rpx;
+  font-size: 20rpx;
   color: #8db8ff;
 }
 
@@ -41,7 +41,7 @@
 .stat-desc {
   display: block;
   margin-top: 14rpx;
-  font-size: 18rpx;
+  font-size: 20rpx;
   color: rgba(255, 255, 255, 0.48);
 }
 
@@ -184,18 +184,25 @@
 .section-title {
   flex: 1;
   min-width: 0;
-  font-size: 36rpx;
-  font-weight: 500;
+  font-size: 32rpx;
+  font-weight: 600;
   color: #ffffff;
 }
 
 .section-link {
   flex: none;
-  padding: 10rpx 20rpx;
+  height: 68rpx;
+  margin-top: 8rpx;
+  padding: 0 24rpx;
   border-radius: 28rpx;
   background-color: rgba(0, 185, 120, 0.16);
-  font-size: 22rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  font-size: 26rpx;
   font-weight: 500;
+  line-height: 1;
   color: #39d87a;
 }
 
@@ -240,7 +247,7 @@
   border-radius: 18rpx;
   background-color: #39d87a;
   color: #052611;
-  font-size: 18rpx;
+  font-size: 20rpx;
   font-weight: 500;
 }
 
@@ -264,7 +271,7 @@
   color: #39d87a;
   text-align: center;
   line-height: 76rpx;
-  font-size: 18rpx;
+  font-size: 20rpx;
 }
 
 .custom-copy {

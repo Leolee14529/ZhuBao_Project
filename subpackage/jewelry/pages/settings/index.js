@@ -37,12 +37,25 @@ Page({
     if (!auth.requireLogin({ source: "/subpackage/jewelry/pages/settings/index" })) return;
     const topSpacer = pageLayout.getContentOffset(64);
     if (topSpacer !== this.data.topSpacer) this.setData({ topSpacer });
-    this.loadCurrentUser();
+    const cachedUser = auth.getStoredUser ? auth.getStoredUser() : wx.getStorageSync("userInfo");
+    if (cachedUser && typeof cachedUser === "object") this.applyUser(cachedUser);
+    this.userRefreshTimer = setTimeout(() => this.loadCurrentUser(), 0);
   },
   onShareAppMessage() { return share.getPageShareAppMessage("/subpackage/jewelry/pages/settings/index"); },
   onShareTimeline() { return share.getPageShareTimeline("/subpackage/jewelry/pages/settings/index"); },
   onShow() {
     auth.requireLogin({ source: "/subpackage/jewelry/pages/settings/index" });
+  },
+  onUnload() {
+    if (this.userRefreshTimer) clearTimeout(this.userRefreshTimer);
+  },
+  applyUser(user) {
+    const safeUser = user || {};
+    const title = safeUser.nickname || ("User " + String(safeUser.id || "").slice(-6));
+    this.setData({
+      profileTitle: title,
+      avatarLetter: title.charAt(0).toUpperCase() || "U"
+    });
   },
   loadCurrentUser() {
     request.get("/api/users/me")

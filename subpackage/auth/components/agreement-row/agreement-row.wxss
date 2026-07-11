@@ -24,7 +24,7 @@
 
 .agreement-row__tick {
   color: #000000;
-  font-size: 18rpx;
+  font-size: 20rpx;
   line-height: 1;
 }
 

@@ -1,10 +1,11 @@
 var share = require("../../../../utils/share");
+var topLayout = require("../../../../utils/top-layout");
 
 var HOME_URL = "/pages/home/index";
 
 Page({
   data: {
-    topSpacer: 40
+    topSpacer: topLayout.getTopLayout().contentOffset
   },
 
   onLoad: function () {

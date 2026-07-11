@@ -54,7 +54,7 @@
 
 .legend-label {
   min-width: 0;
-  font-size: 21rpx;
+  font-size: 22rpx;
   font-weight: 500;
   color: rgba(255, 255, 255, 0.72);
   line-height: 1.2;

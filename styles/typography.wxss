@@ -1,0 +1,105 @@
+/* Shared typography tokens. Keep visual hierarchy centralized across pages. */
+page {
+  --font-title-xl: 36rpx;
+  --font-title-lg: 28rpx;
+  --font-title-md: 24rpx;
+  --font-body: 22rpx;
+  --font-caption: 19rpx;
+  --weight-title-xl: 600;
+  --weight-title-lg: 500;
+  --weight-title-md: 500;
+  --weight-body: 400;
+}
+
+/* Page titles */
+.page-title,
+.profile-title,
+.hello-line {
+  font-size: 36rpx !important;
+  font-size: var(--font-title-xl) !important;
+  font-weight: 600 !important;
+  font-weight: var(--weight-title-xl) !important;
+}
+
+/* Section titles and prominent page subsections */
+.page-subtitle,
+.section-title,
+.panel-title,
+.period-entry-title,
+.detail-card-title,
+.settings-section-title {
+  font-size: 28rpx !important;
+  font-size: var(--font-title-lg) !important;
+  font-weight: 500 !important;
+  font-weight: var(--weight-title-lg) !important;
+}
+
+/* Card titles and primary card values */
+.health-title,
+.sleep-title,
+.mood-card__name,
+.color-card__value,
+.inspiration-label,
+.profile-subtitle,
+.row-label,
+.language-option__text,
+.detail-card-caption {
+  font-size: 28rpx !important;
+  font-weight: 500 !important;
+  font-weight: var(--weight-title-md) !important;
+}
+
+/* Regular content */
+.score-text,
+.destiny-line,
+.overview-value,
+.quality-value,
+.row-value,
+.inspiration-subtitle,
+.inspiration-text,
+.mood-card__desc,
+.color-card__desc,
+.panel-subtitle,
+.energy-desc,
+.element-jade,
+.element-suitable {
+  font-size: 22rpx !important;
+  font-size: var(--font-body) !important;
+  font-weight: 400 !important;
+  font-weight: var(--weight-body) !important;
+}
+
+.health-meta-value,
+.activity-value,
+.activity-unit {
+  font-size: 26rpx !important;
+  font-weight: 500 !important;
+}
+
+/* Supporting information */
+.health-meta-label,
+.overview-label,
+.quality-label,
+.mood-card__caption,
+.mood-card__hint,
+.mood-card__tag,
+.sleep-name,
+  .sleep-unit,
+  .small-unit,
+  .version-text,
+  .tab-text,
+.legend-item,
+.timeline-labels,
+.stage-name,
+.stage-value {
+  font-size: 22rpx !important;
+  font-weight: 400 !important;
+  font-weight: var(--weight-body) !important;
+}
+
+/* Text-only bottom navigation */
+.nav-label {
+  font-size: 30rpx !important;
+  font-weight: 500 !important;
+  line-height: 1.2 !important;
+}

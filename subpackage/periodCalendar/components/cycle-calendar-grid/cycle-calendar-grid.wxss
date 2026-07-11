@@ -26,7 +26,7 @@
   flex: 1;
   min-width: 0;
   text-align: center;
-  font-size: 21rpx;
+  font-size: 22rpx;
   font-weight: 500;
   color: rgba(255, 255, 255, 0.56);
 }
@@ -107,14 +107,14 @@
 .day-text {
   position: relative;
   z-index: 2;
-  font-size: 25rpx;
+  font-size: 26rpx;
   font-weight: 500;
   color: #ffffff;
   line-height: 1;
 }
 
 .calendar-grid--compact .day-text {
-  font-size: 23rpx;
+  font-size: 24rpx;
 }
 
 .day-muted {

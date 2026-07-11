@@ -5,6 +5,12 @@ var pageLayout = require("../../utils/page-layout");
 Page({
   data: {
     topSpacer: pageLayout.getContentOffset(64),
+    activity: {
+      steps: "0 / 2000",
+      distance: "0.00 / 10.00",
+      calories: "0 / 100",
+      progress: "0%"
+    },
     sleep: [
       { name: "安静", value: "0", width: "0%", color: "#10b981", cardClass: "sleep-card-left" },
       { name: "舒展", value: "0", width: "0%", color: "#34d399", cardClass: "sleep-card-mid" },
@@ -38,6 +44,11 @@ Page({
     if (!auth.requireLogin({ source: "/subpackage/periodCalendar/pages/calendar/index" })) return;
     wx.navigateTo({
       url: "/subpackage/periodCalendar/pages/calendar/index"
+    });
+  },
+  openSleepDetail() {
+    wx.navigateTo({
+      url: "/subpackage/jewelry/pages/sleep-detail/index"
     });
   }
 });
