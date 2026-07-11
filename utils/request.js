@@ -26,7 +26,7 @@ function getToken() {
   return auth.getToken();
 }
 
-function buildHeader(header) {
+function buildHeader(header, includeAuth) {
   const nextHeader = Object.assign({}, header || {});
   const token = getToken();
 
@@ -34,7 +34,7 @@ function buildHeader(header) {
     nextHeader["content-type"] = "application/json";
   }
 
-  if (token && !nextHeader.Authorization && !nextHeader.authorization) {
+  if (includeAuth !== false && token && !nextHeader.Authorization && !nextHeader.authorization) {
     nextHeader.Authorization = "Bearer " + token;
   }
 
@@ -91,7 +91,7 @@ function request(options) {
       url: baseUrl + path,
       method: requestOptions.method || "GET",
       data: requestOptions.data || {},
-      header: buildHeader(requestOptions.header),
+      header: buildHeader(requestOptions.header, requestOptions.includeAuth),
       timeout: requestOptions.timeout || 12000,
       success(response) {
         const statusCode = response.statusCode || 0;
@@ -108,7 +108,9 @@ function request(options) {
           statusCode,
           body
         );
-        if (statusCode === 401 && !isAuthEntryPath(path)) {
+        if (statusCode === 401 &&
+          requestOptions.redirectOnUnauthorized !== false &&
+          !isAuthEntryPath(path)) {
           redirectToLogin(getCurrentPageUrl());
         }
         reject(requestError);

@@ -10,6 +10,7 @@ const CYCLE_KEY = "periodCalendarCycleProfile";
 const PERIOD_PRIVACY_KEY = "periodPrivacyConfirmed";
 const BIRTH_NOTICE_KEY = "birthProfileNoticeConfirmed";
 const DAILY_MOOD_KEY = "dailyMoodRecord";
+const MOOD_GUEST_ID_KEY = "dailyMoodGuestId";
 const PRIVACY_CONSENT_KEY = "privacyConsentAccepted";
 const PERSONAL_KEYS = [
   BIRTH_KEY,
@@ -80,6 +81,20 @@ function removePersonalData(key) {
   safeRemove(key);
 }
 
+function createGuestMoodId() {
+  const randomPart = Math.random().toString(36).slice(2, 14);
+  return "guest_" + Date.now().toString(36) + "_" + randomPart;
+}
+
+function getMoodGuestId() {
+  const guestId = safeGet(MOOD_GUEST_ID_KEY);
+  if (guestId && typeof guestId === "string") return guestId;
+
+  const nextGuestId = createGuestMoodId();
+  safeSet(MOOD_GUEST_ID_KEY, nextGuestId);
+  return nextGuestId;
+}
+
 function clearPersonalDataForOwner(owner) {
   PERSONAL_KEYS.forEach((key) => {
     safeRemove(personalKey(key, owner));
@@ -132,6 +147,7 @@ function clearAllLocalPersonalData() {
   clearLegacyPersonalData();
   clearAuthState();
   clearGuestMode();
+  safeRemove(MOOD_GUEST_ID_KEY);
   safeRemove(PRIVACY_CONSENT_KEY);
 }
 
@@ -198,6 +214,7 @@ module.exports = {
   PERIOD_PRIVACY_KEY,
   BIRTH_NOTICE_KEY,
   DAILY_MOOD_KEY,
+  MOOD_GUEST_ID_KEY,
   PRIVACY_CONSENT_KEY,
   getToken,
   getAuthState,
@@ -205,6 +222,7 @@ module.exports = {
   getPersonalData,
   setPersonalData,
   removePersonalData,
+  getMoodGuestId,
   clearGuestMode,
   clearAuthState,
   acceptAuthenticatedSession,

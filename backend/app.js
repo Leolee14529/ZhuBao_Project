@@ -4,6 +4,7 @@ const helmet = require("helmet");
 const { rateLimit, ipKeyGenerator } = require("express-rate-limit");
 const authRouter = require("./routes/auth");
 const inspirationsRouter = require("./routes/inspirations");
+const moodRouter = require("./routes/mood");
 const usersRouter = require("./routes/users");
 const wuxingRouter = require("./routes/wuxing");
 const requestContext = require("./middlewares/requestContext");
@@ -119,6 +120,7 @@ function createApp(config = loadConfig()) {
   );
   app.use("/api/auth", authRouter);
   app.use("/api/inspirations", inspirationsRouter);
+  app.use("/api/mood", moodRouter);
   app.use("/api/users", usersRouter);
   app.use("/api/wuxing", wuxingRouter);
   app.use(notFound);

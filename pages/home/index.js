@@ -1,6 +1,8 @@
 const auth = require("../../utils/auth");
 const share = require("../../utils/share");
-
+const moodRuntime = require("./mood-runtime");
+const MOOD_ENDPOINT = "/api/mood/today";
+const MOOD_RETRY_DELAY_MS = 60000;
 const DEFAULT_INSPIRATION = {
   id: "inspiration-01",
   no: "NO.01",
@@ -9,7 +11,6 @@ const DEFAULT_INSPIRATION = {
   subtitle: "今日色彩 / 青绿色",
   text: "把注意力放回手边的一件小事。慢慢呼吸 6 次。佩戴参考：玉石、银色、柔光银白。"
 };
-
 const INSPIRATIONS = [
   DEFAULT_INSPIRATION,
   {
@@ -45,21 +46,85 @@ const INSPIRATIONS = [
     text: "把视线从屏幕移开，看向远处 30 秒。佩戴参考：蓝水、墨翠、冷调蓝黑。"
   }
 ];
+const DEFAULT_MOOD = {
+  mood_id: "default",
+  name: "正在生成",
+  description: "系统正在为你准备今天的状态。",
+  tag: "陪伴",
+  emoji: "🌿",
+  theme_color: "#7BAE9D",
+  bg_color: "#EDF6F2",
+  text_color: "#243B34",
+  background_mood: "浅绿雾感",
+  encouragement: "今天也先照顾好自己。"
+};
+const FALLBACK_MOOD = {
+  ...DEFAULT_MOOD,
+  name: "今天也慢慢来",
+  description: "不用急，先照顾好自己的节奏。",
+  encouragement: "先从一件很小的事开始。"
+};
 
-const MOOD_OPTIONS = [
-  { id: "calm", label: "平静", itemClass: "" },
-  { id: "tired", label: "疲惫", itemClass: "" },
-  { id: "tense", label: "紧绷", itemClass: "" },
-  { id: "hopeful", label: "期待", itemClass: "" },
-  { id: "low", label: "低落", itemClass: "" }
-];
+function normalizeHexColor(color, fallback) {
+  const value = typeof color === "string" ? color.trim() : "";
+  return /^#[0-9a-fA-F]{6}$/.test(value) ? value : fallback;
+}
 
-function getTodayKey() {
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2, "0");
-  const date = String(now.getDate()).padStart(2, "0");
-  return year + "-" + month + "-" + date;
+function delayMoodRetry(page, cycleDate) {
+  page.moodRetryCycleDate = cycleDate;
+  page.moodRetryAfter = Date.now() + MOOD_RETRY_DELAY_MS;
+}
+
+function colorToRgba(color, alpha, fallback) {
+  const value = typeof color === "string" ? color.trim() : "";
+  const match = value.match(/^#([0-9a-fA-F]{6})$/);
+  if (!match) return fallback;
+  const hex = match[1];
+  const red = parseInt(hex.slice(0, 2), 16);
+  const green = parseInt(hex.slice(2, 4), 16);
+  const blue = parseInt(hex.slice(4, 6), 16);
+  return `rgba(${red}, ${green}, ${blue}, ${alpha})`;
+}
+
+function normalizeMood(rawMood) {
+  const mood = rawMood || {};
+  return {
+    mood_id: mood.mood_id || mood.id || DEFAULT_MOOD.mood_id,
+    name: mood.name || DEFAULT_MOOD.name,
+    description: mood.description || DEFAULT_MOOD.description,
+    tag: mood.tag || DEFAULT_MOOD.tag,
+    emoji: mood.emoji || DEFAULT_MOOD.emoji,
+    theme_color: normalizeHexColor(mood.theme_color, DEFAULT_MOOD.theme_color),
+    bg_color: normalizeHexColor(mood.bg_color, DEFAULT_MOOD.bg_color),
+    text_color: normalizeHexColor(mood.text_color, DEFAULT_MOOD.text_color),
+    icon_url: mood.icon_url || "",
+    background_url: mood.background_url || "",
+    background_mood: mood.background_mood || DEFAULT_MOOD.background_mood,
+    encouragement: mood.encouragement || DEFAULT_MOOD.encouragement,
+    date: mood.date || "",
+    updated_at: mood.updated_at || "",
+    generated_at: mood.generated_at || ""
+  };
+}
+
+function buildMoodView(rawMood) {
+  const mood = normalizeMood(rawMood);
+  const accent = mood.theme_color || DEFAULT_MOOD.theme_color;
+  const accentSoft = colorToRgba(accent, 0.16, "rgba(57, 216, 122, 0.16)");
+  const accentFaint = colorToRgba(accent, 0.09, "rgba(57, 216, 122, 0.09)");
+  const bgFaint = colorToRgba(mood.bg_color, 0.08, "rgba(57, 216, 122, 0.08)");
+
+  return {
+    mood,
+    moodCardStyle: `border-color: ${accentSoft}; background: linear-gradient(135deg, ${bgFaint}, transparent 64%), linear-gradient(180deg, rgba(23, 25, 32, .96), rgba(12, 17, 15, .94));`,
+    moodColorCardStyle: `border-color: ${accentSoft}; background: linear-gradient(135deg, ${accentFaint}, transparent 62%), #171920;`,
+    moodAccentStyle: `color: ${accent};`,
+    moodDotStyle: `background-color: ${accent}; box-shadow: 0 0 16rpx ${accentSoft};`,
+    moodTagStyle: `color: ${accent}; border-color: ${accentSoft}; background-color: ${accentFaint};`,
+    colorSwatchStyle: `background-color: ${accent}; box-shadow: 0 10rpx 26rpx ${accentSoft};`,
+    moodColorTitle: mood.background_mood || (mood.tag ? mood.tag + "色彩" : "今日色彩"),
+    moodColorDesc: "随今日心情同步"
+  };
 }
 
 function getDailyInspiration() {
@@ -67,16 +132,25 @@ function getDailyInspiration() {
   return INSPIRATIONS[daySeed % INSPIRATIONS.length] || DEFAULT_INSPIRATION;
 }
 
+function getCompactTopSpacer(navLayout) {
+  if (!navLayout) return 44;
+  const menuBottom = Number(navLayout.menuBottom || 0);
+  const statusBarHeight = Number(navLayout.statusBarHeight || 0);
+  const contentOffset = Number(navLayout.contentOffset || 0);
+  const safeBottom = menuBottom ? menuBottom + 4 : 0;
+  const safeStatus = statusBarHeight ? statusBarHeight + 34 : 0;
+  const compact = Math.max(safeBottom, safeStatus, 44);
+  return Math.min(contentOffset || compact, compact);
+}
+
 Page({
   data: {
-    topSpacer: 40,
+    topSpacer: 44,
     destinyLine: "今日灵感与珠宝风格参考",
     flipped: false,
     cardClass: "",
     inspiration: DEFAULT_INSPIRATION,
-    moodLabel: "暂无",
-    moodDesc: "轻点记录今天",
-    moodOptions: MOOD_OPTIONS,
+    ...buildMoodView(DEFAULT_MOOD),
     device: {
       title: "设备",
       name: "暂无设备",
@@ -110,19 +184,23 @@ Page({
     ]
   },
   onLoad() {
+    this.isPageUnloaded = false;
     share.enableShareMenu();
     const app = getApp();
     const navLayout = app.getNavLayout ? app.getNavLayout() : app.globalData.navLayout;
     if (navLayout && navLayout.contentOffset) {
       this.setData({
-        topSpacer: navLayout.contentOffset
+        topSpacer: getCompactTopSpacer(navLayout)
       });
     }
     this.refreshInspiration();
-    this.refreshMoodRecord();
+    this.refreshTodayMood();
   },
   onShow() {
-    this.refreshMoodRecord();
+    this.refreshTodayMood();
+  },
+  onUnload() {
+    this.isPageUnloaded = true;
   },
   onShareAppMessage() {
     return share.getHomeShareAppMessage();
@@ -140,34 +218,59 @@ Page({
   refreshInspiration() {
     this.setData({ inspiration: getDailyInspiration() });
   },
-  refreshMoodRecord() {
-    const today = getTodayKey();
-    const record = auth.getPersonalData(auth.DAILY_MOOD_KEY);
-    const isToday = record && record.date === today;
-    const moodId = isToday ? record.moodId : "";
-    const mood = MOOD_OPTIONS.find((item) => item.id === moodId);
-
-    this.setData({
-      moodLabel: mood ? mood.label : "暂无",
-      moodDesc: mood ? "今日已记录" : "轻点记录今天",
-      moodOptions: MOOD_OPTIONS.map((item) => ({
-        id: item.id,
-        label: item.label,
-        itemClass: item.id === moodId ? "mood-option-selected" : ""
-      }))
-    });
+  applyMood(mood, cycleDate) {
+    if (this.isPageUnloaded) return;
+    this.setData(buildMoodView(mood));
+    if (cycleDate) this.moodCycleDate = cycleDate;
   },
-  recordMood(e) {
-    const moodId = e.currentTarget.dataset.mood;
-    const mood = MOOD_OPTIONS.find((item) => item.id === moodId);
-    if (!mood) return;
+  refreshTodayMood() {
+    if (this.moodRequesting || this.isPageUnloaded) return;
+    const cycleDate = moodRuntime.getCycleDate();
+    const cached = auth.getPersonalData(auth.DAILY_MOOD_KEY);
+    if (cached && cached.mood && cached.date === cycleDate) {
+      if (this.moodCycleDate !== cycleDate) {
+        this.applyMood(cached.mood, cycleDate);
+      }
+      return;
+    }
+    if (this.moodRetryCycleDate === cycleDate &&
+      Date.now() < this.moodRetryAfter) return;
+    if (this.moodCycleDate && this.moodCycleDate !== cycleDate) {
+      this.moodCycleDate = "";
+      this.applyMood(DEFAULT_MOOD);
+    }
 
-    auth.setPersonalData(auth.DAILY_MOOD_KEY, {
-      date: getTodayKey(),
-      moodId: mood.id,
-      moodLabel: mood.label
-    });
-    this.refreshMoodRecord();
+    this.moodRequesting = true;
+    moodRuntime.fetchToday({
+      path: MOOD_ENDPOINT,
+      getGuestId: auth.getMoodGuestId
+    })
+      .then((data) => {
+        const mood = data && data.mood ? data.mood : data;
+        if (!mood || !mood.mood_id) {
+          delayMoodRetry(this, cycleDate);
+          if (this.moodCycleDate !== cycleDate) {
+            this.applyMood(FALLBACK_MOOD, cycleDate);
+          }
+          return;
+        }
+        const moodDate = mood.date || cycleDate;
+        auth.setPersonalData(auth.DAILY_MOOD_KEY, {
+          date: moodDate,
+          mood
+        });
+        this.moodRetryAfter = 0;
+        this.applyMood(mood, moodDate);
+      })
+      .catch(() => {
+        delayMoodRetry(this, cycleDate);
+        if (this.moodCycleDate !== cycleDate) {
+          this.applyMood(FALLBACK_MOOD, cycleDate);
+        }
+      })
+      .then(() => {
+        this.moodRequesting = false;
+      });
   },
   goData() {
     if (!auth.requireLogin({ source: "/subpackage/jewelry/pages/data/index" })) return;

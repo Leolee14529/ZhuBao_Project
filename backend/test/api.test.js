@@ -68,6 +68,44 @@ test("random inspiration endpoint returns an inspiration card payload", async ()
   assert.ok(body.data.inspiration.text);
 });
 
+test("daily mood endpoint fixes guest mood within the same cycle", async () => {
+  const headers = { "x-guest-id": "guest_api_test_fixed" };
+  const first = await request("/api/mood/today", { headers });
+  const second = await request("/api/mood/today", { headers });
+
+  assert.equal(first.response.status, 200);
+  assert.equal(first.body.success, true);
+  assert.equal(first.body.data.code, 0);
+  assert.ok(first.body.data.mood.mood_id);
+  assert.ok(first.body.data.mood.theme_color);
+  assert.ok(first.body.data.mood.bg_color);
+  assert.ok(first.body.data.mood.text_color);
+  assert.equal(second.body.data.mood.mood_id, first.body.data.mood.mood_id);
+});
+
+test("daily mood endpoint requires auth token or guest id", async () => {
+  const { response, body } = await request("/api/mood/today");
+  assert.equal(response.status, 400);
+  assert.equal(body.success, false);
+  assert.equal(body.code, "MOOD_OWNER_REQUIRED");
+});
+
+test("authenticated daily mood ignores client supplied guest id", async () => {
+  const auth = await login("api-test-mood-owner");
+  const headers = {
+    authorization: `Bearer ${auth.token}`,
+    "x-guest-id": "guest_should_not_own_user_mood"
+  };
+  const first = await request("/api/mood/today", { headers });
+  const second = await request("/api/mood/today", {
+    headers: { authorization: `Bearer ${auth.token}` }
+  });
+
+  assert.equal(first.response.status, 200);
+  assert.equal(second.response.status, 200);
+  assert.equal(second.body.data.mood.mood_id, first.body.data.mood.mood_id);
+});
+
 test("legacy fortune endpoint is not mounted", async () => {
   const { response, body } = await request("/api/fortunes/random");
   assert.equal(response.status, 404);
@@ -216,6 +254,24 @@ test("account deletion revokes all sessions for the user", async () => {
     headers: { authorization: `Bearer ${second.token}` }
   });
   assert.equal(secondMe.response.status, 401);
+});
+
+test("account deletion removes daily mood records for the user", async () => {
+  const auth = await login("api-test-delete-mood");
+  const headers = { authorization: `Bearer ${auth.token}` };
+
+  const mood = await request("/api/mood/today", { headers });
+  assert.equal(mood.response.status, 200);
+
+  const deleted = await request("/api/users/me", {
+    method: "DELETE",
+    headers
+  });
+  assert.equal(deleted.response.status, 200);
+
+  const moodFile = path.join(runtimeDir, "moods.json");
+  const stored = JSON.parse(fs.readFileSync(moodFile, "utf8"));
+  assert.equal(stored.records.some((item) => item.userId === auth.user.id), false);
 });
 
 test("logout revokes the current session", async () => {
