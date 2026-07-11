@@ -1,9 +1,10 @@
 var auth = require("../../../../utils/auth");
 var share = require("../../../../utils/share");
+var pageLayout = require("../../utils/page-layout");
 
 Page({
   data: {
-    topSpacer: 40,
+    topSpacer: pageLayout.getContentOffset(64),
     sleep: [
       { name: "安静", value: "0", width: "0%", color: "#10b981", cardClass: "sleep-card-left" },
       { name: "舒展", value: "0", width: "0%", color: "#34d399", cardClass: "sleep-card-mid" },
@@ -13,13 +14,8 @@ Page({
   onLoad() {
     share.enableShareMenu();
     if (!auth.requireLogin({ source: "/subpackage/jewelry/pages/data/index" })) return;
-    const app = getApp();
-    const navLayout = app.getNavLayout ? app.getNavLayout() : app.globalData.navLayout;
-    if (navLayout && navLayout.contentOffset) {
-      this.setData({
-        topSpacer: navLayout.contentOffset
-      });
-    }
+    const topSpacer = pageLayout.getContentOffset(64);
+    if (topSpacer !== this.data.topSpacer) this.setData({ topSpacer });
   },
   onShareAppMessage() { return share.getPageShareAppMessage("/subpackage/jewelry/pages/data/index"); },
   onShareTimeline() { return share.getPageShareTimeline("/subpackage/jewelry/pages/data/index"); },

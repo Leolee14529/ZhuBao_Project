@@ -1,9 +1,10 @@
 const share = require("../../../../utils/share");
 const productData = require("../../utils/products");
+const pageLayout = require("../../utils/page-layout");
 
 Page({
   data: {
-    topSpacer: 40,
+    topSpacer: pageLayout.getContentOffset(64),
     product: null,
     palette: []
   },
@@ -41,14 +42,8 @@ Page({
   },
 
   applyNavLayout() {
-    const app = getApp();
-    const navLayout = app.getNavLayout ? app.getNavLayout() : app.globalData.navLayout;
-
-    if (navLayout && navLayout.contentOffset) {
-      this.setData({
-        topSpacer: navLayout.contentOffset
-      });
-    }
+    const topSpacer = pageLayout.getContentOffset(64);
+    if (topSpacer !== this.data.topSpacer) this.setData({ topSpacer });
   },
 
   loadProduct(productId) {

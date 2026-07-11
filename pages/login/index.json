@@ -3,5 +3,7 @@
     "status-bar": "/components/status-bar/status-bar",
     "empty-state": "/components/empty-state/empty-state"
   },
-  "navigationStyle": "custom"
+  "navigationStyle": "custom",
+  "backgroundColor": "#000000",
+  "backgroundTextStyle": "light"
 }

@@ -51,6 +51,8 @@ DATABASE_URL=postgresql://user:password@host:5432/zhubao pnpm run db:migrate
 
 - `users`
 - `auth_sessions`
+- `mood_templates`
+- `user_daily_mood`
 - `birth_profiles`
 - 风格结果表
 - `schema_migrations`
@@ -116,6 +118,40 @@ token 只以 SHA-256 哈希形式存储。退出登录会撤销当前 session。
 - `GET /api/inspirations/random`
 
 当前从后端灵感卡池随机返回一条，支持 `previousId` 查询参数避免连续重复。后续可在 `backend/services/inspirationService.js` 内替换为数据库或运营配置来源。
+
+### 每日心情
+
+- `GET /api/mood/today`
+
+每天以北京时间 12:00 为边界生成一次心情。12 点前沿用前一个周期，12 点后进入当天新周期。同一用户或同一匿名临时 ID 在同一周期内重复请求会返回同一条记录，不会刷新一次变一次。
+
+登录用户使用 `Authorization: Bearer <token>` 固定记录；未登录小程序客户端使用 `X-Guest-Id: guest_xxx` 临时标识固定记录。客户端不提交 `userId`，服务器只使用 token 对应用户或校验后的临时 ID。
+
+响应示例：
+
+```json
+{
+  "success": true,
+  "data": {
+    "code": 0,
+    "mood": {
+      "mood_id": "mood_05_03",
+      "name": "想躺平 · 独处时间",
+      "description": "今天不一定要很努力，留一点松弛给自己也很好。独处不是空白，是把注意力重新放回自己身上。",
+      "emoji": "🌙",
+      "theme_color": "#7B8FA1",
+      "bg_color": "#EEF2F5",
+      "text_color": "#2F3A45",
+      "tag": "放松",
+      "background_mood": "月光灰蓝",
+      "encouragement": "躺一下不是放弃，是把能量慢慢充回来。",
+      "updated_at": "2026-07-09 12:00:00"
+    }
+  }
+}
+```
+
+`mood_templates` 初始迁移会生成 100 条模板，后续可直接在数据库中维护名称、文案、颜色、权重和启用状态。
 
 ### 色彩风格参考
 

@@ -1,5 +1,7 @@
 {
   "navigationStyle": "custom",
+  "backgroundColor": "#02060d",
+  "backgroundTextStyle": "light",
   "usingComponents": {
     "calendar-topbar": "/subpackage/periodCalendar/components/calendar-topbar/calendar-topbar",
     "month-switcher": "/subpackage/periodCalendar/components/month-switcher/month-switcher",

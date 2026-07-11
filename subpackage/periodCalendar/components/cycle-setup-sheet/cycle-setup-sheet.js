@@ -43,6 +43,7 @@ Component({
     isSavingCycle: Boolean
   },
   data: {
+    ready: false,
     draftProfile: { lastPeriodDate: "", cycleLength: "28", periodLength: "5", todayPeriodStartEnabled: false, adjustments: {} },
     setupYear: 0,
     setupMonth: 0,
@@ -52,12 +53,16 @@ Component({
   },
   lifetimes: {
     attached() {
+      this._isAttached = true;
       this.initializeSetup();
+    },
+    detached() {
+      this._isAttached = false;
     }
   },
   observers: {
     "cycleProfile,todayDateKey": function () {
-      if (!this.data.isEditing) this.initializeSetup();
+      if (this._isAttached && !this.data.isEditing) this.initializeSetup();
     }
   },
   methods: {
@@ -76,7 +81,7 @@ Component({
     refreshSetupCalendar(year, month, profile) {
       const normalizedProfile = cycleEngine.normalizeProfile(profile || this.data.draftProfile);
       this.setData(Object.assign(
-        { draftProfile: normalizedProfile },
+        { draftProfile: normalizedProfile, ready: true },
         buildSetupCalendarState(normalizedProfile, year, month)
       ));
     },

@@ -1,4 +1,4 @@
-<view class="cycle-setup-mask" catchtap="onCloseTap">
+<view wx:if="{{ready}}" class="cycle-setup-mask" catchtap="onCloseTap">
   <view class="cycle-setup-sheet" catchtap="noop">
     <view class="cycle-setup-sheet__handle"></view>
     <text class="cycle-setup-sheet__title">设置周期</text>

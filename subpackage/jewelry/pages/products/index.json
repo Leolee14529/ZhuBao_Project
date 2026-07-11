@@ -1,4 +1,6 @@
 {
   "navigationStyle": "custom",
-  "navigationBarTitleText": "风格参考"
+  "navigationBarTitleText": "风格参考",
+  "backgroundColor": "#050806",
+  "backgroundTextStyle": "light"
 }

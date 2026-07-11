@@ -20,7 +20,14 @@
       <cycle-legend items="{{legendItems}}" />
     </view>
 
-    <view wx:if="{{!hasCycleData}}" class="cycle-preview-card">
+    <view wx:if="{{!calendarReady}}" class="cycle-state-placeholder">
+      <view class="cycle-state-placeholder__line cycle-state-placeholder__line-short"></view>
+      <view class="cycle-state-placeholder__line cycle-state-placeholder__line-title"></view>
+      <view class="cycle-state-placeholder__line"></view>
+      <view class="cycle-state-placeholder__action"></view>
+    </view>
+
+    <view wx:elif="{{!hasCycleData}}" class="cycle-preview-card">
       <text class="cycle-preview-card__eyebrow">预览日历</text>
       <text class="cycle-preview-card__title">先用颜色看懂周期，再选择开始日期</text>
       <view class="cycle-preview-card__button" bindtap="onSetupCycle">设置我的周期</view>

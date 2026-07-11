@@ -2,10 +2,11 @@ const request = require("../../../../utils/request");
 const auth = require("../../../../utils/auth");
 const privacy = require("../../../../utils/privacy");
 const share = require("../../../../utils/share");
+const pageLayout = require("../../utils/page-layout");
 
 Page({
   data: {
-    topSpacer: 40,
+    topSpacer: pageLayout.getContentOffset(64),
     currentLanguage: "中文",
     isDeviceBound: false,
     sleepEnabled: false,
@@ -34,13 +35,8 @@ Page({
   onLoad() {
     share.enableShareMenu();
     if (!auth.requireLogin({ source: "/subpackage/jewelry/pages/settings/index" })) return;
-    const app = getApp();
-    const navLayout = app.getNavLayout ? app.getNavLayout() : app.globalData.navLayout;
-    if (navLayout && navLayout.contentOffset) {
-      this.setData({
-        topSpacer: navLayout.contentOffset
-      });
-    }
+    const topSpacer = pageLayout.getContentOffset(64);
+    if (topSpacer !== this.data.topSpacer) this.setData({ topSpacer });
     this.loadCurrentUser();
   },
   onShareAppMessage() { return share.getPageShareAppMessage("/subpackage/jewelry/pages/settings/index"); },

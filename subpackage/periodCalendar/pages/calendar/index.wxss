@@ -2,7 +2,8 @@
 
 .calendar-page {
   min-height: 100vh;
-  background: radial-gradient(circle at 50% 18%, rgba(18, 28, 47, 0.24), transparent 32%), linear-gradient(180deg, #02070f 0%, #02060d 52%, #01050b 100%);
+  background-color: #02060d;
+  background-image: radial-gradient(circle at 50% 18%, rgba(18, 28, 47, 0.24), transparent 32%), linear-gradient(180deg, #02070f 0%, #02060d 52%, #01050b 100%);
   color: #ffffff;
   overflow-x: hidden;
   box-sizing: border-box;
@@ -33,6 +34,32 @@
   background: rgba(255, 255, 255, 0.045);
   box-sizing: border-box;
   overflow: hidden;
+}
+.cycle-state-placeholder {
+  min-height: 300rpx;
+  margin-top: 26rpx;
+  padding: 28rpx 26rpx;
+  border-radius: 28rpx;
+  border: 1rpx solid rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.035);
+  box-sizing: border-box;
+}
+.cycle-state-placeholder__line {
+  width: 88%;
+  height: 18rpx;
+  margin-top: 22rpx;
+  border-radius: 999rpx;
+  background: rgba(255, 255, 255, 0.07);
+}
+.cycle-state-placeholder__line:first-child { margin-top: 0; }
+.cycle-state-placeholder__line-short { width: 28%; }
+.cycle-state-placeholder__line-title { width: 72%; height: 30rpx; }
+.cycle-state-placeholder__action {
+  width: 100%;
+  height: 76rpx;
+  margin-top: 28rpx;
+  border-radius: 999rpx;
+  background: rgba(8, 110, 78, 0.34);
 }
 .cycle-preview-card__eyebrow {
   display: block;

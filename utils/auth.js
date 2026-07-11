@@ -10,7 +10,9 @@ const CYCLE_KEY = "periodCalendarCycleProfile";
 const PERIOD_PRIVACY_KEY = "periodPrivacyConfirmed";
 const BIRTH_NOTICE_KEY = "birthProfileNoticeConfirmed";
 const DAILY_MOOD_KEY = "dailyMoodRecord";
+const MOOD_GUEST_ID_KEY = "dailyMoodGuestId";
 const PRIVACY_CONSENT_KEY = "privacyConsentAccepted";
+const MOOD_GUEST_ID_PATTERN = /^guest_[a-zA-Z0-9_.:-]{8,80}$/;
 const PERSONAL_KEYS = [
   BIRTH_KEY,
   WUXING_KEY,
@@ -80,6 +82,21 @@ function removePersonalData(key) {
   safeRemove(key);
 }
 
+function createGuestMoodId() {
+  const randomPart = Math.random().toString(36).slice(2, 14);
+  return "guest_" + Date.now().toString(36) + "_" + randomPart;
+}
+
+function getMoodGuestId() {
+  if (!hasPrivacyConsent()) return "";
+  const guestId = safeGet(MOOD_GUEST_ID_KEY);
+  if (typeof guestId === "string" && MOOD_GUEST_ID_PATTERN.test(guestId)) return guestId;
+
+  const nextGuestId = createGuestMoodId();
+  safeSet(MOOD_GUEST_ID_KEY, nextGuestId);
+  return nextGuestId;
+}
+
 function clearPersonalDataForOwner(owner) {
   PERSONAL_KEYS.forEach((key) => {
     safeRemove(personalKey(key, owner));
@@ -113,6 +130,15 @@ function clearAuthState() {
   safeRemove(USER_KEY);
 }
 
+function invalidateAuthenticatedSession() {
+  const owner = getPersonalOwner();
+  if (owner !== "anonymous") clearPersonalDataForOwner(owner);
+  clearLegacyPersonalData();
+  clearAuthState();
+  clearGuestMode();
+  return owner;
+}
+
 function clearCycleData() {
   removePersonalData(CYCLE_KEY);
   removePersonalData(PERIOD_PRIVACY_KEY);
@@ -132,6 +158,7 @@ function clearAllLocalPersonalData() {
   clearLegacyPersonalData();
   clearAuthState();
   clearGuestMode();
+  safeRemove(MOOD_GUEST_ID_KEY);
   safeRemove(PRIVACY_CONSENT_KEY);
 }
 
@@ -198,15 +225,19 @@ module.exports = {
   PERIOD_PRIVACY_KEY,
   BIRTH_NOTICE_KEY,
   DAILY_MOOD_KEY,
+  MOOD_GUEST_ID_KEY,
   PRIVACY_CONSENT_KEY,
   getToken,
+  getPersonalOwner,
   getAuthState,
   isLoggedIn,
   getPersonalData,
   setPersonalData,
   removePersonalData,
+  getMoodGuestId,
   clearGuestMode,
   clearAuthState,
+  invalidateAuthenticatedSession,
   acceptAuthenticatedSession,
   clearCycleData,
   clearWuxingLocalData,

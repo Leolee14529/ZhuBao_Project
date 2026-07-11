@@ -1,6 +1,6 @@
 <view class="bottom-nav">
   <block wx:for="{{tabs}}" wx:key="id">
-    <button class="nav-item {{item.itemClass}}" data-tab="{{item.id}}" bindtap="switchTab">
+    <button class="nav-item {{item.id === active ? 'active' : ''}}" data-tab="{{item.id}}" bindtap="switchTab">
       <view class="nav-top"></view>
       <view class="nav-icon {{item.iconClass}}">
         <block wx:if="{{item.id === 'home'}}">

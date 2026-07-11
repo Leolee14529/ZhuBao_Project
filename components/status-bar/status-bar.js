@@ -1,15 +1,21 @@
+function getStatusBarHeight() {
+  try {
+    const info = wx.getSystemInfoSync();
+    const height = Number(info.statusBarHeight);
+    return height > 0 ? height : 20;
+  } catch (error) {
+    return 20;
+  }
+}
+
 Component({
   data: {
-    height: 20
+    height: getStatusBarHeight()
   },
   lifetimes: {
     attached() {
-      try {
-        const info = wx.getSystemInfoSync();
-        this.setData({ height: info.statusBarHeight || 20 });
-      } catch (error) {
-        this.setData({ height: 20 });
-      }
+      const height = getStatusBarHeight();
+      if (height !== this.data.height) this.setData({ height });
     }
   }
 });

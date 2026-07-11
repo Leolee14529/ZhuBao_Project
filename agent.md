@@ -1,5 +1,7 @@
 # ZhuBao Project Agent Plan
 
+> ⚠️ 历史计划提示（2026-07-11）：本文中的旧绝对路径、登录页首入口和“无真实鉴权”等描述已经过时。当前版本为 `1.1.0`，入口为 `pages/home/index`，发布分支为 `agent/miniapp-stability-v1.1.0`。下一位 Agent 应先阅读 `README.md`、`协作工作区.md`、`交接文档.md` 与 `backend/README.md`，不要按本文恢复旧页面或旧 stash。
+
 ## Current workspace path
 
 - Windows path: `D:\30_Projects_项目工程\ZhuBao_Project`

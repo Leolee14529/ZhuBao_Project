@@ -146,22 +146,28 @@ test("daily inspiration card is local and does not request legacy card endpoints
   assert.ok(homePage.includes("今日灵感"));
   assert.equal(homePage.includes("<inspiration-card"), false);
   assert.equal(homeLogic.includes("/api/fortunes"), false);
-  assert.equal(homeLogic.includes("request.get"), false);
+  assert.equal(homeLogic.includes("/api/inspirations"), false);
 });
 
-test("home page records today's mood locally without backend upload", () => {
+test("home page renders system generated daily mood without manual choices", () => {
   const homePage = readText("pages/home/index.wxml");
   const homeLogic = readText("pages/home/index.js");
+  const moodStyle = readText("pages/home/mood.wxss");
   const authLogic = readText("utils/auth.js");
 
-  ["平静", "疲惫", "紧绷", "期待", "低落"].forEach((label) => {
-    assert.ok(homeLogic.includes(`label: "${label}"`), `home mood option missing ${label}`);
-  });
-  assert.ok(homePage.includes("bindtap=\"recordMood\""));
+  assert.ok(homePage.includes("今日心情"));
+  assert.ok(homePage.includes("{{mood.name}}"));
+  assert.ok(homePage.includes("{{mood.theme_color}}"));
+  assert.ok(homeLogic.includes("/api/mood/today"));
+  assert.ok(homeLogic.includes("auth.getMoodGuestId"));
   assert.ok(homeLogic.includes("auth.DAILY_MOOD_KEY"));
   assert.ok(homeLogic.includes("auth.setPersonalData"));
-  assert.equal(homeLogic.includes("/api/"), false);
+  assert.equal(homePage.includes("bindtap=\"recordMood\""), false);
+  assert.equal(homeLogic.includes("recordMood"), false);
+  assert.equal(homeLogic.includes("MOOD_OPTIONS"), false);
+  assert.equal(moodStyle.includes(".mood-option"), false);
   assert.ok(authLogic.includes('const DAILY_MOOD_KEY = "dailyMoodRecord"'));
+  assert.ok(authLogic.includes('const MOOD_GUEST_ID_KEY = "dailyMoodGuestId"'));
   assert.ok(authLogic.includes("DAILY_MOOD_KEY"));
 });
 

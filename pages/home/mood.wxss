@@ -1,34 +1,50 @@
 .mood-stat {
   min-height: 236rpx;
+  box-sizing: border-box;
 }
 
-.mood-options {
+.mood-title-row {
   display: flex;
-  flex-wrap: wrap;
-  gap: 12rpx;
-  margin-top: 16rpx;
+  align-items: flex-start;
+  gap: 10rpx;
+  margin-top: 18rpx;
 }
 
-.mood-option {
-  flex: 1 0 86rpx;
-  max-width: 100rpx;
-  height: 46rpx;
-  padding: 0;
-  border-radius: 23rpx;
-  border: 1rpx solid rgba(255, 255, 255, 0.13);
-  background: rgba(255, 255, 255, 0.05);
-  color: rgba(255, 255, 255, 0.68);
-  font-size: 20rpx;
-  line-height: 44rpx;
-  text-align: center;
+.mood-emoji {
+  flex: none;
+  width: 34rpx;
+  font-size: 28rpx;
+  line-height: 1.2;
 }
 
-.mood-option::after {
-  border: 0;
+.mood-name {
+  flex: 1;
+  min-width: 0;
+  margin-top: 0;
+  word-break: break-all;
 }
 
-.mood-option-selected {
-  border-color: rgba(232, 217, 181, 0.72);
-  background: rgba(232, 217, 181, 0.16);
-  color: #e8d9b5;
+.mood-desc {
+  min-height: 54rpx;
+  line-height: 1.5;
+}
+
+.mood-encourage {
+  display: block;
+  margin-top: 12rpx;
+  font-size: 18rpx;
+  line-height: 1.45;
+}
+
+.color-stat {
+  position: relative;
+  box-sizing: border-box;
+}
+
+.color-swatch {
+  width: 54rpx;
+  height: 54rpx;
+  margin-top: 18rpx;
+  border-radius: 50%;
+  box-shadow: 0 12rpx 30rpx rgba(0, 0, 0, 0.16);
 }

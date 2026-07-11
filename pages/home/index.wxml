@@ -42,24 +42,28 @@
         </view>
 
         <view class="stats-row">
-          <view class="stat-card stat-left mood-stat">
-            <text class="stat-caption">· 今日心情</text>
-            <text class="stat-value">{{moodLabel}}</text>
-            <text class="stat-desc">{{moodDesc}}</text>
-            <view class="mood-options">
-              <block wx:for="{{moodOptions}}" wx:key="id">
-                <button
-                  class="mood-option {{item.itemClass}}"
-                  data-mood="{{item.id}}"
-                  bindtap="recordMood"
-                >{{item.label}}</button>
-              </block>
+          <view class="stat-card stat-left mood-card" style="{{moodCardStyle}}">
+            <view class="mood-card__header">
+              <view class="mood-card__caption" style="{{moodAccentStyle}}">
+                <view class="mood-card__dot" style="{{moodDotStyle}}"></view>
+                <text>今日心情</text>
+              </view>
+              <text class="mood-card__tag" style="{{moodTagStyle}}">{{mood.tag}}</text>
             </view>
+            <text class="mood-card__hint">系统为你生成了今天的状态</text>
+            <text class="mood-card__name">{{mood.name}}</text>
+            <text class="mood-card__desc">{{mood.description}}</text>
           </view>
-          <view class="stat-card stat-right">
-            <text class="stat-caption stat-pink">· 今日色彩</text>
-            <text class="stat-value">无</text>
-            <text class="stat-desc">浏览珠宝风格参考</text>
+          <view class="stat-card stat-right color-card" style="{{moodColorCardStyle}}">
+            <view class="color-card__header">
+              <view class="mood-card__caption" style="{{moodAccentStyle}}">
+                <view class="mood-card__dot" style="{{moodDotStyle}}"></view>
+                <text>今日色彩</text>
+              </view>
+            </view>
+            <view class="color-card__swatch" style="background-color: {{mood.theme_color}}; {{colorSwatchStyle}}"></view>
+            <text class="color-card__value">{{moodColorTitle}}</text>
+            <text class="color-card__desc">{{moodColorDesc}}</text>
           </view>
         </view>
 

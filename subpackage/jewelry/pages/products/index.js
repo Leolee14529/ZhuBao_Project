@@ -1,20 +1,21 @@
 const share = require("../../../../utils/share");
 const productData = require("../../utils/products");
+const pageLayout = require("../../utils/page-layout");
+const initialColumns = productData.splitProducts(productData.PRODUCTS);
 
 Page({
   data: {
-    topSpacer: 40,
+    topSpacer: pageLayout.getContentOffset(64),
     activeFilter: "all",
     filters: productData.decorateFilters("all"),
     currentProducts: productData.PRODUCTS,
     filteredCount: productData.PRODUCTS.length,
-    leftProducts: productData.splitProducts(productData.PRODUCTS).leftProducts,
-    rightProducts: productData.splitProducts(productData.PRODUCTS).rightProducts
+    leftProducts: initialColumns.leftProducts,
+    rightProducts: initialColumns.rightProducts
   },
   onLoad() {
     share.enableShareMenu();
     this.applyNavLayout();
-    this.applyFilter("all");
   },
   onShareAppMessage() {
     return share.getPageShareAppMessage(productData.PRODUCTS_PAGE_PATH);
@@ -23,14 +24,8 @@ Page({
     return share.getPageShareTimeline(productData.PRODUCTS_PAGE_PATH);
   },
   applyNavLayout() {
-    const app = getApp();
-    const navLayout = app.getNavLayout ? app.getNavLayout() : app.globalData.navLayout;
-
-    if (navLayout && navLayout.contentOffset) {
-      this.setData({
-        topSpacer: navLayout.contentOffset
-      });
-    }
+    const topSpacer = pageLayout.getContentOffset(64);
+    if (topSpacer !== this.data.topSpacer) this.setData({ topSpacer });
   },
   applyFilter(filterId) {
     const currentProducts = productData.getProductsByFilter(filterId);

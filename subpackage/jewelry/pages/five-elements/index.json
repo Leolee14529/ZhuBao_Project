@@ -1,3 +1,5 @@
 {
-  "navigationStyle": "custom"
+  "navigationStyle": "custom",
+  "backgroundColor": "#050806",
+  "backgroundTextStyle": "light"
 }
