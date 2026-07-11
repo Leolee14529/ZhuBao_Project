@@ -62,7 +62,7 @@
 .page-subtitle {
   display: block;
   margin-top: 8rpx;
-  font-size: 21rpx;
+  font-size: 22rpx;
   color: rgba(255, 255, 255, 0.46);
 }
 
@@ -105,7 +105,7 @@
 
 .feature-kicker {
   display: block;
-  font-size: 18rpx;
+  font-size: 20rpx;
   letter-spacing: 0;
   color: rgba(57, 216, 122, 0.82);
 }
@@ -248,7 +248,7 @@
 .product-name {
   display: block;
   color: rgba(255, 255, 255, 0.94);
-  font-size: 27rpx;
+  font-size: 28rpx;
   font-weight: 500;
   line-height: 1.32;
 }
@@ -284,7 +284,7 @@
   border-radius: 18rpx;
   background: rgba(255, 255, 255, 0.07);
   color: rgba(255, 255, 255, 0.72);
-  font-size: 18rpx;
+  font-size: 20rpx;
 }
 
 .safe-bottom-space {

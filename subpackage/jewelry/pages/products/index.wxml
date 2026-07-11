@@ -41,7 +41,7 @@
           <block wx:for="{{leftProducts}}" wx:key="id">
             <view class="product-tile {{item.cardClass}}" bindtap="previewProduct" data-id="{{item.id}}">
               <view class="product-image-wrap">
-                <image class="product-image" src="{{item.image}}" mode="aspectFill" fade-in="{{false}}"></image>
+                <image class="product-image" src="{{item.image}}" mode="aspectFill" fade-in="{{false}}" lazy-load="true"></image>
                 <view class="image-shade"></view>
                 <text wx:if="{{item.tag}}" class="product-badge">{{item.tag}}</text>
               </view>
@@ -61,7 +61,7 @@
           <block wx:for="{{rightProducts}}" wx:key="id">
             <view class="product-tile {{item.cardClass}}" bindtap="previewProduct" data-id="{{item.id}}">
               <view class="product-image-wrap">
-                <image class="product-image" src="{{item.image}}" mode="aspectFill" fade-in="{{false}}"></image>
+                <image class="product-image" src="{{item.image}}" mode="aspectFill" fade-in="{{false}}" lazy-load="true"></image>
                 <view class="image-shade"></view>
                 <text wx:if="{{item.tag}}" class="product-badge">{{item.tag}}</text>
               </view>

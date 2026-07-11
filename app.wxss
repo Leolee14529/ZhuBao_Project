@@ -1,3 +1,5 @@
+@import "./styles/typography.wxss";
+
 page {
   min-height: 100vh;
   background: #050505;
@@ -19,7 +21,7 @@ swiper,
 swiper-item,
 cover-view {
   box-sizing: border-box;
-  font-family: "STSongti-SC-Regular", "Songti SC", "Noto Serif CJK SC", "Source Han Serif SC", "SimSun", "NSimSun", serif !important;
+  font-family: "SimHei" !important;
   font-variant-numeric: lining-nums tabular-nums;
 }
 

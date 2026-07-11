@@ -46,7 +46,7 @@
             <view class="mood-card__header">
               <view class="mood-card__caption" style="{{moodAccentStyle}}">
                 <view class="mood-card__dot" style="{{moodDotStyle}}"></view>
-                <text>今日心情</text>
+                <text class="mood-card__title">今日心情</text>
               </view>
               <text class="mood-card__tag" style="{{moodTagStyle}}">{{mood.tag}}</text>
             </view>
@@ -58,11 +58,13 @@
             <view class="color-card__header">
               <view class="mood-card__caption" style="{{moodAccentStyle}}">
                 <view class="mood-card__dot" style="{{moodDotStyle}}"></view>
-                <text>今日色彩</text>
+                <text class="mood-card__title">今日色彩</text>
               </view>
             </view>
-            <view class="color-card__swatch" style="background-color: {{mood.theme_color}}; {{colorSwatchStyle}}"></view>
-            <text class="color-card__value">{{moodColorTitle}}</text>
+            <view class="color-card__value-row">
+              <text class="color-card__value">{{moodColorTitle}}</text>
+              <view class="color-card__swatch" style="background-color: {{mood.theme_color}}; {{colorSwatchStyle}}"></view>
+            </view>
             <text class="color-card__desc">{{moodColorDesc}}</text>
           </view>
         </view>
@@ -99,7 +101,7 @@
           <view class="gallery-col gallery-col-left">
             <block wx:for="{{leftProducts}}" wx:key="image">
               <view class="product-card {{item.cardClass}}">
-                <image class="product-image" src="{{item.image}}" mode="aspectFill"></image>
+                <image class="product-image" src="{{item.image}}" mode="aspectFill" lazy-load="true"></image>
                 <text wx:if="{{item.tag}}" class="product-tag">{{item.tag}}</text>
               </view>
             </block>
@@ -107,7 +109,7 @@
           <view class="gallery-col gallery-col-right">
             <block wx:for="{{rightProducts}}" wx:key="image">
               <view class="product-card {{item.cardClass}}">
-                <image class="product-image" src="{{item.image}}" mode="aspectFill"></image>
+                <image class="product-image" src="{{item.image}}" mode="aspectFill" lazy-load="true"></image>
                 <text wx:if="{{item.tag}}" class="product-tag">{{item.tag}}</text>
               </view>
             </block>
@@ -122,30 +124,14 @@
   <view class="bottom-nav">
     <button class="nav-item active" bindtap="noop">
       <view class="nav-top"></view>
-      <view class="nav-icon icon-home">
-        <view class="home-roof"></view>
-        <view class="home-body"></view>
-      </view>
       <text class="nav-label">首页</text>
     </button>
     <button class="nav-item" bindtap="goData">
       <view class="nav-top"></view>
-      <view class="nav-icon icon-wave">
-        <view class="wave-line wave-left"></view>
-        <view class="wave-line wave-mid"></view>
-        <view class="wave-line wave-right"></view>
-      </view>
       <text class="nav-label">记录</text>
     </button>
     <button class="nav-item" bindtap="goSettings">
       <view class="nav-top"></view>
-      <view class="nav-icon icon-gear">
-        <view class="gear-core"></view>
-        <view class="gear-tooth gear-top"></view>
-        <view class="gear-tooth gear-right"></view>
-        <view class="gear-tooth gear-bottom"></view>
-        <view class="gear-tooth gear-left"></view>
-      </view>
       <text class="nav-label">设置</text>
     </button>
   </view>

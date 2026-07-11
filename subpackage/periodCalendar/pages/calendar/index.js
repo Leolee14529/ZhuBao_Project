@@ -4,7 +4,9 @@ const auth = require("../../../../utils/auth"); const privacy = require("../../.
 Page({
   cycleStorageKey: auth.CYCLE_KEY,
   data: {
-    ...calendarState.create(),
+    weeks: [],
+    cycleProfile: {},
+    selectedDetail: null,
     calendarReady: false,
     showCycleSetup: false,
     cyclePrivacyConfirmed: false,
@@ -15,7 +17,10 @@ Page({
     share.enableShareMenu();
     if (!auth.requireLogin({ source: "/subpackage/periodCalendar/pages/calendar/index" })) return;
     const profile = auth.getPersonalData(this.cycleStorageKey);
-    this.setData(Object.assign(calendarState.create(profile), { calendarReady: true }));
+    setTimeout(() => {
+      if (!this.data) return;
+      this.setData(Object.assign(calendarState.create(profile), { calendarReady: true }));
+    }, 0);
   },
   onShow() { auth.requireLogin({ source: "/subpackage/periodCalendar/pages/calendar/index" }); },
   onShareAppMessage() { return share.getPageShareAppMessage("/subpackage/periodCalendar/pages/calendar/index"); },

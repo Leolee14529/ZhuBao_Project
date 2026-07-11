@@ -31,7 +31,6 @@ Component({
         return;
       }
       this._isNavigating = true;
-      console.warn("[ROUTE]", "from subpackage/jewelry/components/bottom-nav/bottom-nav.js/switchTab", "to", routes[tab], "reason", "bottom nav switch");
       wx.redirectTo({
         url: routes[tab],
         fail: () => {

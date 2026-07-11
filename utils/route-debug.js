@@ -24,7 +24,13 @@ function wrapNavigation(methodName) {
 }
 
 function installRouteDebug() {
-  if (installed || config.getEnvironment() === "production") return;
+  let enabled = false;
+  try {
+    enabled = wx.getStorageSync("routeDebugEnabled") === true;
+  } catch (error) {
+    enabled = false;
+  }
+  if (installed || config.getEnvironment() === "production" || !enabled) return;
   installed = true;
   ["reLaunch", "redirectTo", "navigateTo"].forEach(wrapNavigation);
 }

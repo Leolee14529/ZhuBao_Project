@@ -1,33 +1,22 @@
 const cycleEngine = require("../../utils/cycle-engine");
+const topLayout = require("../../../utils/top-layout");
 
 function getSafeArea() {
-  const fallback = {
-    statusBarHeight: 47,
-    topbarHeight: 91,
-    contentTopOffset: 99,
-    backButtonTop: 55
-  };
   try {
-    const info = wx.getWindowInfo ? wx.getWindowInfo() : wx.getSystemInfoSync();
-    const menuButton = wx.getMenuButtonBoundingClientRect ?
-      wx.getMenuButtonBoundingClientRect() : null;
-    const windowWidth = info.windowWidth || 375;
-    const backButtonHeight = 56 * windowWidth / 750;
-    const statusBarHeight = info.statusBarHeight || fallback.statusBarHeight;
-    let topbarHeight = statusBarHeight + 44;
-    let backButtonTop = statusBarHeight + 8;
-    if (menuButton && menuButton.top) {
-      topbarHeight = Math.max(menuButton.bottom + 8, statusBarHeight + 44);
-      backButtonTop = menuButton.top + (menuButton.height - backButtonHeight) / 2 + 2;
-    }
+    const layout = topLayout.getTopLayout();
     return {
-      statusBarHeight,
-      topbarHeight: Math.round(topbarHeight),
-      contentTopOffset: Math.round(topbarHeight + 8),
-      backButtonTop: Math.round(backButtonTop)
+      statusBarHeight: layout.statusBarHeight,
+      topbarHeight: layout.topbarHeight,
+      contentTopOffset: layout.contentOffset,
+      backButtonTop: layout.backButtonTop
     };
   } catch (error) {
-    return fallback;
+    return {
+      statusBarHeight: 20,
+      topbarHeight: 64,
+      contentTopOffset: 64,
+      backButtonTop: 28
+    };
   }
 }
 

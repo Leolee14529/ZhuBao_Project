@@ -1,6 +1,8 @@
+const topLayout = require("../../../../utils/top-layout");
+
 Page({
   data: {
-    statusBarHeight: 47,
+    statusBarHeight: topLayout.getTopLayout().statusBarHeight,
     deviceStatus: "unconnected",
     infoRows: [
       { label: "设备名称", value: "暂无设备", arrow: true },
@@ -25,9 +27,8 @@ Page({
   },
 
   updateSafeArea() {
-    const info = wx.getWindowInfo ? wx.getWindowInfo() : wx.getSystemInfoSync();
     this.setData({
-      statusBarHeight: info.statusBarHeight || 47
+      statusBarHeight: topLayout.getTopLayout().statusBarHeight
     });
   },
 

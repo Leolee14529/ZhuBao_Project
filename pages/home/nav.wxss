@@ -65,17 +65,10 @@
   background: transparent;
 }
 
-.nav-icon {
-  position: relative;
-  width: 42rpx;
-  height: 42rpx;
-  margin: 0 auto;
-}
-
 .nav-label {
-  margin-top: 9rpx;
-  font-size: 20rpx;
   font-weight: 500;
+  font-size: 30rpx;
+  line-height: 1.2;
 }
 
 .nav-item.active {
@@ -87,94 +80,3 @@
   box-shadow: 0 0 16rpx rgba(0, 212, 148, 0.58);
 }
 
-.icon-home .home-roof {
-  position: absolute;
-  left: 6rpx;
-  top: 4rpx;
-  width: 28rpx;
-  height: 28rpx;
-  border-left: 4rpx solid currentColor;
-  border-top: 4rpx solid currentColor;
-  transform: rotate(45deg);
-}
-
-.icon-home .home-body {
-  position: absolute;
-  left: 10rpx;
-  bottom: 5rpx;
-  width: 20rpx;
-  height: 16rpx;
-  border: 3rpx solid currentColor;
-  border-top: 0;
-  border-radius: 0 0 6rpx 6rpx;
-}
-
-.icon-wave .wave-line {
-  position: absolute;
-  bottom: 14rpx;
-  width: 9rpx;
-  border-bottom: 3rpx solid currentColor;
-  border-radius: 0 0 10rpx 10rpx;
-}
-
-.icon-wave .wave-left {
-  left: 5rpx;
-  height: 7rpx;
-}
-
-.icon-wave .wave-mid {
-  left: 16rpx;
-  height: 13rpx;
-}
-
-.icon-wave .wave-right {
-  left: 27rpx;
-  height: 7rpx;
-}
-
-.icon-gear {
-  border: 3rpx solid currentColor;
-  border-radius: 50%;
-  box-sizing: border-box;
-}
-
-.icon-gear .gear-core {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 10rpx;
-  height: 10rpx;
-  margin-left: -5rpx;
-  margin-top: -5rpx;
-  border-radius: 50%;
-  background: currentColor;
-}
-
-.icon-gear .gear-tooth {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 4rpx;
-  height: 9rpx;
-  margin-left: -2rpx;
-  margin-top: -19rpx;
-  border-radius: 999rpx;
-  background: currentColor;
-  transform-origin: center 19rpx;
-}
-
-.icon-gear .gear-top {
-  transform: rotate(0deg);
-}
-
-.icon-gear .gear-right {
-  transform: rotate(90deg);
-}
-
-.icon-gear .gear-bottom {
-  transform: rotate(180deg);
-}
-
-.icon-gear .gear-left {
-  transform: rotate(270deg);
-}

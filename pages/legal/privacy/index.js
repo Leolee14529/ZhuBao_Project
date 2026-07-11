@@ -1,20 +1,15 @@
 const auth = require("../../../utils/auth");
 const share = require("../../../utils/share");
+const topLayout = require("../../../utils/top-layout");
 
 Page({
   data: {
-    headerTop: 64,
+    headerTop: topLayout.getTopLayout().headerTop,
     consentMode: false
   },
   onLoad(options) {
     share.enableShareMenu();
-    const app = getApp();
-    const navLayout = app.getNavLayout ? app.getNavLayout() : app.globalData.navLayout;
-    if (navLayout && navLayout.contentOffset) {
-      this.setData({
-        headerTop: navLayout.contentOffset
-      });
-    }
+    this.setData({ headerTop: topLayout.getTopLayout().headerTop });
     this.setData({
       consentMode: options && options.mode === "consent"
     });

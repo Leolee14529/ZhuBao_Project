@@ -1,6 +1,7 @@
 const auth = require("../../utils/auth");
 const share = require("../../utils/share");
 const moodRuntime = require("./mood-runtime");
+const topLayout = require("../../utils/top-layout");
 const MOOD_ENDPOINT = "/api/mood/today";
 const MOOD_RETRY_DELAY_MS = 60000;
 const DEFAULT_INSPIRATION = {
@@ -81,24 +82,11 @@ function getDailyInspiration() {
   return INSPIRATIONS[daySeed % INSPIRATIONS.length] || DEFAULT_INSPIRATION;
 }
 
-function getCompactTopSpacer(navLayout) {
-  if (!navLayout) return 44;
-  const menuBottom = Number(navLayout.menuBottom || 0);
-  const statusBarHeight = Number(navLayout.statusBarHeight || 0);
-  const contentOffset = Number(navLayout.contentOffset || 0);
-  const safeBottom = menuBottom ? menuBottom + 4 : 0;
-  const safeStatus = statusBarHeight ? statusBarHeight + 34 : 0;
-  const compact = Math.max(safeBottom, safeStatus, 44);
-  return Math.min(contentOffset || compact, compact);
-}
-
 function getInitialTopSpacer() {
   try {
-    const app = getApp();
-    const navLayout = app && app.globalData ? app.globalData.navLayout : null;
-    return getCompactTopSpacer(navLayout || (app.getNavLayout ? app.getNavLayout() : null));
+    return topLayout.getTopLayout().contentOffset;
   } catch (error) {
-    return 44;
+    return 64;
   }
 }
 
@@ -144,22 +132,25 @@ Page({
   },
   onLoad() {
     this.isPageUnloaded = false;
+    this.homeLoadedAt = Date.now();
     share.enableShareMenu();
     const app = getApp();
     const navLayout = app.getNavLayout ? app.getNavLayout() : app.globalData.navLayout;
     if (navLayout && navLayout.contentOffset) {
-      const topSpacer = getCompactTopSpacer(navLayout);
+      const topSpacer = navLayout.contentOffset;
       if (topSpacer !== this.data.topSpacer) this.setData({ topSpacer });
     }
     this.refreshInspiration();
-    this.refreshTodayMood();
+    this.moodRefreshTimer = setTimeout(() => this.refreshTodayMood(), 0);
   },
   onShow() {
+    if (this.homeLoadedAt && Date.now() - this.homeLoadedAt < 800) return;
     this.refreshTodayMood();
   },
   onUnload() {
     this.isPageUnloaded = true;
     this.moodRequestId = (this.moodRequestId || 0) + 1;
+    if (this.moodRefreshTimer) clearTimeout(this.moodRefreshTimer);
   },
   onShareAppMessage() {
     return share.getHomeShareAppMessage();

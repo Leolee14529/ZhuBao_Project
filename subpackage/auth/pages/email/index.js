@@ -1,6 +1,8 @@
+const topLayout = require("../../../../utils/top-layout");
+
 Page({
   data: {
-    statusBarHeight: 44,
+    statusBarHeight: topLayout.getTopLayout().statusBarHeight,
     email: "",
     errorText: "",
     agreed: true,
@@ -8,9 +10,8 @@ Page({
   },
 
   onLoad() {
-    const info = wx.getWindowInfo ? wx.getWindowInfo() : wx.getSystemInfoSync();
     this.setData({
-      statusBarHeight: info.statusBarHeight || 44
+      statusBarHeight: topLayout.getTopLayout().statusBarHeight
     });
   },
 

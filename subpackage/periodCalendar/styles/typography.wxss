@@ -2,13 +2,13 @@
 .month-switcher,
 .calendar-grid,
 .legend-row {
-  font-family: "STSongti-SC-Regular", "Songti SC", "Noto Serif CJK SC", "Source Han Serif SC", "SimSun", "NSimSun", serif !important;
+  font-family: "SimHei" !important;
   font-variant-numeric: lining-nums tabular-nums;
 }
 
 .cycle-setup-sheet,
 .calendar-grid--compact {
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC", "HarmonyOS Sans SC", "Microsoft YaHei", sans-serif !important;
+  font-family: "SimHei" !important;
   font-variant-numeric: lining-nums tabular-nums;
 }
 
@@ -16,5 +16,5 @@
 .setup-calendar-nav,
 .cycle-stepper__button,
 .cycle-setup-sheet__button {
-  font-family: inherit !important;
+  font-family: "SimHei" !important;
 }

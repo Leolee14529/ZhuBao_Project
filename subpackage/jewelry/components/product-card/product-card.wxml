@@ -1,6 +1,6 @@
 <view class="product-card">
   <view class="image-wrap">
-    <image class="product-image" src="{{image}}" mode="aspectFill"></image>
+    <image class="product-image" src="{{image}}" mode="aspectFill" lazy-load="true"></image>
     <view class="shade"></view>
     <text wx:if="{{showTag}}" class="tag">参考</text>
   </view>
