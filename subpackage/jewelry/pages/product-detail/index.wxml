@@ -1,6 +1,6 @@
 <view class="product-detail-page">
   <scroll-view class="detail-scroll" scroll-y="true" enhanced="true" bounces="true" show-scrollbar="false">
-    <view class="detail-body" wx:if="{{product}}">
+    <view class="detail-body">
       <view class="page-top-spacer" style="height: {{topSpacer}}px;"></view>
 
       <view class="detail-topbar">
@@ -14,32 +14,41 @@
       </view>
 
       <view class="hero-image-wrap">
-        <image class="hero-image" src="{{product.image}}" mode="aspectFit"></image>
-        <text wx:if="{{product.tag}}" class="hero-badge">{{product.tag}}</text>
+        <image wx:if="{{product}}" class="hero-image" src="{{product.image}}" mode="aspectFit" fade-in="{{false}}"></image>
+        <view wx:else class="hero-placeholder"></view>
+        <text wx:if="{{product && product.tag}}" class="hero-badge">{{product.tag}}</text>
       </view>
 
-      <view class="detail-panel">
-        <text class="detail-kicker">{{product.type}}</text>
-        <text class="detail-title">{{product.name}}</text>
-        <text class="detail-desc">{{product.desc}}</text>
-        <text class="detail-long">{{product.detail}}</text>
-      </view>
-
-      <view class="color-panel">
-        <text class="section-title">色彩与材质</text>
-        <view class="palette-list">
-          <block wx:for="{{palette}}" wx:key="label">
-            <view class="palette-item">
-              <view class="palette-swatch" style="background-color: {{item.color}};"></view>
-              <text class="palette-label">{{item.label}}</text>
-            </view>
-          </block>
+      <block wx:if="{{product}}">
+        <view class="detail-panel">
+          <text class="detail-kicker">{{product.type}}</text>
+          <text class="detail-title">{{product.name}}</text>
+          <text class="detail-desc">{{product.desc}}</text>
+          <text class="detail-long">{{product.detail}}</text>
         </view>
-      </view>
 
-      <view class="style-panel">
-        <text class="section-title">搭配参考</text>
-        <text class="style-text">{{product.scene}}</text>
+        <view class="color-panel">
+          <text class="section-title">色彩与材质</text>
+          <view class="palette-list">
+            <block wx:for="{{palette}}" wx:key="label">
+              <view class="palette-item">
+                <view class="palette-swatch" style="background-color: {{item.color}};"></view>
+                <text class="palette-label">{{item.label}}</text>
+              </view>
+            </block>
+          </view>
+        </view>
+
+        <view class="style-panel">
+          <text class="section-title">搭配参考</text>
+          <text class="style-text">{{product.scene}}</text>
+        </view>
+      </block>
+      <view wx:else class="detail-loading-panel">
+        <view class="loading-line loading-line-short"></view>
+        <view class="loading-line loading-line-title"></view>
+        <view class="loading-line"></view>
+        <view class="loading-line loading-line-wide"></view>
       </view>
 
       <view class="safe-bottom-space"></view>

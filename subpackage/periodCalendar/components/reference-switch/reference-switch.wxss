@@ -1,5 +1,6 @@
 .reference-switch {
   width: 120rpx;
+  height: 60rpx;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -7,5 +8,6 @@
 
 .reference-switch-image {
   width: 120rpx;
+  height: 60rpx;
   display: block;
 }

@@ -2,6 +2,7 @@
   <image
     class="reference-switch-image"
     src="{{checked ? '/subpackage/periodCalendar/assets/reference-switch-on.png' : '/subpackage/periodCalendar/assets/reference-switch.png'}}"
-    mode="widthFix"
+    mode="aspectFit"
+    fade-in="{{false}}"
   />
 </view>

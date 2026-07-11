@@ -92,9 +92,19 @@ function getCompactTopSpacer(navLayout) {
   return Math.min(contentOffset || compact, compact);
 }
 
+function getInitialTopSpacer() {
+  try {
+    const app = getApp();
+    const navLayout = app && app.globalData ? app.globalData.navLayout : null;
+    return getCompactTopSpacer(navLayout || (app.getNavLayout ? app.getNavLayout() : null));
+  } catch (error) {
+    return 44;
+  }
+}
+
 Page({
   data: {
-    topSpacer: 44,
+    topSpacer: getInitialTopSpacer(),
     destinyLine: "今日灵感与珠宝风格参考",
     flipped: false,
     cardClass: "",
@@ -138,9 +148,8 @@ Page({
     const app = getApp();
     const navLayout = app.getNavLayout ? app.getNavLayout() : app.globalData.navLayout;
     if (navLayout && navLayout.contentOffset) {
-      this.setData({
-        topSpacer: getCompactTopSpacer(navLayout)
-      });
+      const topSpacer = getCompactTopSpacer(navLayout);
+      if (topSpacer !== this.data.topSpacer) this.setData({ topSpacer });
     }
     this.refreshInspiration();
     this.refreshTodayMood();

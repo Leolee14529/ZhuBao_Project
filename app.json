@@ -17,6 +17,16 @@
       "pages": ["pages/calendar/index"]
     }
   ],
+  "preloadRule": {
+    "pages/home/index": {
+      "network": "all",
+      "packages": ["jewelry"]
+    },
+    "subpackage/jewelry/pages/data/index": {
+      "network": "all",
+      "packages": ["periodCalendar"]
+    }
+  },
   "window": {
     "navigationStyle": "custom",
     "backgroundColor": "#050505",

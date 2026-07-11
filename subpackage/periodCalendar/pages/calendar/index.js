@@ -1,75 +1,25 @@
 const cycleEngine = require("../../utils/cycle-engine");
 const cycleProfileService = require("../../utils/cycle-profile");
-const auth = require("../../../../utils/auth"); const privacy = require("../../../../utils/privacy"); const share = require("../../../../utils/share");
+const auth = require("../../../../utils/auth"); const privacy = require("../../../../utils/privacy"); const share = require("../../../../utils/share"); const calendarState = require("./calendar-state");
 Page({
   cycleStorageKey: auth.CYCLE_KEY,
   data: {
-    statusBarHeight: 47,
-    topbarHeight: 52,
-    contentTopOffset: 60,
-    backButtonTop: 26,
-    monthLabel: "",
-    viewYear: 0,
-    viewMonth: 0,
-    hasCycleData: false,
+    ...calendarState.create(),
+    calendarReady: false,
     showCycleSetup: false,
-    todayDateKey: "",
-    selectedDateKey: "",
-    selectedDetail: null,
-    summaryDays: "--",
-    summaryNextStart: "暂无参考日期",
     cyclePrivacyConfirmed: false,
     isSavingCycle: false,
-    cycleProfile: { lastPeriodDate: "", cycleLength: "28", periodLength: "5", todayPeriodStartEnabled: false, adjustments: {} },
-    weeks: [],
     legendItems: [{ key: "period", label: "周期" }, { key: "periodForecast", label: "参考周期" }, { key: "ovulation", label: "参考日" }, { key: "fertile", label: "参考窗口" }, { key: "safe", label: "其他日期" }]
   },
   onLoad() {
     share.enableShareMenu();
     if (!auth.requireLogin({ source: "/subpackage/periodCalendar/pages/calendar/index" })) return;
-    this.updateSafeArea();
-    const todayDate = cycleEngine.getTodayDate();
-    const todayDateKey = cycleEngine.formatDateKey(todayDate);
-    const normalizedProfile = cycleEngine.normalizeProfile({ lastPeriodDate: todayDateKey, cycleLength: "28", periodLength: "5", todayPeriodStartEnabled: false, adjustments: {} });
-    this.setData({ todayDateKey, selectedDateKey: todayDateKey, cycleProfile: normalizedProfile });
-    this.loadCycleProfile();
-    this.initializeViewMonth();
+    const profile = auth.getPersonalData(this.cycleStorageKey);
+    this.setData(Object.assign(calendarState.create(profile), { calendarReady: true }));
   },
   onShow() { auth.requireLogin({ source: "/subpackage/periodCalendar/pages/calendar/index" }); },
   onShareAppMessage() { return share.getPageShareAppMessage("/subpackage/periodCalendar/pages/calendar/index"); },
   onShareTimeline() { return share.getPageShareTimeline("/subpackage/periodCalendar/pages/calendar/index"); },
-  initializeViewMonth() {
-    const today = cycleEngine.getTodayDate();
-    const year = today.getFullYear();
-    const month = today.getMonth() + 1;
-    this.setData({ viewYear: year, viewMonth: month });
-    this.refreshCalendar(year, month);
-  },
-  updateSafeArea() {
-    const info = wx.getWindowInfo ? wx.getWindowInfo() : wx.getSystemInfoSync();
-    const menuButton = wx.getMenuButtonBoundingClientRect ? wx.getMenuButtonBoundingClientRect() : null;
-    const windowWidth = info.windowWidth || 375;
-    const rpxToPx = windowWidth / 750;
-    const backButtonHeight = 56 * rpxToPx;
-    const statusBarHeight = info.statusBarHeight || 47;
-    let topbarHeight = statusBarHeight + 44;
-    let backButtonTop = statusBarHeight + 8;
-    if (menuButton && menuButton.top) {
-      topbarHeight = Math.max(menuButton.bottom + 8, statusBarHeight + 44);
-      backButtonTop = menuButton.top + (menuButton.height - backButtonHeight) / 2 + 2;
-    }
-    this.setData({
-      statusBarHeight: statusBarHeight,
-      topbarHeight: Math.round(topbarHeight),
-      contentTopOffset: Math.round(topbarHeight + 8),
-      backButtonTop: Math.round(backButtonTop)
-    });
-  },
-  loadCycleProfile() {
-    const profile = auth.getPersonalData(this.cycleStorageKey);
-    if (!profile) return;
-    this.setData({ hasCycleData: true, cycleProfile: cycleEngine.normalizeProfile(profile) });
-  },
   refreshCalendar(year, month) {
     const monthLabel = cycleEngine.formatMonthLabel(year, month);
     const profile = cycleEngine.normalizeProfile(this.data.cycleProfile);

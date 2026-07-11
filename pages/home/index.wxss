@@ -165,7 +165,9 @@
 
 .mood-card,
 .color-card {
-  min-height: 190rpx;
+  height: 300rpx;
+  min-height: 300rpx;
+  overflow: hidden;
   padding: 22rpx 20rpx 18rpx;
   border-radius: 24rpx;
   box-shadow: inset 0 0 0 1rpx rgba(255, 255, 255, 0.02);
@@ -240,7 +242,7 @@
   font-size: 19rpx;
   line-height: 1.55;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 3;
 }
 
 .color-card__swatch {

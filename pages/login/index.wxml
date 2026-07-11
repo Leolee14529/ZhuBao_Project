@@ -1,6 +1,6 @@
 <view class="login-page">
   <view class="login-backdrop">
-    <image class="login-bg" src="/assets/auth/bg-login.jpg" mode="aspectFill"></image>
+    <image class="login-bg" src="/assets/auth/bg-login.jpg" mode="aspectFill" fade-in="{{false}}"></image>
     <view class="login-shade"></view>
   </view>
   <status-bar></status-bar>
