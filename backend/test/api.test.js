@@ -129,6 +129,8 @@ test("wechat login and current user responses are sanitized", async () => {
   assert.equal(auth.user.openid, undefined);
   assert.equal(auth.user.unionid, undefined);
   assert.equal(auth.user.sessionKey, undefined);
+  assert.equal(auth.user.nickname, undefined);
+  assert.equal(auth.user.avatarUrl, undefined);
 
   const me = await request("/api/users/me", {
     headers: { authorization: `Bearer ${auth.token}` }
@@ -137,6 +139,8 @@ test("wechat login and current user responses are sanitized", async () => {
   assert.equal(me.body.data.user.openid, undefined);
   assert.equal(me.body.data.user.unionid, undefined);
   assert.equal(me.body.data.user.sessionKey, undefined);
+  assert.equal(me.body.data.user.nickname, undefined);
+  assert.equal(me.body.data.user.avatarUrl, undefined);
 });
 
 test("account password register and login use the shared session flow", async () => {
@@ -144,7 +148,8 @@ test("account password register and login use the shared session flow", async ()
   assert.ok(created.token);
   assert.equal(created.user.passwordHash, undefined);
   assert.equal(created.user.openid, undefined);
-  assert.equal(created.user.nickname, null);
+  assert.equal(created.user.nickname, undefined);
+  assert.equal(created.user.avatarUrl, undefined);
 
   const me = await request("/api/users/me", {
     headers: { authorization: `Bearer ${created.token}` }

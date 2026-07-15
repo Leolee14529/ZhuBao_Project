@@ -6,7 +6,7 @@ const DEFAULT_FORTUNE = {
   symbol: "巽",
   title: "中吉",
   subtitle: "Wind / Wood",
-  text: "风行水上，自然成纹。今日灵感如风，宜顺势而为。指环监测显示心流状态极佳。"
+  text: "风行水上，自然成纹。今日灵感如风，宜顺势而为；把注意力留给正在发生的好事。"
 };
 
 Component({

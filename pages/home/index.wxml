@@ -1,0 +1,11 @@
+<view class="entry-page">
+  <view class="entry-glow entry-glow-top"></view>
+  <view class="entry-glow entry-glow-bottom"></view>
+  <view class="entry-content">
+    <view class="brand-mark"><view></view></view>
+    <text class="brand-name">Ting's</text>
+    <text class="brand-subtitle">Computing Power Jewelry</text>
+    <text class="entry-status">{{redirectFailed ? '首页加载失败，请重试' : '正在进入首页'}}</text>
+    <button wx:if="{{redirectFailed}}" class="retry-button" bindtap="openServiceHome">重新进入</button>
+  </view>
+</view>

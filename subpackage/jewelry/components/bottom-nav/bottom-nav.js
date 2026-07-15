@@ -16,7 +16,7 @@ Component({
   data: {
     tabs: [
       { id: "home", label: "首页", iconClass: "icon-home", itemClass: "" },
-      { id: "data", label: "健康", iconClass: "icon-wave", itemClass: "" },
+      { id: "data", label: "记录", iconClass: "icon-wave", itemClass: "" },
       { id: "settings", label: "设置", iconClass: "icon-gear", itemClass: "" }
     ]
   },

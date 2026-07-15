@@ -16,10 +16,7 @@ Page({
   goBack() {
     wx.navigateBack({
       fail() {
-        const state = auth.getAuthState();
-        wx.redirectTo({
-          url: state.status === "anonymous" ? "/pages/login/index" : auth.HOME_URL
-        });
+        wx.redirectTo({ url: "/pages/home/index" });
       }
     });
   }

@@ -48,7 +48,7 @@ Page({
     request.get("/api/users/me")
       .then((data) => {
         const user = data.user || {};
-        const title = user.nickname || ("用户 " + String(user.id || "").slice(-6));
+        const title = "用户 " + String(user.id || "").slice(-6);
         this.setData({
           profileTitle: title,
           avatarLetter: title.charAt(0).toUpperCase() || "U"

@@ -1,26 +1,8 @@
 <view class="bottom-nav">
   <block wx:for="{{tabs}}" wx:key="id">
-    <button class="nav-item {{item.itemClass}}" data-tab="{{item.id}}" bindtap="switchTab">
-      <view class="nav-top"></view>
-      <view class="nav-icon {{item.iconClass}}">
-        <block wx:if="{{item.id === 'home'}}">
-          <view class="home-roof"></view>
-          <view class="home-body"></view>
-        </block>
-        <block wx:elif="{{item.id === 'data'}}">
-          <view class="wave-line wave-left"></view>
-          <view class="wave-line wave-mid"></view>
-          <view class="wave-line wave-right"></view>
-        </block>
-        <block wx:elif="{{item.id === 'settings'}}">
-          <view class="gear-core"></view>
-          <view class="gear-tooth gear-top"></view>
-          <view class="gear-tooth gear-right"></view>
-          <view class="gear-tooth gear-bottom"></view>
-          <view class="gear-tooth gear-left"></view>
-        </block>
-      </view>
+    <button class="nav-item {{item.itemClass}}" hover-class="nav-item-pressed" data-tab="{{item.id}}" bindtap="switchTab">
       <text class="nav-label">{{item.label}}</text>
+      <view class="nav-indicator"></view>
     </button>
   </block>
 </view>

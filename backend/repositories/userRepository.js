@@ -21,9 +21,7 @@ function mapUser(row) {
 function toClientUser(user) {
   if (!user) return null;
   return {
-    id: user.id,
-    nickname: user.nickname || null,
-    avatarUrl: user.avatarUrl || null
+    id: user.id
   };
 }
 

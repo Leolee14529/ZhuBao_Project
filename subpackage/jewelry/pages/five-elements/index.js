@@ -12,13 +12,13 @@ Page({
     genderOptions: ["女", "男"],
     genderIndex: 0,
     isSaving: false,
+    isLoggedIn: false,
     focusElement: "木",
     destinyLine: "",
     previewTags: []
   },
 
   onLoad: function () {
-    if (!auth.requireLogin({ source: "/subpackage/jewelry/pages/five-elements/index" })) return;
     var app = getApp();
     var navLayout = app.getNavLayout ? app.getNavLayout() : app.globalData.navLayout;
     var birthInput = fiveElements.getSavedBirthInput();
@@ -30,6 +30,7 @@ Page({
     }
 
     this.setData({
+      isLoggedIn: auth.isLoggedIn(),
       birthDate: birthInput.date,
       birthTime: birthInput.time,
       gender: birthInput.gender,
@@ -39,7 +40,9 @@ Page({
     this.loadLatestResult();
   },
   onShow: function () {
-    auth.requireLogin({ source: "/subpackage/jewelry/pages/five-elements/index" });
+    this.setData({
+      isLoggedIn: auth.isLoggedIn()
+    });
   },
 
   onDateChange: function (event) {
@@ -151,6 +154,13 @@ Page({
 
   saveBirthProfile: function () {
     if (this.data.isSaving) {
+      return;
+    }
+    if (!auth.isLoggedIn()) {
+      auth.requireLogin({
+        source: "/subpackage/jewelry/pages/five-elements/index",
+        reason: "登录后可保存和同步五行结果"
+      });
       return;
     }
 

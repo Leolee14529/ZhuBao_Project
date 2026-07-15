@@ -197,6 +197,56 @@ test("auth state prefers token over guest mode and clears conflicts", () => {
   assert.equal(storage.guestMode, undefined);
 });
 
+test("review entry opens the browseable home before login", () => {
+  const appConfig = JSON.parse(readText("app.json"));
+  assert.equal(appConfig.pages[0], "pages/home/index");
+
+  const entrySource = readText("pages/home/index.js");
+  assert.equal(entrySource.includes("/subpackage/jewelry/pages/home/index"), true);
+  assert.equal(entrySource.includes("wx.login"), false);
+  assert.equal(entrySource.includes("requirePrivacyAuthorize"), false);
+  assert.equal(entrySource.includes("requireLogin"), false);
+});
+
+test("active client does not request phone, nickname, or avatar interfaces", () => {
+  const files = [
+    ...listFiles("pages", [".js", ".json", ".wxml"]),
+    ...listFiles("components", [".js", ".json", ".wxml"]),
+    ...listFiles("subpackage/jewelry", [".js", ".json", ".wxml"]),
+    ...listFiles("subpackage/periodCalendar", [".js", ".json", ".wxml"])
+  ];
+  const forbiddenInterfaces = [
+    "getPhoneNumber",
+    "getUserProfile",
+    "getUserInfo",
+    "chooseAvatar",
+    "open-type=\"getPhoneNumber\"",
+    "open-type=\"chooseAvatar\"",
+    "type=\"nickname\""
+  ];
+
+  for (const file of files) {
+    const text = readText(file);
+    for (const interfaceName of forbiddenInterfaces) {
+      assert.equal(
+        text.includes(interfaceName),
+        false,
+        `${file} references privacy interface ${interfaceName}`
+      );
+    }
+  }
+});
+
+test("five-element preview is available before login", () => {
+  const source = readText("subpackage/jewelry/pages/five-elements/index.js");
+  const onLoadSource = source.slice(
+    source.indexOf("onLoad: function"),
+    source.indexOf("onDateChange: function")
+  );
+  assert.equal(onLoadSource.includes("requireLogin"), false);
+  assert.equal(source.includes("登录后可保存和同步五行结果"), true);
+});
+
 test("active review text does not contain prohibited promise language", () => {
   const files = [
     ...listFiles("pages", [".js", ".wxml"]),

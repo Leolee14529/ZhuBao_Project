@@ -29,3 +29,4 @@
 .agreement-copy{flex:1;font-size:23rpx;line-height:1.55}
 .agreement-link{color:#6ee7b7}
 .home-indicator{position:fixed;z-index:4;left:50%;bottom:14rpx;width:240rpx;height:9rpx;transform:translateX(-50%);border-radius:999rpx;background:rgba(255,255,255,.22)}
+.brand-description{display:block;margin-top:12rpx;color:rgba(237,255,247,.7);font-size:25rpx;line-height:1.5}

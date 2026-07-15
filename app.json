@@ -1,5 +1,6 @@
 {
   "pages": [
+    "pages/home/index",
     "pages/login/index",
     "pages/legal/agreement/index",
     "pages/legal/privacy/index"

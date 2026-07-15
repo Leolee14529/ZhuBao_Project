@@ -8,13 +8,17 @@
     <view class="brand-block">
       <view class="brand-mark"><view></view></view>
       <text class="brand-name">Ting's</text>
-      <text class="brand-subtitle">Computing Power Jewelry</text>
+      <text class="brand-subtitle">COMPUTING POWER JEWELRY</text>
+      <text class="brand-description">智能珠宝与个人定制</text>
     </view>
     <view class="login-form">
       <view wx:if="{{accountAuthEnabled}}" class="mode-tabs">
         <view class="mode-tab {{loginMode === 'wechat' ? 'mode-tab-on' : ''}}" data-mode="wechat" bindtap="switchLoginMode">微信</view>
         <view class="mode-tab {{loginMode === 'account' ? 'mode-tab-on' : ''}}" data-mode="account" bindtap="switchLoginMode">账号</view>
       </view>
+      <text class="login-kicker">欢迎来到 Ting's</text>
+      <text class="login-title">保存你的专属定制与健康记录</text>
+      <text class="login-summary">登录后可跨设备同步五行结果、珠宝定制和设备数据。</text>
       <empty-state
         wx:if="{{serviceError}}"
         title="登录暂时不可用"
@@ -49,10 +53,9 @@
         </view>
       </view>
       <view class="link-row">
-        <text bindtap="openWechatPrivacy">微信隐私保护指引</text>
-        <text bindtap="enterGuest">暂不登录，浏览首页</text>
+        <text class="privacy-guide-link" bindtap="openWechatPrivacy">微信隐私保护指引</text>
+        <text class="guest-link" bindtap="enterGuest">暂不登录，先浏览</text>
       </view>
     </view>
   </view>
-  <view class="home-indicator"></view>
 </view>

@@ -100,6 +100,13 @@
   line-height: 1.5;
   color: rgba(220, 252, 231, 0.92);
 }
+.divination-hint {
+  display: block;
+  margin-top: 18rpx;
+  font-size: 20rpx;
+  letter-spacing: 1rpx;
+  color: rgba(174, 232, 204, 0.5);
+}
 .divination-back {
   display: none;
   position: relative;

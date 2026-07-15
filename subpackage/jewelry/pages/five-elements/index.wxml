@@ -12,7 +12,7 @@
 
       <view class="intro-card">
         <text class="intro-title">输入出生时间</text>
-        <text class="intro-desc">保存后会根据你的出生日期和时刻，刷新五行定制与能量分布结果。</text>
+        <text class="intro-desc">你可以先体验本地预览；登录后可保存结果并进行跨设备同步。</text>
       </view>
 
       <view class="form-card">
@@ -66,7 +66,7 @@
           bindtap="saveBirthProfile"
           loading="{{isSaving}}"
           disabled="{{isSaving}}"
-        >{{isSaving ? '保存中' : '保存并更新五行'}}</button>
+        >{{isSaving ? '保存中' : (isLoggedIn ? '保存并更新五行' : '登录后保存结果')}}</button>
       </view>
       <view class="bottom-space"></view>
     </view>

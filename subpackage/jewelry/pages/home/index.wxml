@@ -8,33 +8,40 @@
             <text class="hello-line">你好</text>
             <text class="destiny-line">{{destinyLine}}</text>
           </view>
-          <view class="capsule-action">
-            <text>● ● ●</text>
-            <text class="capsule-divider">|</text>
-            <text>◎</text>
-          </view>
+          <text class="header-context">今日灵感</text>
         </view>
 
         <divination-card></divination-card>
 
+        <view class="custom-card" bindtap="openFiveElementCustomizer" hover-class="custom-card-pressed">
+          <view class="custom-icon">
+            <text>GEM</text>
+          </view>
+          <view class="custom-copy">
+            <text class="custom-title">五行定制</text>
+            <text class="custom-desc">{{customDesc}}</text>
+          </view>
+          <text class="custom-arrow">›</text>
+        </view>
+
         <view class="stats-row">
           <view class="stat-card stat-left">
-            <text class="stat-caption">· 今日心情</text>
-            <text class="stat-value">暂无</text>
-            <text class="stat-desc">心率 · 0 bpm</text>
+            <text class="stat-caption">设备状态</text>
+            <text class="stat-value">待连接</text>
+            <text class="stat-desc">连接设备后展示今日数据</text>
           </view>
           <view class="stat-card stat-right">
-            <text class="stat-caption stat-pink">· 幸运元素</text>
-            <text class="stat-value">无</text>
-            <text class="stat-desc">暂无真实五行数据</text>
+            <text class="stat-caption stat-gold">五行结果</text>
+            <text class="stat-value">待生成</text>
+            <text class="stat-desc">完成定制后生成专属结果</text>
           </view>
         </view>
 
         <device-card info="{{device}}" bind:tapcard="openDevice"></device-card>
 
         <view class="section-head">
-          <text class="section-title">系列产品</text>
-          <text class="section-link">查看全部 ›</text>
+          <text class="section-title">本季臻选</text>
+          <text class="section-note">灵感预览</text>
         </view>
 
         <view class="gallery">
@@ -54,17 +61,6 @@
               </view>
             </block>
           </view>
-        </view>
-
-        <view class="custom-card" bindtap="openFiveElementCustomizer">
-          <view class="custom-icon">
-            <text>GEM</text>
-          </view>
-          <view class="custom-copy">
-            <text class="custom-title">五行定制</text>
-            <text class="custom-desc">{{customDesc}}</text>
-          </view>
-          <text class="custom-arrow">›</text>
         </view>
 
         <view class="bottom-space"></view>

@@ -54,21 +54,12 @@
   color: rgba(255, 255, 255, 0.46);
 }
 
-.capsule-action {
+.header-context {
   float: right;
-  height: 58rpx;
-  padding: 0 18rpx;
-  margin-top: 10rpx;
-  border-radius: 29rpx;
-  border: 1rpx solid rgba(255, 255, 255, 0.16);
-  line-height: 58rpx;
-  color: rgba(255, 255, 255, 0.92);
-  font-size: 20rpx;
-}
-
-.capsule-divider {
-  margin: 0 10rpx;
-  color: rgba(255, 255, 255, 0.3);
+  margin-top: 18rpx;
+  color: rgba(191, 235, 216, 0.6);
+  font-size: 22rpx;
+  letter-spacing: 2rpx;
 }
 
 .stats-row {
@@ -86,8 +77,8 @@
   min-height: 148rpx;
   padding: 18rpx 18rpx 16rpx;
   border-radius: 24rpx;
-  background-color: #171920;
-  border: 1rpx solid rgba(255, 255, 255, 0.07);
+  background-color: #111815;
+  border: 1rpx solid rgba(199, 242, 221, 0.08);
 }
 
 .stat-left {
@@ -101,17 +92,17 @@
 .stat-caption {
   display: block;
   font-size: 18rpx;
-  color: #8db8ff;
+  color: rgba(183, 237, 211, 0.74);
 }
 
-.stat-pink {
-  color: #ff7aa8;
+.stat-gold {
+  color: #d8b77d;
 }
 
 .stat-value {
   display: block;
   margin-top: 24rpx;
-  font-size: 24rpx;
+  font-size: 28rpx;
   font-weight: 700;
   color: #ffffff;
 }
@@ -135,15 +126,11 @@
   color: #ffffff;
 }
 
-.section-link {
+.section-note {
   float: right;
-  margin-top: 4rpx;
-  padding: 10rpx 20rpx;
-  border-radius: 28rpx;
-  background-color: rgba(0, 185, 120, 0.16);
+  margin-top: 10rpx;
   font-size: 22rpx;
-  font-weight: 500;
-  color: #39d87a;
+  color: rgba(255, 255, 255, 0.42);
 }
 
 .gallery {
@@ -198,11 +185,18 @@
 
 .custom-card {
   overflow: hidden;
-  margin-top: 34rpx;
+  margin-bottom: 40rpx;
   padding: 30rpx 28rpx;
   border-radius: 28rpx;
   border: 1rpx solid rgba(57, 216, 122, 0.24);
-  background-color: rgba(0, 95, 68, 0.72);
+  background:
+    radial-gradient(circle at 0 50%, rgba(57, 216, 122, 0.18), transparent 42%),
+    #0b2018;
+  box-shadow: 0 18rpx 42rpx rgba(0, 0, 0, 0.18);
+}
+
+.custom-card-pressed {
+  opacity: 0.9;
 }
 
 .custom-icon {

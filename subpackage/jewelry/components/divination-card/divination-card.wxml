@@ -19,12 +19,13 @@
     <view class="divination-copy">
       <text class="divination-quote">“</text>
       <text class="divination-text">{{fortune.text}}</text>
+      <text class="divination-hint">轻触翻看卡背</text>
     </view>
   </view>
   <view class="divination-back">
     <view class="divination-back-grid"></view>
     <view class="divination-back-core"></view>
     <text class="divination-back-title">COMPUTING POWER</text>
-    <text class="divination-back-tip">点击翻面</text>
+    <text class="divination-back-tip">再次轻触回到签文</text>
   </view>
 </view>
