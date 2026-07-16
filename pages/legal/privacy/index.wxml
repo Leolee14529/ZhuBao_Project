@@ -1,25 +1,21 @@
 <view class="legal-page">
-  <view class="legal-header" style="padding-top: {{headerTop}}px;">
-    <text class="legal-title">隐私政策</text>
-  </view>
-  <scroll-view scroll-y="true" class="legal-scroll">
+  <view class="legal-bg"></view>
+  <view class="legal-content">
     <view class="legal-card">
-      <text class="legal-heading">海米算力隐私政策</text>
-      <text class="legal-meta">更新时间：2026-06-27　生效日期：2026-06-27</text>
-      <text class="legal-p">运营主体：北京海米莱科技有限公司。联系方式：qq13238367306@163.com。</text>
-      <text class="legal-p">我们处理微信账号标识、登录凭证/会话标识，用于登录、账号识别和安全认证。openid、unionid 仅保存在服务端，不返回小程序前端展示。</text>
-      <text class="legal-p">如用户选择账号密码登录，我们会处理账号名或邮箱形式的账号标识；密码仅以不可逆哈希形式保存在服务端，不以明文保存或返回前端。</text>
-      <text class="legal-p">每日心情由系统自动生成。登录用户会在服务端保存当天心情编号和生成时间，用于让同一天重复打开时展示一致；未登录用户会使用本机临时标识完成同样的每日固定展示。该功能不收集用户手动填写的心情内容。</text>
-      <text class="legal-p">周期开始日期、周期、持续天数和参考记录属于敏感生理周期记录，仅保存在本机，不上传服务器、不备份、不同步。用户可随时在周期页或设置页清除，卸载或清理缓存可能导致数据丢失。</text>
-      <text class="legal-p">设备窗口和状态栏信息仅用于界面适配。服务日志仅用于安全审计和排障，保留 180 天，不记录密钥、登录凭证或周期记录。</text>
-      <text class="legal-p">我们不收集手机号、位置、相册、相机、麦克风、通讯录、剪贴板、地址或支付信息。</text>
-      <text class="legal-p">用户可请求查阅、更正、删除个人信息，撤回同意或注销账号。账号和个人信息删除申请将在 15 个工作日内完成。</text>
-      <text class="legal-p">未满 14 周岁的用户应在监护人同意和指导下使用。本产品不主动面向儿童提供服务，不主动收集儿童个人信息。</text>
-      <text class="legal-p">相关内容仅用于个人记录与展示参考，不作为任何专业判断依据，也不代表确定结果。</text>
+      <text class="legal-kicker">Privacy</text>
+      <text class="legal-heading">Haimi Power Privacy Policy</text>
+      <text class="legal-meta">Updated: 2026-07-01</text>
+      <text class="legal-p">Operator: Beijing Haimilai Technology Co., Ltd. Contact: qq13238367306@163.com.</text>
+      <text class="legal-p">We process WeChat account identifiers, login credentials, and session identifiers for sign-in, account recognition, and security authentication. OpenID and UnionID are stored only on the server and are not displayed in the mini program frontend.</text>
+      <text class="legal-p">If you choose password login, we process your account name or email identifier. Passwords are stored only as irreversible hashes and are never stored or returned in plain text.</text>
+      <text class="legal-p">The daily mood is generated automatically. Signed-in users have the mood ID and generation time saved on the server so the same result appears throughout the day. Guest users use a temporary local identifier for the same daily display. This feature does not collect manually entered mood content.</text>
+      <text class="legal-p">Period start dates, cycle length, duration, and reference records are sensitive physiological cycle records. They are stored locally only, are not uploaded to the server, are not backed up, and are not synced. You can clear them at any time from the period page or Settings. Uninstalling the app or clearing cache may cause data loss.</text>
+      <text class="legal-p">Device window and status bar information are used only for layout adaptation. Service logs are used only for security auditing and troubleshooting, retained for 180 days, and do not record keys, login credentials, or period records.</text>
+      <text class="legal-p">We do not collect phone numbers, location, photos, camera, microphone, contacts, clipboard, address, or payment information.</text>
+      <text class="legal-p">You may request access, correction, or deletion of personal information, withdraw consent, or close your account. Account and personal information deletion requests will be completed within 15 business days.</text>
+      <text class="legal-p">Users under 14 should use the product with guardian consent and guidance. This product is not actively provided to children and does not actively collect children's personal information.</text>
+      <text class="legal-p">All content is for personal records and display reference only. It is not professional advice and does not represent a confirmed result.</text>
     </view>
-  </scroll-view>
-  <view class="legal-footer">
-    <button wx:if="{{consentMode}}" class="agree-btn" bindtap="acceptAndGoBack">同意并返回</button>
-    <button class="back-btn" bindtap="goBack">返回</button>
+    <button wx:if="{{consentMode}}" class="agree-btn" bindtap="acceptAndGoBack">Agree and return</button>
   </view>
 </view>

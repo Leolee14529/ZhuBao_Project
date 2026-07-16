@@ -12,9 +12,9 @@ Page({
       progress: "0%"
     },
     sleep: [
-      { name: "安静", value: "0", width: "0%", color: "#10b981", cardClass: "sleep-card-left" },
-      { name: "舒展", value: "0", width: "0%", color: "#34d399", cardClass: "sleep-card-mid" },
-      { name: "专注", value: "0", width: "0%", color: "#6ee7b7", cardClass: "sleep-card-right" }
+      { name: "Calm", value: "0", width: "0%", color: "#10b981", cardClass: "sleep-card-left" },
+      { name: "Ease", value: "0", width: "0%", color: "#34d399", cardClass: "sleep-card-mid" },
+      { name: "Focus", value: "0", width: "0%", color: "#6ee7b7", cardClass: "sleep-card-right" }
     ]
   },
   onLoad() {

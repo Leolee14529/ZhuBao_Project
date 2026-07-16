@@ -1,7 +1,7 @@
 const config = require("./config");
 const auth = require("./auth");
 
-const DEFAULT_ERROR_MESSAGE = "请求失败，请稍后再试";
+const DEFAULT_ERROR_MESSAGE = "Request failed. Please try again later.";
 function createRequestError(message, code, statusCode, data) {
   const error = new Error(message || DEFAULT_ERROR_MESSAGE);
   error.code = code || "REQUEST_FAILED";
@@ -12,11 +12,11 @@ function createRequestError(message, code, statusCode, data) {
 
 function normalizePath(path) {
   if (!path || typeof path !== "string") {
-    throw createRequestError("请求路径不能为空", "REQUEST_PATH_REQUIRED", 0);
+    throw createRequestError("Request path cannot be empty.", "REQUEST_PATH_REQUIRED", 0);
   }
 
   if (/^https?:\/\//i.test(path)) {
-    throw createRequestError("请求路径必须使用相对路径", "REQUEST_PATH_INVALID", 0);
+    throw createRequestError("Request path must be relative.", "REQUEST_PATH_INVALID", 0);
   }
 
   return path.charAt(0) === "/" ? path : "/" + path;
@@ -77,7 +77,7 @@ function request(options) {
       baseUrl = config.getApiBaseUrl();
       if (!baseUrl) {
         throw createRequestError(
-          "当前版本尚未配置服务器地址",
+          "Server address is not configured for this version.",
           "API_BASE_URL_MISSING",
           0
         );
@@ -117,7 +117,7 @@ function request(options) {
       },
       fail(error) {
         reject(createRequestError(
-          error && error.errMsg ? error.errMsg : "网络请求失败，请稍后再试",
+          error && error.errMsg ? error.errMsg : "Network request failed. Please try again later.",
           "REQUEST_NETWORK_ERROR",
           0,
           error

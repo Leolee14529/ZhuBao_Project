@@ -28,24 +28,6 @@
   margin-bottom: 26rpx;
 }
 
-.back-button {
-  position: absolute;
-  left: 0;
-  top: 6rpx;
-  width: 60rpx;
-  height: 60rpx;
-  border-radius: 30rpx;
-  background-color: rgba(255, 255, 255, 0.06);
-}
-
-.back-arrow {
-  display: block;
-  text-align: center;
-  line-height: 56rpx;
-  font-size: 42rpx;
-  color: #ffffff;
-}
-
 .topbar-title {
   display: block;
   text-align: center;

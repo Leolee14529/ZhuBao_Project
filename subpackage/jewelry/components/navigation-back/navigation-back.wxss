@@ -1,0 +1,47 @@
+.navigation-back-host {
+  position: fixed;
+  left: 8rpx;
+  top: 0;
+  z-index: 1000;
+  width: 88rpx;
+  height: 88rpx;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.navigation-back {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 88rpx;
+  height: 88rpx;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.9);
+  background: transparent;
+  border: 0;
+  border-radius: 44rpx;
+  line-height: 1;
+  box-sizing: border-box;
+}
+
+.navigation-back::after {
+  border: 0;
+}
+
+.navigation-back-hover {
+  opacity: 0.62;
+}
+
+.navigation-back__chevron {
+  width: 24rpx;
+  height: 24rpx;
+  border-left: 4rpx solid currentColor;
+  border-bottom: 4rpx solid currentColor;
+  transform: rotate(45deg);
+  box-sizing: border-box;
+}

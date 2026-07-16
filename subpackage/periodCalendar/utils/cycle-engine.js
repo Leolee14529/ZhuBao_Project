@@ -95,7 +95,7 @@ function classifyDate(date, cycleStarts, periodLength) {
     if (daysFromStart >= 0 && daysFromStart < periodLength) {
       return {
         status: cycle.cycleIndex === 0 ? "period" : "periodForecast",
-        statusLabel: cycle.cycleIndex === 0 ? "周期" : "参考周期",
+        statusLabel: cycle.cycleIndex === 0 ? "Period" : "Forecast Period",
         cycleIndex: cycle.cycleIndex,
         cycleStartDateKey: formatDateKey(cycle.startDate)
       };
@@ -109,7 +109,7 @@ function classifyDate(date, cycleStarts, periodLength) {
     if (daysBeforeStart === 14) {
       return {
         status: "ovulation",
-        statusLabel: "参考日",
+        statusLabel: "Reference Day",
         cycleIndex: cycle.cycleIndex,
         cycleStartDateKey: formatDateKey(cycle.startDate)
       };
@@ -118,7 +118,7 @@ function classifyDate(date, cycleStarts, periodLength) {
     if (daysBeforeStart >= 13 && daysBeforeStart <= 19) {
       return {
         status: "fertile",
-        statusLabel: "参考窗口",
+        statusLabel: "Reference Window",
         cycleIndex: cycle.cycleIndex,
         cycleStartDateKey: formatDateKey(cycle.startDate)
       };
@@ -127,7 +127,7 @@ function classifyDate(date, cycleStarts, periodLength) {
 
   return {
     status: "safe",
-    statusLabel: "其他日期",
+    statusLabel: "Other Dates",
     cycleIndex: null,
     cycleStartDateKey: ""
   };
@@ -186,7 +186,7 @@ function buildWeeks(profile, year, month, selectedDateKey) {
       isSelected: selectedDateKey === dateKey,
       status: detail.status,
       statusLabel: detail.statusLabel,
-      remark: "暂无",
+      remark: "None",
       cycleIndex: detail.cycleIndex,
       cycleStartDateKey: detail.cycleStartDateKey
     });

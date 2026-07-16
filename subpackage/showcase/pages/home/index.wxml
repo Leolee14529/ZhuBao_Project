@@ -5,8 +5,8 @@
 
       <view class="hero-row">
         <view class="hero-copy">
-          <text class="hero-title">你好</text>
-          <text class="hero-subtitle">暂无元素参考数据</text>
+          <text class="hero-title">Hello</text>
+          <text class="hero-subtitle">No element reference data</text>
         </view>
       </view>
 
@@ -21,9 +21,9 @@
       <device-module device="{{device}}" bind:tapmodule="handleDeviceTap"></device-module>
 
       <view class="section-row">
-        <text class="section-title">系列产品</text>
+        <text class="section-title">Collections</text>
         <view class="section-action" bindtap="handleViewAll">
-          <text>查看全部</text>
+          <text>View All</text>
           <text class="section-arrow">›</text>
         </view>
       </view>

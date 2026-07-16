@@ -7,21 +7,3 @@
   z-index: 60;
   background: linear-gradient(180deg, rgba(2, 7, 15, 0.98) 0%, rgba(2, 7, 15, 0.92) 68%, rgba(2, 7, 15, 0) 100%);
 }
-
-.back-button {
-  position: absolute;
-  left: 32rpx;
-  width: 60rpx;
-  height: 56rpx;
-  background: transparent;
-}
-
-.back-arrow {
-  margin-left: 0rpx;
-  margin-top: 14rpx;
-  width: 22rpx;
-  height: 22rpx;
-  border-left: 4rpx solid #ffffff;
-  border-bottom: 4rpx solid #ffffff;
-  transform: rotate(45deg);
-}

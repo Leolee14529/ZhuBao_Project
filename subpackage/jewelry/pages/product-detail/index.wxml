@@ -1,15 +1,20 @@
 <view class="product-detail-page">
+  <view
+    class="page-back-button"
+    style="top: {{backButtonTop}}px;"
+    bindtap="handleBack"
+  >
+    <view class="page-back-chevron"></view>
+  </view>
   <scroll-view class="detail-scroll" scroll-y="true" enhanced="true" bounces="true" show-scrollbar="false">
     <view class="detail-body">
       <view class="page-top-spacer" style="height: {{topSpacer}}px;"></view>
 
       <view class="detail-topbar">
-        <button class="icon-button back-button" bindtap="goBack" aria-label="返回">
-          <view class="back-chevron"></view>
-        </button>
+        <view class="topbar-leading"></view>
         <view class="title-block">
-          <text class="page-title">风格展示</text>
-          <text class="page-subtitle">完整图文参考</text>
+          <text class="page-title">Style Detail</text>
+          <text class="page-subtitle">Full Style Reference</text>
         </view>
       </view>
 
@@ -28,7 +33,7 @@
         </view>
 
         <view class="color-panel">
-          <text class="section-title">色彩与材质</text>
+          <text class="section-title">Color and Material</text>
           <view class="palette-list">
             <block wx:for="{{palette}}" wx:key="label">
               <view class="palette-item">
@@ -40,7 +45,7 @@
         </view>
 
         <view class="style-panel">
-          <text class="section-title">搭配参考</text>
+          <text class="section-title">Styling Ideas</text>
           <text class="style-text">{{product.scene}}</text>
         </view>
       </block>

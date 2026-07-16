@@ -7,9 +7,9 @@ Component({
   },
   data: {
     tabs: [
-      { id: "home", label: "首页", icon: "⌂" },
-      { id: "health", label: "健康", icon: "〰" },
-      { id: "settings", label: "设置", icon: "⚙" }
+      { id: "home", label: "Home", icon: "⌂" },
+      { id: "health", label: "Health", icon: "〰" },
+      { id: "settings", label: "Settings", icon: "⚙" }
     ]
   },
   methods: {

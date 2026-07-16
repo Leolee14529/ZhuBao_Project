@@ -18,24 +18,6 @@
   height: 88rpx;
 }
 
-.auth-page__back {
-  position: absolute;
-  left: 0;
-  top: 28rpx;
-  width: 60rpx;
-  height: 60rpx;
-}
-
-.auth-page__back-arrow {
-  width: 22rpx;
-  height: 22rpx;
-  margin-top: 18rpx;
-  margin-left: 10rpx;
-  border-left: 4rpx solid #ffffff;
-  border-bottom: 4rpx solid #ffffff;
-  transform: rotate(45deg);
-}
-
 .auth-page__content {
   flex: 1;
   padding-top: 34rpx;

@@ -1,9 +1,12 @@
 <view class="calendar-page" style="padding-top: {{contentTopOffset}}px;">
-  <calendar-topbar
-    topbar-height="{{topbarHeight}}"
-    back-button-top="{{backButtonTop}}"
-    bind:back="onBackTap"
-  />
+  <view class="period-topbar"></view>
+  <view
+    class="period-page-back"
+    style="top: {{backButtonTop}}px;"
+    bindtap="handleBack"
+  >
+    <view class="page-back-chevron"></view>
+  </view>
 
   <view class="page-content">
     <month-switcher
@@ -28,32 +31,31 @@
     </view>
 
     <view wx:elif="{{!hasCycleData}}" class="cycle-preview-card">
-      <text class="cycle-preview-card__eyebrow">预览日历</text>
-      <text class="cycle-preview-card__title">先用颜色看懂周期，再选择开始日期</text>
-      <view class="cycle-preview-card__button" bindtap="onSetupCycle">设置我的周期</view>
-      <text class="cycle-preview-card__desc">点“设置我的周期”后，可以直接在月历上选上次周期开始日，系统会按颜色生成周期参考。</text>
+      <text class="cycle-preview-card__eyebrow">Calendar Preview</text>
+      <text class="cycle-preview-card__title">Preview your cycle colors, then choose a start date</text>
+      <view class="cycle-preview-card__button" bindtap="onSetupCycle">Set My Period</view>
+      <text class="cycle-preview-card__desc">After tapping Set My Period, choose your last period start date on the month calendar. The system will create color references.</text>
     </view>
 
     <block wx:else>
-
       <view wx:if="{{selectedDetail}}" class="detail-card">
         <text class="detail-date">{{selectedDetail.fullDate}}</text>
         <view class="detail-row">
-          <text class="detail-label">状态：</text>
+          <text class="detail-label">Status:</text>
           <text class="detail-value">{{selectedDetail.statusLabel}}</text>
         </view>
         <view class="detail-row">
-          <text class="detail-label">备注：</text>
+          <text class="detail-label">Note:</text>
           <text class="detail-value">{{selectedDetail.remark}}</text>
         </view>
       </view>
 
       <view class="summary-block">
-        <text class="summary-title">距离下次参考日期还有</text>
-        <text class="summary-value">{{summaryDays}}天</text>
+        <text class="summary-title">Days until next reference date</text>
+        <text class="summary-value">{{summaryDays}} days</text>
         <text class="summary-note">{{summaryNextStart}}</text>
-        <view class="summary-action" bindtap="onSetupCycle">调整周期</view>
-        <view class="summary-clear-action" bindtap="onClearCycleData">清除本机周期记录</view>
+        <view class="summary-action" bindtap="onSetupCycle">Adjust Period</view>
+        <view class="summary-clear-action" bindtap="onClearCycleData">Clear Local Period Records</view>
       </view>
     </block>
   </view>

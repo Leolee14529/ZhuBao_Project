@@ -8,7 +8,7 @@
   </view>
 
   <view class="reminder-bar">
-    <text class="reminder-text">今天开始周期了吗？</text>
+    <text class="reminder-text">Did your period start today?</text>
     <view class="reminder-actions">
       <reference-switch checked="{{periodStartedToday}}" bind:toggle="onToggleTap" />
     </view>

@@ -5,6 +5,7 @@
     "dark-input-field": "/subpackage/auth/components/dark-input-field/dark-input-field",
     "form-error-text": "/subpackage/auth/components/form-error-text/form-error-text",
     "agreement-row": "/subpackage/auth/components/agreement-row/agreement-row",
-    "empty-state": "/components/empty-state/empty-state"
+    "empty-state": "/components/empty-state/empty-state",
+    "navigation-back": "/subpackage/auth/components/navigation-back/navigation-back"
   }
 }

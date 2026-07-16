@@ -107,7 +107,7 @@ Component({
       const todayDate = cycleEngine.parseDateKey(todayKey);
       if (!selectedDate) return;
       if (cycleEngine.diffDays(selectedDate, todayDate) < 0) {
-        wx.showToast({ title: "不能选择今天之后的日期", icon: "none" });
+        wx.showToast({ title: "You cannot select a future date", icon: "none" });
         return;
       }
       const month = getMonthFromDate(selectedDate);

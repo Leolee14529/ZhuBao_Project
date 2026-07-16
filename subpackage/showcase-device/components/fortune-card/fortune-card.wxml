@@ -4,7 +4,7 @@
     <view class="fortune-head">
       <view class="fortune-label">
         <view class="fortune-dot"></view>
-        <text>今日灵感</text>
+        <text>Today's Inspiration</text>
       </view>
       <text class="fortune-no">NO.88</text>
     </view>
@@ -12,21 +12,21 @@
       <view class="fortune-ring">
         <view class="fortune-ring-middle">
           <view class="fortune-ring-inner">
-            <text class="fortune-symbol">巽</text>
+            <text class="fortune-symbol">Xun</text>
           </view>
         </view>
       </view>
-      <text class="fortune-title">清润</text>
+      <text class="fortune-title">Fresh</text>
       <text class="fortune-subtitle">Wind / Wood</text>
     </view>
     <view class="fortune-quote-box">
       <text class="fortune-quote-mark">“</text>
-      <text class="fortune-quote-text">把注意力放回手边的一件小事。慢慢呼吸 6 次。今日色彩：青绿色。</text>
+      <text class="fortune-quote-text">Return your attention to one small thing nearby. Take six slow breaths. Today's color: emerald green.</text>
     </view>
   </view>
   <view class="fortune-face fortune-back">
     <view class="fortune-grid"></view>
     <text class="fortune-back-title">DAILY INSPIRATION</text>
-    <text class="fortune-back-copy">点击卡片可切换正反面</text>
+    <text class="fortune-back-copy">Tap the card to flip</text>
   </view>
 </view>

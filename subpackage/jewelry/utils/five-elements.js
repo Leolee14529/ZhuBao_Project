@@ -3,48 +3,48 @@ var auth = require("../../../utils/auth");
 var ELEMENT_META = {
   wood: {
     key: "wood",
-    cn: "木",
+    cn: "Wood",
     en: "Wood",
-    label: "翠绿色",
+    label: "Emerald",
     color: "#10b981",
-    jade: "翠绿/碧玉",
-    suit: "适合呈现舒展、清新的视觉感受"
+    jade: "Emerald / Jasper",
+    suit: "Good for a calm, fresh visual mood"
   },
   fire: {
     key: "fire",
-    cn: "火",
+    cn: "Fire",
     en: "Fire",
-    label: "红紫色",
+    label: "Red Violet",
     color: "#f43f5e",
-    jade: "红翡/紫罗兰",
-    suit: "适合突出明亮、醒目的风格"
+    jade: "Red Jade / Lavender",
+    suit: "Good for a brighter, more expressive style"
   },
   earth: {
     key: "earth",
-    cn: "土",
+    cn: "Earth",
     en: "Earth",
-    label: "蜜糖色",
+    label: "Honey",
     color: "#d97706",
-    jade: "黄翡/蜜糖",
-    suit: "适合增加温润、沉稳的层次"
+    jade: "Yellow Jade / Honey",
+    suit: "Good for adding warmth and grounded layers"
   },
   metal: {
     key: "metal",
-    cn: "金",
+    cn: "Metal",
     en: "Metal",
-    label: "银白色",
+    label: "Silver White",
     color: "#e2e8f0",
-    jade: "冰种/白底青",
-    suit: "适合呈现清透、利落的质感"
+    jade: "Icy Jade / Pale Green",
+    suit: "Good for a clean, translucent finish"
   },
   water: {
     key: "water",
-    cn: "水",
+    cn: "Water",
     en: "Water",
-    label: "蓝黑色",
+    label: "Blue Black",
     color: "#3b82f6",
-    jade: "墨翠/蓝水",
-    suit: "适合呈现冷静、柔和的色彩感"
+    jade: "Dark Jade / Blue Water",
+    suit: "Good for a cool, softened color mood"
   }
 };
 var ELEMENT_ORDER = ["wood", "fire", "earth", "metal", "water"];
@@ -111,8 +111,8 @@ function buildEmptyElements() {
     return {
       key: key,
       name: meta.label,
-      jade: "暂无参考数据",
-      suitable: "0% · 暂无色彩参考数据",
+      jade: "No reference data yet",
+      suitable: "0% · No color reference data",
       color: meta.color,
       rowClass: index === ELEMENT_ORDER.length - 1 ? "element-row-last" : ""
     };
@@ -121,17 +121,17 @@ function buildEmptyElements() {
 function buildEmptyProfile(birthInput) {
   return {
     birthInput: birthInput || getDefaultBirthInput(),
-    focusElement: "无",
+    focusElement: "None",
     focusKey: "",
-    destinyLine: "暂无色彩参考数据",
-    summaryText: "暂无色彩参考数据",
+    destinyLine: "No color reference data",
+    summaryText: "No color reference data",
     radarValues: [0, 0, 0, 0, 0],
-    radarNote: "暂无色彩参考数据。",
+    radarNote: "No color reference data.",
     elements: buildEmptyElements()
   };
 }
 function buildResultSummary(dominantMeta, weakestMeta) {
-  return dominantMeta.label + "倾向更明显，可搭配" + weakestMeta.label + "丰富整体风格层次";
+  return dominantMeta.label + " is more prominent. Add " + weakestMeta.label + " to balance the overall style.";
 }
 function buildProfileFromResult(result) {
   if (!result || !result.elements) return null;
@@ -170,7 +170,7 @@ function buildProfileFromResult(result) {
     },
     focusElement: dominantMeta.label,
     focusKey: dominantKey,
-    destinyLine: dominantMeta.label + "倾向更明显 · " + weakestMeta.label + "可作平衡参考",
+    destinyLine: dominantMeta.label + " stands out · " + weakestMeta.label + " can balance it",
     summaryText: summary,
     radarValues: radarValues,
     radarNote: summary,
@@ -249,9 +249,9 @@ function buildProfile(birthInput) {
     var meta = ELEMENT_META[item.key];
     var suitable = meta.suit;
     if (item.key === dominantKey) {
-      suitable = "当前色彩更明显，适合突出视觉感受";
+      suitable = "This color is more prominent and works well as the visual focus";
     } else if (item.key === weakestKey) {
-      suitable = "当前较少，可作平衡参考";
+      suitable = "Use this as a balancing color reference";
     }
     return {
       key: item.key,
@@ -271,16 +271,16 @@ function buildProfile(birthInput) {
     });
     return current ? current.value : 0.65;
   });
-  var note = "整体色彩分布较均衡。";
+  var note = "The overall color distribution is balanced.";
   if (highest - lowest >= 10) {
-    note = dominantMeta.label + "倾向更明显，" + weakestMeta.label + "可作平衡参考，可用" + weakestMeta.jade + "丰富整体风格层次。";
+    note = dominantMeta.label + " is more prominent. " + weakestMeta.label + " can balance it; use " + weakestMeta.jade + " to add depth to the overall style.";
   }
   return {
     birthInput: safeInput,
     focusElement: dominantMeta.label,
     focusKey: dominantKey,
-    destinyLine: dominantMeta.label + "倾向更明显 · " + weakestMeta.label + "可作平衡参考",
-    summaryText: "风格资料已保存，可查看色彩偏好与珠宝风格参考",
+    destinyLine: dominantMeta.label + " stands out · " + weakestMeta.label + " can balance it",
+    summaryText: "Style details saved. View color preferences and jewelry references.",
     radarValues: radarValues,
     radarNote: note,
     elements: elements

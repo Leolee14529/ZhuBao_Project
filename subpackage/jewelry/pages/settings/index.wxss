@@ -76,7 +76,7 @@
   margin: 0 0 18rpx 24rpx;
   font-size: 22rpx;
   font-weight: 500;
-  letter-spacing: 2rpx;
+  letter-spacing: 0;
   color: rgba(255, 255, 255, 0.24);
 }
 

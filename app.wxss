@@ -21,7 +21,7 @@ swiper,
 swiper-item,
 cover-view {
   box-sizing: border-box;
-  font-family: "SimHei" !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
   font-variant-numeric: lining-nums tabular-nums;
 }
 

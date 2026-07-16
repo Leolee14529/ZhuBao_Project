@@ -30,3 +30,7 @@ build/
 backend/.env.*
 !.env.example
 !backend/.env.example
+
+# WeChat DevTools local/private config
+project.private.config.json
+project.local.config.json

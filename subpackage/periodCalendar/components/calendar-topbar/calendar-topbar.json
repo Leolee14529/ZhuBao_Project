@@ -1,3 +1,6 @@
 {
-  "component": true
+  "component": true,
+  "usingComponents": {
+    "navigation-back": "/subpackage/periodCalendar/components/navigation-back/navigation-back"
+  }
 }

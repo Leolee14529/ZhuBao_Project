@@ -1,0 +1,10 @@
+<view class="navigation-back-host" style="top: {{buttonTop}}px;">
+  <button
+    class="navigation-back"
+    aria-label="{{computedLabel}}"
+    hover-class="navigation-back-hover"
+    bindtap="onTap"
+  >
+    <view class="navigation-back__chevron"></view>
+  </button>
+</view>

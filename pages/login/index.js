@@ -5,7 +5,7 @@ const config = require("../../utils/config");
 const share = require("../../utils/share");
 
 const HOME_URL = "/pages/home/index";
-const DEFAULT_LOGIN_ERROR = "登录暂时不可用，请稍后再试";
+const DEFAULT_LOGIN_ERROR = "Login is unavailable. Please try again later.";
 const WX_LOGIN_TIMEOUT_MS = 12000;
 const WX_LOGIN_MAX_ATTEMPTS = 2;
 
@@ -67,7 +67,7 @@ Page({
   },
   submitAccount(action) {
     if (!this.data.accountAuthEnabled) {
-      this.setData({ serviceError: "账号登录暂未开放，请使用微信登录" });
+      this.setData({ serviceError: "Account login is not available yet. Please use WeChat login." });
       return;
     }
     if (this.isAuthBusy()) return;
@@ -78,7 +78,7 @@ Page({
     const accountName = this.data.accountName.trim();
     const password = this.data.password;
     if (!accountName || !password) {
-      this.setData({ serviceError: "请输入账号和密码" });
+      this.setData({ serviceError: "Enter your account and password." });
       return;
     }
 
@@ -103,8 +103,8 @@ Page({
   },
   ensureLoginReady() {
     if (!this.data.agreed) {
-      this.setData({ serviceError: "请先阅读并同意用户协议与隐私政策" });
-      return Promise.reject(new Error("请先阅读并同意用户协议与隐私政策"));
+      this.setData({ serviceError: "Please read and agree to the User Agreement and Privacy Policy first" });
+      return Promise.reject(new Error("Please read and agree to the User Agreement and Privacy Policy first"));
     }
 
     return privacy.checkWechatPrivacyReady({
@@ -141,7 +141,7 @@ Page({
 
         settled = true;
         console.error("[login] wx.login timeout", { attempt: currentAttempt });
-        reject(new Error("微信登录超时，请稍后重试"));
+        reject(new Error("WeChat login timed out. Please try again later."));
       }, WX_LOGIN_TIMEOUT_MS);
 
       const finish = (callback) => {
@@ -246,7 +246,7 @@ Page({
   openWechatPrivacy() {
     privacy.openWechatPrivacyContract().catch((error) => {
       this.setData({
-        serviceError: error && error.message ? error.message : "微信隐私保护指引暂时无法打开"
+        serviceError: error && error.message ? error.message : "The WeChat Privacy Guide cannot be opened right now."
       });
     });
   },

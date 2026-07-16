@@ -3,18 +3,18 @@
     <view class="page-body">
       <view class="page-top-spacer" style="height: {{topSpacer}}px;"></view>
       <view class="page-header">
-        <text class="page-title">数据记录</text>
-        <text class="page-subtitle">今日记录</text>
+        <text class="page-title">Records</text>
+        <text class="page-subtitle">Today's Summary</text>
       </view>
 
       <view class="score-card">
         <view class="score-copy">
           <view class="score-label-row">
             <view class="score-dot"></view>
-            <text class="score-label">今日记录</text>
+            <text class="score-label">Today's Summary</text>
           </view>
-          <text class="score-value">0 <text class="score-unit">条</text></text>
-          <text class="score-text">暂无佩戴记录。</text>
+          <text class="score-value">0 <text class="score-unit">items</text></text>
+          <text class="score-text">No data recorded yet.</text>
         </view>
         <view class="score-ring">
           <view class="score-ring-inner">
@@ -24,7 +24,7 @@
       </view>
 
       <view class="period-entry" bindtap="openPeriodCalendar">
-        <text class="period-entry-title">周期记录</text>
+        <text class="period-entry-title">Smart Period Calendar</text>
         <text class="period-entry-arrow">›</text>
       </view>
 
@@ -33,13 +33,13 @@
           <view class="health-card-main">
             <view class="health-card-heading">
               <view class="health-icon sleep-icon">☾</view>
-              <text class="health-title">睡眠</text>
+              <text class="health-title">Sleep</text>
             </view>
-            <text class="health-duration">--小时--分钟</text>
+            <text class="health-duration">-- h -- min</text>
             <view class="health-meta-row">
-              <view class="health-meta"><text class="health-meta-label">入睡</text><text class="health-meta-value">--</text></view>
-              <view class="health-meta"><text class="health-meta-label">清醒</text><text class="health-meta-value">--</text></view>
-              <view class="health-meta"><text class="health-meta-label">评分</text><text class="health-meta-value">--</text></view>
+              <view class="health-meta"><text class="health-meta-label">Asleep</text><text class="health-meta-value">--</text></view>
+              <view class="health-meta"><text class="health-meta-label">Awake</text><text class="health-meta-value">--</text></view>
+              <view class="health-meta"><text class="health-meta-label">Score</text><text class="health-meta-value">--</text></view>
             </view>
           </view>
           <view class="health-card-side">
@@ -52,12 +52,12 @@
           <view class="health-card-main">
             <view class="health-card-heading">
               <view class="health-icon activity-icon">↗</view>
-              <text class="health-title">今日活动</text>
+              <text class="health-title">Today's Activity</text>
             </view>
             <view class="activity-meta-grid">
-              <view class="activity-meta"><text class="health-meta-label">步数</text><text class="activity-value">{{activity.steps}}<text class="activity-unit">步</text></text></view>
-              <view class="activity-meta"><text class="health-meta-label">距离</text><text class="activity-value">{{activity.distance}}<text class="activity-unit">公里</text></text></view>
-              <view class="activity-meta"><text class="health-meta-label">热量</text><text class="activity-value">{{activity.calories}}<text class="activity-unit">千卡</text></text></view>
+              <view class="activity-meta"><text class="health-meta-label">Steps</text><text class="activity-value">{{activity.steps}}<text class="activity-unit"> steps</text></text></view>
+              <view class="activity-meta"><text class="health-meta-label">Distance</text><text class="activity-value">{{activity.distance}}<text class="activity-unit"> km</text></text></view>
+              <view class="activity-meta"><text class="health-meta-label">Calories</text><text class="activity-value">{{activity.calories}}<text class="activity-unit"> kcal</text></text></view>
             </view>
           </view>
           <view class="health-card-side">
@@ -68,8 +68,8 @@
       </view>
 
       <view class="panel">
-        <text class="panel-title">节奏记录</text>
-        <text class="panel-subtitle">今日记录参考</text>
+        <text class="panel-title">Rhythm Records</text>
+        <text class="panel-subtitle">Today's SummaryReference</text>
         <view class="chart-area">
           <view class="chart-line chart-line-top"></view>
           <view class="chart-line chart-line-mid"></view>
@@ -86,14 +86,14 @@
       </view>
 
       <view class="panel">
-        <text class="panel-title">感受记录</text>
-        <text class="panel-subtitle">暂无记录</text>
+        <text class="panel-title">Feeling Records</text>
+        <text class="panel-subtitle">No records</text>
         <view class="sleep-cards">
           <block wx:for="{{sleep}}" wx:key="name">
             <view class="sleep-card {{item.cardClass}}">
               <view class="sleep-top-line" style="background-color: {{item.color}};"></view>
               <text class="sleep-name">{{item.name}}</text>
-              <text class="sleep-value">{{item.value}}<text class="sleep-unit">次</text></text>
+              <text class="sleep-value">{{item.value}}<text class="sleep-unit">x</text></text>
             </view>
           </block>
         </view>
@@ -107,10 +107,10 @@
       <view class="energy-card">
         <view class="energy-icon">✦</view>
         <view class="energy-copy">
-          <text class="energy-title">今日感受</text>
-          <text class="energy-desc">暂无感受记录</text>
+          <text class="energy-title">Today's Feeling</text>
+          <text class="energy-desc">No feeling records</text>
         </view>
-        <text class="energy-value">暂无</text>
+        <text class="energy-value">None</text>
       </view>
 
       <view class="bottom-space"></view>

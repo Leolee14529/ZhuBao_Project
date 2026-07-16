@@ -7,11 +7,11 @@ const pageLayout = require("../../utils/page-layout");
 Page({
   data: {
     topSpacer: pageLayout.getContentOffset(64),
-    currentLanguage: "中文",
+    currentLanguage: "English",
     isDeviceBound: false,
     sleepEnabled: false,
     notificationsEnabled: false,
-    profileTitle: "珠宝用户",
+    profileTitle: "Jewelry User",
     avatarLetter: "U",
     isLoggingOut: false,
     toggleTouchStartX: 0,
@@ -19,15 +19,15 @@ Page({
       {
         title: "DEVICE",
         items: [
-          { isRing: true, label: "指环连接 (Ring)", arrow: false, rowClass: "", valueClass: "row-value-shifted" },
-          { isSleep: true, label: "夜间提醒", toggle: true, toggleClass: "toggle-off", rowClass: "setting-row-last" }
+          { isRing: true, label: "Ring Connection", arrow: false, rowClass: "", valueClass: "row-value-shifted" },
+          { isSleep: true, label: "Night Reminder", toggle: true, toggleClass: "toggle-off", rowClass: "setting-row-last" }
         ]
       },
       {
         title: "PREFERENCES",
         items: [
-          { isBell: true, label: "消息通知", toggle: true, toggleClass: "toggle-off", rowClass: "" },
-          { isLanguage: true, label: "语言 (Language)", arrow: false, rowClass: "setting-row-last" }
+          { isBell: true, label: "Notifications", toggle: true, toggleClass: "toggle-off", rowClass: "" },
+          { isLanguage: true, label: "Language", arrow: false, rowClass: "setting-row-last" }
         ]
       }
     ]
@@ -61,7 +61,7 @@ Page({
     request.get("/api/users/me")
       .then((data) => {
         const user = data.user || {};
-        const title = user.nickname || ("用户 " + String(user.id || "").slice(-6));
+        const title = user.nickname || ("User " + String(user.id || "").slice(-6));
         this.setData({
           profileTitle: title,
           avatarLetter: title.charAt(0).toUpperCase() || "U"
@@ -102,7 +102,7 @@ Page({
           return;
         }
         wx.showToast({
-          title: error && error.message ? error.message : "退出失败，请稍后再试",
+          title: error && error.message ? error.message : "Logout failed. Please try again later.",
           icon: "none"
         });
         this.setData({ isLoggingOut: false });
@@ -117,28 +117,28 @@ Page({
   openWechatPrivacy() {
     privacy.openWechatPrivacyContract().catch((error) => {
       wx.showToast({
-        title: error && error.message ? error.message : "微信隐私保护指引暂时无法打开",
+        title: error && error.message ? error.message : "The WeChat Privacy Guide cannot be opened right now.",
         icon: "none"
       });
     });
   },
   clearCycleData() {
     wx.showModal({
-      title: "清除周期记录",
-      content: "将清除本机保存的周期记录和确认状态，不会影响服务器账号。",
-      confirmText: "清除",
+      title: "Clear Period Records",
+      content: "This will clear local period records and confirmation status. It will not affect your server account.",
+      confirmText: "Clear",
       success: (res) => {
         if (!res.confirm) return;
         auth.clearCycleData();
-        wx.showToast({ title: "已清除本机周期记录", icon: "success" });
+        wx.showToast({ title: "Local period records cleared", icon: "success" });
       }
     });
   },
   withdrawConsent() {
     wx.showModal({
-      title: "撤回同意",
-      content: "撤回后将退出登录并清除本机个人数据。再次使用登录或保存功能时需重新同意。",
-      confirmText: "撤回",
+      title: "Withdraw Consent",
+      content: "After withdrawal, you will be logged out and local personal data will be cleared. You must agree again before using sign-in or saved features.",
+      confirmText: "Withdraw",
       success: (res) => {
         if (!res.confirm) return;
         request.post("/api/auth/logout").catch(() => null).then(() => {
@@ -150,15 +150,15 @@ Page({
   },
   deleteAccount() {
     wx.showModal({
-      title: "注销账号",
-      content: "将删除账号、全部服务器业务数据，并清除本机周期记录。该操作不可恢复。",
-      confirmText: "注销",
+      title: "Close Account",
+      content: "This will delete your account, all server data, and local period records. This action cannot be undone.",
+      confirmText: "Close",
       success: (res) => {
         if (!res.confirm) return;
         request.delete("/api/users/me")
           .then((data) => {
             if (!data || data.deleted !== true) {
-              throw new Error("注销失败，请重试");
+              throw new Error("Account closure failed. Please try again.");
             }
             auth.clearAllLocalPersonalData();
             wx.reLaunch({ url: "/pages/login/index" });
@@ -166,7 +166,7 @@ Page({
           .catch((error) => {
             if (error && error.statusCode === 401) return;
             wx.showToast({
-              title: error && error.message ? error.message : "注销失败，请重试",
+              title: error && error.message ? error.message : "Account closure failed. Please try again.",
               icon: "none"
             });
           });

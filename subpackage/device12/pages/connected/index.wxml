@@ -1,15 +1,15 @@
 <view class="connected-page" style="padding-top: {{statusBarHeight}}px;">
-  <device-topbar bind:back="onBackTap" />
+  <device-topbar />
 
   <view class="page-content">
-    <text class="page-title">设备连接</text>
+    <text class="page-title">Device Connection</text>
 
     <empty-state
       wx:if="{{deviceStatus === 'failed'}}"
       class="device-empty-state"
-      title="设备已断开连接"
-      desc="请重新连接设备，继续同步健康与佩戴数据"
-      buttonText="重新连接"
+      title="Device disconnected"
+      desc="Reconnect the device to continue syncing health and wear data"
+      buttonText="Reconnect"
       type="device"
       bind:action="onReconnect"
     ></empty-state>
@@ -17,25 +17,25 @@
     <block wx:else>
     <connected-hero
       image-src="/subpackage/device12/assets/ring-connected.png"
-      ring-name="暂无设备"
-      status-text="未连接"
-      battery-text="电量 0%"
+      ring-name="No device"
+      status-text="Disconnected"
+      battery-text="Battery 0%"
     />
 
     <device-section-card
-      title="设备信息"
+      title="Device Info"
       rows="{{infoRows}}"
       bind:select="onInfoSelect"
     />
 
     <device-section-card
       class="connection-card"
-      title="连接管理"
+      title="Connection"
       rows="{{connectionRows}}"
       bind:select="onConnectionSelect"
     />
 
-    <disconnect-button text="断开连接" bind:action="onDisconnect" />
+    <disconnect-button text="Disconnect" bind:action="onDisconnect" />
     </block>
   </view>
 </view>

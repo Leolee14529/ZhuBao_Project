@@ -6,7 +6,7 @@ function showLocalPrivacy() {
     url: PRIVACY_URL + "?mode=consent",
     fail() {
       wx.showToast({
-        title: "请先阅读隐私政策",
+        title: "Please read the Privacy Policy first.",
         icon: "none"
       });
     }
@@ -17,7 +17,7 @@ function openWechatPrivacyContract() {
   return new Promise((resolve, reject) => {
     if (!wx.openPrivacyContract) {
       showLocalPrivacy();
-      reject(new Error("当前微信版本暂不支持打开官方隐私指引"));
+      reject(new Error("This WeChat version cannot open the official Privacy Guide."));
       return;
     }
 
@@ -25,7 +25,7 @@ function openWechatPrivacyContract() {
       success: resolve,
       fail() {
         showLocalPrivacy();
-        reject(new Error("微信隐私保护指引暂时无法打开"));
+        reject(new Error("The WeChat Privacy Guide cannot be opened right now."));
       }
     });
   });
@@ -34,35 +34,35 @@ function openWechatPrivacyContract() {
 function requestWechatPrivacyAuthorization() {
   return new Promise((resolve, reject) => {
     wx.showModal({
-      title: "隐私保护提示",
-      content: "继续使用前，请先阅读并同意微信隐私保护指引和海米算力隐私政策。",
-      confirmText: "同意",
-      cancelText: "查看",
+      title: "Privacy Notice",
+      content: "Before continuing, please read and agree to the WeChat Privacy Guide and Haimi Power Privacy Policy.",
+      confirmText: "Agree",
+      cancelText: "View",
       success(res) {
         if (res.cancel) {
           openWechatPrivacyContract().catch(() => null);
-          reject(new Error("请先同意隐私保护指引"));
+          reject(new Error("Please agree to the privacy notice first"));
           return;
         }
         if (!res.confirm) {
-          reject(new Error("请先同意隐私保护指引"));
+          reject(new Error("Please agree to the privacy notice first"));
           return;
         }
         if (!wx.requirePrivacyAuthorize) {
           showLocalPrivacy();
-          reject(new Error("当前微信版本暂不支持隐私授权，请升级微信后重试"));
+          reject(new Error("This WeChat version does not support privacy authorization. Please update WeChat and try again."));
           return;
         }
         wx.requirePrivacyAuthorize({
           success: resolve,
           fail() {
             showLocalPrivacy();
-            reject(new Error("请先同意隐私保护指引"));
+            reject(new Error("Please agree to the privacy notice first"));
           }
         });
       },
       fail() {
-        reject(new Error("隐私授权暂时不可用，请稍后再试"));
+        reject(new Error("Privacy authorization is unavailable. Please try again later."));
       }
     });
   });
@@ -71,17 +71,17 @@ function requestWechatPrivacyAuthorization() {
 function checkWechatPrivacyReady(options) {
   const opts = options || {};
   if (opts.agreed === false) {
-    return Promise.reject(new Error("请先阅读并同意用户协议与隐私政策"));
+    return Promise.reject(new Error("Please read and agree to the User Agreement and Privacy Policy first"));
   }
   if (opts.action !== "login" && !auth.hasPrivacyConsent()) {
     showLocalPrivacy();
-    return Promise.reject(new Error("请先重新同意用户协议与隐私政策"));
+    return Promise.reject(new Error("Please agree to the User Agreement and Privacy Policy again"));
   }
 
   return new Promise((resolve, reject) => {
     if (!wx.getPrivacySetting) {
       showLocalPrivacy();
-      reject(new Error("当前微信版本暂不支持隐私授权，请升级微信后重试"));
+      reject(new Error("This WeChat version does not support privacy authorization. Please update WeChat and try again."));
       return;
     }
 
@@ -95,7 +95,7 @@ function checkWechatPrivacyReady(options) {
       },
       fail() {
         showLocalPrivacy();
-        reject(new Error("隐私授权状态获取失败，请稍后重试"));
+        reject(new Error("Failed to get privacy authorization status. Please try again later."));
       }
     });
   });

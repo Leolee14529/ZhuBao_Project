@@ -1,22 +1,22 @@
 const HOME_SHARE_PATH = "/pages/home/index";
 const HOME_SHARE_IMAGE = "/pages/home/assets/product-1.jpg";
-const HOME_SHARE_TITLE = "海米算力 | 珠宝风格参考";
+const HOME_SHARE_TITLE = "Haimi Power | Jewelry Style Reference";
 const PAGE_SHARE_CONFIGS = {
   "/pages/home/index": { title: HOME_SHARE_TITLE },
   "/pages/login/index": { title: HOME_SHARE_TITLE },
-  "/pages/legal/agreement/index": { title: "海米算力 | 用户协议" },
-  "/pages/legal/privacy/index": { title: "海米算力 | 隐私政策" },
-  "/subpackage/jewelry/pages/data/index": { title: "海米算力 | 记录中心" },
-  "/subpackage/jewelry/pages/settings/index": { title: "海米算力 | 设置中心" },
+  "/pages/legal/agreement/index": { title: "Haimi Power | User Agreement" },
+  "/pages/legal/privacy/index": { title: "Haimi Power | Privacy Policy" },
+  "/subpackage/jewelry/pages/data/index": { title: "Haimi Power | Records" },
+  "/subpackage/jewelry/pages/settings/index": { title: "Haimi Power | Settings" },
   "/subpackage/jewelry/pages/products/index": {
-    title: "海米算力 | 风格参考",
+    title: "Haimi Power | Style Reference",
     imageUrl: "/subpackage/jewelry/assets/product-6.jpg"
   },
   "/subpackage/jewelry/pages/product-detail/index": {
-    title: "海米算力 | 风格展示",
+    title: "Haimi Power | Style Detail",
     imageUrl: "/subpackage/jewelry/assets/product-6.jpg"
   },
-  "/subpackage/periodCalendar/pages/calendar/index": { title: "海米算力 | 周期记录" }
+  "/subpackage/periodCalendar/pages/calendar/index": { title: "Haimi Power | Cycle Records" }
 };
 
 function enableShareMenu() {

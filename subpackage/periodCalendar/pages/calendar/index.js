@@ -11,7 +11,7 @@ Page({
     showCycleSetup: false,
     cyclePrivacyConfirmed: false,
     isSavingCycle: false,
-    legendItems: [{ key: "period", label: "周期" }, { key: "periodForecast", label: "参考周期" }, { key: "ovulation", label: "参考日" }, { key: "fertile", label: "参考窗口" }, { key: "safe", label: "其他日期" }]
+    legendItems: [{ key: "period", label: "Period" }, { key: "periodForecast", label: "Forecast Period" }, { key: "ovulation", label: "Reference Day" }, { key: "fertile", label: "Reference Window" }, { key: "safe", label: "Other Dates" }]
   },
   onLoad() {
     share.enableShareMenu();
@@ -35,7 +35,7 @@ Page({
         weeks: built.weeks,
         selectedDetail: null,
         summaryDays: "--",
-        summaryNextStart: "设置后生成周期参考"
+        summaryNextStart: "Set up to generate period references"
       });
       return;
     }
@@ -52,6 +52,9 @@ Page({
     }
     console.warn("[ROUTE]", "from subpackage/periodCalendar/pages/calendar/index.js/onBackTap", "to", "/subpackage/jewelry/pages/data/index", "reason", "fallback back");
     wx.redirectTo({ url: "/subpackage/jewelry/pages/data/index" });
+  },
+  handleBack() {
+    this.onBackTap();
   },
   onPrevMonth() {
     let { viewYear, viewMonth } = this.data;
@@ -118,14 +121,14 @@ Page({
         auth.setPersonalData(auth.PERIOD_PRIVACY_KEY, true);
         this.setData({ hasCycleData: true, showCycleSetup: false, selectedDateKey: todayDateKey, cycleProfile: profile });
         this.refreshCalendar(this.data.viewYear, this.data.viewMonth);
-        wx.showToast({ title: "周期设置完成", icon: "success" });
+        wx.showToast({ title: "Period setup complete", icon: "success" });
       })
       .then(() => {
         this.setData({ isSavingCycle: false });
       })
       .catch((error) => {
         wx.showToast({
-          title: error && error.message ? error.message : "请先确认周期数据说明",
+          title: error && error.message ? error.message : "Please confirm the period data notice first",
           icon: "none"
         });
         this.setData({ isSavingCycle: false });
@@ -135,7 +138,7 @@ Page({
     if (this.data.showCycleSetup) {
       return this.data.cyclePrivacyConfirmed ?
         Promise.resolve(true) :
-        Promise.reject(new Error("请先勾选周期数据说明"));
+        Promise.reject(new Error("Please check the period data notice first"));
     }
     if (this.data.cyclePrivacyConfirmed || auth.getPersonalData(auth.PERIOD_PRIVACY_KEY)) {
       return Promise.resolve(true);
@@ -146,7 +149,7 @@ Page({
         cyclePrivacyConfirmed: false
       });
     }
-    return Promise.reject(new Error("请先勾选周期数据说明"));
+    return Promise.reject(new Error("Please check the period data notice first"));
   },
   ensureCyclePrivacyReady() {
     return this.confirmCyclePrivacy()
@@ -176,7 +179,7 @@ Page({
       this.refreshCalendar(this.data.viewYear, this.data.viewMonth);
     }).catch((error) => {
       wx.showToast({
-        title: error && error.message ? error.message : "请先确认周期数据说明",
+        title: error && error.message ? error.message : "Please confirm the period data notice first",
         icon: "none"
       });
     });
@@ -198,7 +201,7 @@ Page({
     );
     if (!nextProfile) {
       wx.showToast({
-        title: "当前日期无法调整参考日期",
+        title: "This date cannot adjust the reference date",
         icon: "none"
       });
       return;
@@ -210,21 +213,21 @@ Page({
       });
       this.refreshCalendar(this.data.viewYear, this.data.viewMonth);
       wx.showToast({
-        title: "已更新后续参考日期",
+        title: "Future reference dates updated",
         icon: "success"
       });
     }).catch((error) => {
       wx.showToast({
-        title: error && error.message ? error.message : "请先确认周期数据说明",
+        title: error && error.message ? error.message : "Please confirm the period data notice first",
         icon: "none"
       });
     });
   },
   onClearCycleData() {
     wx.showModal({
-      title: "清除周期记录",
-      content: "将清除本机保存的周期记录和确认状态，不会影响服务器账号。",
-      confirmText: "清除",
+      title: "Clear Period Records",
+      content: "This will clear local period records and confirmation status. It will not affect your server account.",
+      confirmText: "Clear",
       success: (res) => {
         if (!res.confirm) return;
         const todayDate = cycleEngine.getTodayDate();
@@ -245,7 +248,7 @@ Page({
           cycleProfile: profile
         });
         this.refreshCalendar(this.data.viewYear, this.data.viewMonth);
-        wx.showToast({ title: "已清除本机周期记录", icon: "success" });
+        wx.showToast({ title: "Local period records cleared", icon: "success" });
       }
     });
   }

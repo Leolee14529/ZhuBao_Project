@@ -205,7 +205,7 @@ function requireLogin(options) {
 
   if (opts.redirectToLogin !== false) {
     wx.showToast({
-      title: opts.reason || "请先登录后使用",
+      title: opts.reason || "Please log in to continue.",
       icon: "none"
     });
     setTimeout(() => redirectToLogin(opts.source), 500);

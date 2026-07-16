@@ -1,19 +1,17 @@
 <view class="auth-page">
   <view class="auth-page__inner" style="padding-top: {{statusBarHeight}}px;">
     <view class="auth-page__topbar">
-      <view class="auth-page__back" bindtap="onBackTap">
-        <view class="auth-page__back-arrow"></view>
-      </view>
+      <navigation-back mode="back" aria-label="Back"></navigation-back>
     </view>
 
     <view class="auth-page__content">
-      <auth-intro title="创建密码" subtitle="请输入 8-16 个字符的密码，包含字母、数字和符号。"></auth-intro>
+      <auth-intro title="Create Password" subtitle="Enter an 8-16 character password with letters, numbers, and symbols."></auth-intro>
       <empty-state
         wx:if="{{serviceError}}"
         class="auth-page__error-state"
-        title="暂时无法继续"
+        title="Cannot continue right now"
         desc="{{serviceError}}"
-        buttonText="重试"
+        buttonText="Retry"
         type="auth"
         compact="{{true}}"
         bind:action="retryNext"
@@ -22,7 +20,7 @@
         value="{{password}}"
         password="{{!showPassword}}"
         visible="{{showPassword}}"
-        placeholder="请输入密码"
+        placeholder="Enter password"
         toggleable="{{true}}"
         bind:input="onPasswordInput"
         bind:toggle="onTogglePassword"
@@ -31,13 +29,13 @@
         value="{{confirmPassword}}"
         password="{{!showConfirm}}"
         visible="{{showConfirm}}"
-        placeholder="再次确认密码"
+        placeholder="Confirm password"
         toggleable="{{true}}"
         bind:input="onConfirmInput"
         bind:toggle="onToggleConfirm"
       ></dark-input-field>
       <form-error-text message="{{errorText}}"></form-error-text>
-      <view class="auth-page__primary auth-page__primary--spaced" bindtap="onNext">下一步</view>
+      <view class="auth-page__primary auth-page__primary--spaced" bindtap="onNext">Next</view>
     </view>
 
     <view class="auth-page__agreement">

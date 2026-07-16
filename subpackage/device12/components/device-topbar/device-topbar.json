@@ -1,3 +1,6 @@
 {
-  "component": true
+  "component": true,
+  "usingComponents": {
+    "navigation-back": "/subpackage/device12/components/navigation-back/navigation-back"
+  }
 }

@@ -15,9 +15,9 @@ Component({
   },
   data: {
     tabs: [
-      { id: "home", label: "首页", iconClass: "icon-home" },
-      { id: "data", label: "记录", iconClass: "icon-wave" },
-      { id: "settings", label: "设置", iconClass: "icon-gear" }
+      { id: "home", label: "Home", iconClass: "icon-home" },
+      { id: "data", label: "Records", iconClass: "icon-wave" },
+      { id: "settings", label: "Settings", iconClass: "icon-gear" }
     ]
   },
   methods: {
@@ -26,7 +26,7 @@ Component({
       if (!tab || tab === this.data.active || this._isNavigating) return;
       if (tab !== "home" && !auth.requireLogin({
         source: routes[tab],
-        reason: "请先登录后使用"
+        reason: "Please log in to continue."
       })) {
         return;
       }

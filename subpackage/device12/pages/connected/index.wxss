@@ -16,7 +16,7 @@
   text-align: center;
   font-size: 52rpx;
   font-weight: 500;
-  letter-spacing: 1rpx;
+  letter-spacing: 0;
 }
 
 .device-empty-state {

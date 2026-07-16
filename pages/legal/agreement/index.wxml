@@ -1,20 +1,16 @@
 <view class="legal-page">
-  <view class="legal-header" style="padding-top: {{headerTop}}px;">
-    <text class="legal-title">用户协议</text>
-  </view>
-  <scroll-view scroll-y="true" class="legal-scroll">
+  <view class="legal-bg"></view>
+  <view class="legal-content">
     <view class="legal-card">
-      <text class="legal-heading">海米算力用户协议</text>
-      <text class="legal-meta">更新时间：2026-06-27　生效日期：2026-06-27</text>
-      <text class="legal-p">海米算力由北京海米莱科技有限公司运营。使用本小程序前，请阅读并理解本协议及隐私政策。</text>
-      <text class="legal-p">本产品提供生活方式记录、每日自动心情、今日色彩和饰品风格推荐。相关内容仅用于个人记录与展示参考，不作为任何专业判断依据，也不代表确定结果。</text>
-      <text class="legal-p">用户应确保提交的信息真实、合法，并自行判断参考内容是否适合自身情况。如需专业判断，请咨询具备资质的机构。</text>
-      <text class="legal-p">未满 14 周岁的用户应在监护人同意和指导下使用。本产品不主动面向儿童提供服务，不主动收集儿童个人信息。</text>
-      <text class="legal-p">用户可在设置页退出登录、清除本地记录、撤回同意或注销账号；注销账号后将删除账号关联的每日心情记录。</text>
-      <text class="legal-p">如需联系我们，请发送邮件至 qq13238367306@163.com。</text>
+      <text class="legal-kicker">Terms</text>
+      <text class="legal-heading">Haimi Power User Agreement</text>
+      <text class="legal-meta">Updated: 2026-07-01</text>
+      <text class="legal-p">Haimi Power is operated by Beijing Haimilai Technology Co., Ltd. Please read and understand this agreement and the Privacy Policy before using this mini program.</text>
+      <text class="legal-p">This product provides lifestyle records, automatically generated daily mood, today's color, and jewelry style references. The content is only for personal records and display reference. It is not professional advice and does not represent a confirmed result.</text>
+      <text class="legal-p">Users should ensure submitted information is truthful and lawful, and should decide whether reference content suits their own situation. For professional judgment, please consult a qualified organization.</text>
+      <text class="legal-p">Users under 14 should use this product with guardian consent and guidance. This product is not actively provided to children and does not actively collect children's personal information.</text>
+      <text class="legal-p">You can log out, clear local records, withdraw consent, or close your account from Settings. After account closure, daily mood records linked to the account will be deleted.</text>
+      <text class="legal-p">To contact us, email qq13238367306@163.com.</text>
     </view>
-  </scroll-view>
-  <view class="legal-footer">
-    <button class="back-btn" bindtap="goBack">返回</button>
   </view>
 </view>

@@ -2,15 +2,15 @@ Component({
   properties: {
     title: {
       type: String,
-      value: "色彩分布参考"
+      value: "Color distribution reference"
     },
     subtitle: {
       type: String,
-      value: "实时色彩分布参考"
+      value: "Live color distribution reference"
     },
     note: {
       type: String,
-      value: "整体色彩分布较均衡。"
+      value: "The overall color distribution is balanced."
     },
     values: {
       type: Array,

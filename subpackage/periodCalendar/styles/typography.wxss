@@ -2,13 +2,13 @@
 .month-switcher,
 .calendar-grid,
 .legend-row {
-  font-family: "SimHei" !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
   font-variant-numeric: lining-nums tabular-nums;
 }
 
 .cycle-setup-sheet,
 .calendar-grid--compact {
-  font-family: "SimHei" !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
   font-variant-numeric: lining-nums tabular-nums;
 }
 
@@ -16,5 +16,5 @@
 .setup-calendar-nav,
 .cycle-stepper__button,
 .cycle-setup-sheet__button {
-  font-family: "SimHei" !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
 }

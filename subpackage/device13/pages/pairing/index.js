@@ -5,16 +5,16 @@ Page({
     statusBarHeight: topLayout.getTopLayout().statusBarHeight,
     deviceStatus: "pairing",
     infoRows: [
-      { label: "设备名称", value: "暂无设备", arrow: true },
-      { label: "设备型号", value: "--", arrow: true },
-      { label: "固件版本", value: "--", arrow: false },
-      { label: "序列号", value: "--", arrow: false }
+      { label: "Device Name", value: "No device", arrow: true },
+      { label: "Device Model", value: "--", arrow: true },
+      { label: "Firmware Version", value: "--", arrow: false },
+      { label: "Serial Number", value: "--", arrow: false }
     ],
     connectionRows: [
       {
         icon: "/subpackage/device13/assets/bluetooth-connecting.png",
-        label: "蓝牙连接",
-        value: "正在连接",
+        label: "Bluetooth",
+        value: "Connecting",
         valueAlign: "right",
         brand: true,
         loading: true,
@@ -86,7 +86,7 @@ Page({
   onInfoSelect(event) {
     const { item } = event.detail;
     wx.showToast({
-      title: item && item.label ? item.label : "设备信息",
+      title: item && item.label ? item.label : "Device Info",
       icon: "none"
     });
   },
@@ -94,7 +94,7 @@ Page({
   onConnectionSelect(event) {
     const { item } = event.detail;
     wx.showToast({
-      title: item && item.label ? item.label : "连接管理",
+      title: item && item.label ? item.label : "Connection",
       icon: "none"
     });
   }

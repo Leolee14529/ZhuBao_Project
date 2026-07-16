@@ -8,5 +8,5 @@
     placeholder-class="dark-input__placeholder"
     bindinput="onInput"
   />
-  <text wx:if="{{toggleable}}" class="dark-input__toggle" bindtap="onToggle">{{visible ? '隐藏' : '显示'}}</text>
+  <text wx:if="{{toggleable}}" class="dark-input__toggle" bindtap="onToggle">{{visible ? 'Hide' : 'Show'}}</text>
 </view>

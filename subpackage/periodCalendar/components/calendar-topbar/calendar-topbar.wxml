@@ -1,5 +1,3 @@
 <view class="topbar" style="height: {{topbarHeight}}px;">
-  <view class="back-button" style="top: {{backButtonTop}}px;" bindtap="onBackTap">
-    <view class="back-arrow"></view>
-  </view>
+  <navigation-back mode="back" aria-label="Back"></navigation-back>
 </view>

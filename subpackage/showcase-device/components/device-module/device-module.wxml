@@ -1,7 +1,7 @@
 <view class="device-card" bindtap="onTapModule">
   <view class="device-top">
     <view>
-      <text class="device-eyebrow">设备模块</text>
+      <text class="device-eyebrow">Device Module</text>
       <text class="device-name">{{device.name}}</text>
     </view>
     <view class="device-status">
@@ -17,9 +17,9 @@
       </view>
     </view>
     <view class="device-copy">
-      <text class="device-copy-title">暂无连接数据</text>
+      <text class="device-copy-title">No connection data</text>
       <text class="device-copy-desc">{{device.sync}}</text>
-      <text class="device-copy-battery">电量 {{device.battery}}</text>
+      <text class="device-copy-battery">Battery {{device.battery}}</text>
     </view>
   </view>
 

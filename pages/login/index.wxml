@@ -12,45 +12,45 @@
     </view>
     <view class="login-form">
       <view wx:if="{{accountAuthEnabled}}" class="mode-tabs">
-        <view class="mode-tab {{loginMode === 'wechat' ? 'mode-tab-on' : ''}}" data-mode="wechat" bindtap="switchLoginMode">微信</view>
-        <view class="mode-tab {{loginMode === 'account' ? 'mode-tab-on' : ''}}" data-mode="account" bindtap="switchLoginMode">账号</view>
+        <view class="mode-tab {{loginMode === 'wechat' ? 'mode-tab-on' : ''}}" data-mode="wechat" bindtap="switchLoginMode">WeChat</view>
+        <view class="mode-tab {{loginMode === 'account' ? 'mode-tab-on' : ''}}" data-mode="account" bindtap="switchLoginMode">Account</view>
       </view>
       <empty-state
         wx:if="{{serviceError}}"
-        title="登录暂时不可用"
+        title="Login unavailable"
         desc="{{serviceError}}"
-        buttonText="重试"
+        buttonText="Retry"
         type="auth"
         compact="{{true}}"
         bind:action="retryLogin"
       ></empty-state>
       <block wx:if="{{accountAuthEnabled && loginMode === 'account'}}">
         <view class="field">
-          <input value="{{accountName}}" bindinput="onAccountInput" placeholder="账号 / 邮箱" placeholder-class="placeholder" confirm-type="next"></input>
+          <input value="{{accountName}}" bindinput="onAccountInput" placeholder="Account / Email" placeholder-class="placeholder" confirm-type="next"></input>
         </view>
         <view class="field">
-          <input value="{{password}}" bindinput="onPasswordInput" password="{{true}}" placeholder="密码" placeholder-class="placeholder" confirm-type="done"></input>
+          <input value="{{password}}" bindinput="onPasswordInput" password="{{true}}" placeholder="Password" placeholder-class="placeholder" confirm-type="done"></input>
         </view>
-        <button class="primary" bindtap="accountLogin" loading="{{isAccountSubmitting}}" disabled="{{isLoggingIn || isAccountSubmitting || isCreatingAccount}}" hover-class="primary-hover"><text>账号登录</text></button>
-        <button class="secondary" bindtap="accountRegister" loading="{{isCreatingAccount}}" disabled="{{isLoggingIn || isAccountSubmitting || isCreatingAccount}}" hover-class="secondary-hover"><text>创建账号</text></button>
+        <button class="primary" bindtap="accountLogin" loading="{{isAccountSubmitting}}" disabled="{{isLoggingIn || isAccountSubmitting || isCreatingAccount}}" hover-class="primary-hover"><text>Log In</text></button>
+        <button class="secondary" bindtap="accountRegister" loading="{{isCreatingAccount}}" disabled="{{isLoggingIn || isAccountSubmitting || isCreatingAccount}}" hover-class="secondary-hover"><text>Create Account</text></button>
       </block>
       <block wx:else>
-        <button class="primary" bindtap="login" loading="{{isLoggingIn}}" disabled="{{isLoggingIn || isAccountSubmitting || isCreatingAccount}}" hover-class="primary-hover"><text>微信登录</text></button>
+        <button class="primary" bindtap="login" loading="{{isLoggingIn}}" disabled="{{isLoggingIn || isAccountSubmitting || isCreatingAccount}}" hover-class="primary-hover"><text>WeChat Login</text></button>
       </block>
       <view class="agreement-row" bindtap="toggleAgreement">
         <view class="agreement-check {{agreed ? 'agreement-check-on' : ''}}">
           <text wx:if="{{agreed}}">✓</text>
         </view>
         <view class="agreement-copy">
-          <text>我已阅读并同意</text>
-          <text class="agreement-link" catchtap="openAgreement">《用户协议》</text>
-          <text>和</text>
-          <text class="agreement-link" catchtap="openPrivacy">《隐私政策》</text>
+          <text>I have read and agree to</text>
+          <text class="agreement-link" catchtap="openAgreement">the User Agreement</text>
+          <text>and</text>
+          <text class="agreement-link" catchtap="openPrivacy">the Privacy Policy</text>
         </view>
       </view>
       <view class="link-row">
-        <text bindtap="openWechatPrivacy">微信隐私保护指引</text>
-        <text bindtap="enterGuest">暂不登录，浏览首页</text>
+        <text bindtap="openWechatPrivacy">WeChat Privacy Guide</text>
+        <text bindtap="enterGuest">Browse Home as Guest</text>
       </view>
     </view>
   </view>

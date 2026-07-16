@@ -53,8 +53,8 @@ function buildView(rawMood, defaultMood) {
     moodDotStyle: `background-color: ${accent}; box-shadow: 0 0 16rpx ${accentSoft};`,
     moodTagStyle: `color: ${accent}; border-color: ${accentSoft}; background-color: ${accentFaint};`,
     colorSwatchStyle: `background-color: ${accent}; box-shadow: 0 10rpx 26rpx ${accentSoft};`,
-    moodColorTitle: mood.background_mood || (mood.tag ? mood.tag + "色彩" : "今日色彩"),
-    moodColorDesc: "随今日心情同步"
+    moodColorTitle: mood.background_mood || (mood.tag ? mood.tag + " Color" : "Today's Color"),
+    moodColorDesc: "Synced with today's mood"
   };
 }
 

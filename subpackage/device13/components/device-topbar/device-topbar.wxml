@@ -1,5 +1,3 @@
 <view class="topbar">
-  <button class="back-button" bindtap="onBackTap" aria-label="返回">
-    <view class="back-arrow"></view>
-  </button>
+  <navigation-back mode="back" aria-label="Back"></navigation-back>
 </view>

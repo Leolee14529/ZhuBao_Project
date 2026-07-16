@@ -4,29 +4,3 @@
   padding: 0 34rpx;
   overflow: hidden;
 }
-
-.back-button {
-  position: absolute;
-  left: 34rpx;
-  top: 42rpx;
-  width: 70rpx;
-  height: 70rpx;
-  display: flex;
-  align-items: flex-start;
-  justify-content: flex-start;
-  padding-left: 6rpx;
-  padding-top: 14rpx;
-  background: transparent;
-}
-
-.back-button::after {
-  border: 0;
-}
-
-.back-arrow {
-  width: 26rpx;
-  height: 26rpx;
-  border-left: 5rpx solid #ffffff;
-  border-bottom: 5rpx solid #ffffff;
-  transform: rotate(45deg);
-}

@@ -6,16 +6,16 @@ function prepareSavedProfile(source, todayDate) {
   var periodNum = Number(source.periodLength);
 
   if (!lastPeriodDate) {
-    return { error: "请选择上次周期日期" };
+    return { error: "Select the last period date" };
   }
   if (cycleEngine.diffDays(cycleEngine.parseDateKey(lastPeriodDate), todayDate) < 0) {
-    return { error: "开始日期不能晚于今天" };
+    return { error: "Start date cannot be later than today" };
   }
   if (!cycleNum || cycleNum < 21 || cycleNum > 35) {
-    return { error: "周期天数填写 21-35" };
+    return { error: "Cycle length must be 21-35 days" };
   }
   if (!periodNum || periodNum < 3 || periodNum > 8) {
-    return { error: "持续天数填写 3-8" };
+    return { error: "Duration must be 3-8 days" };
   }
 
   var valuesUnchanged =

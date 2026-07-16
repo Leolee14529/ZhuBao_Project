@@ -60,19 +60,19 @@ Page({
     const { password, confirmPassword, agreed } = this.data;
     if (!agreed) {
       this.setData({
-        errorText: "请先阅读并同意用户协议与隐私政策"
+        errorText: "Please read and agree to the User Agreement and Privacy Policy first"
       });
       return;
     }
     if (password.length < 8 || password.length > 16) {
       this.setData({
-        errorText: "密码需要 8-16 个字符"
+        errorText: "Password must be 8-16 characters"
       });
       return;
     }
     if (password !== confirmPassword) {
       this.setData({
-        errorText: "两次输入的密码不一致"
+        errorText: "The two passwords do not match"
       });
       return;
     }
@@ -81,7 +81,7 @@ Page({
       url: "/pages/home/index",
       fail: () => {
         this.setData({
-          serviceError: "当前无法继续，请稍后再试"
+          serviceError: "Cannot continue right now. Please try again later."
         });
       }
     });

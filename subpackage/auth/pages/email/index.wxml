@@ -1,26 +1,24 @@
 <view class="auth-page">
   <view class="auth-page__inner" style="padding-top: {{statusBarHeight}}px;">
     <view class="auth-page__topbar">
-      <view class="auth-page__back" bindtap="onBackTap">
-        <view class="auth-page__back-arrow"></view>
-      </view>
+      <navigation-back mode="back" aria-label="Back"></navigation-back>
     </view>
 
     <view class="auth-page__content">
-      <auth-intro title="创建账号" subtitle="输入你要发送验证码的电子邮箱地址"></auth-intro>
+      <auth-intro title="Create Account" subtitle="Enter the email address for your verification code"></auth-intro>
       <empty-state
         wx:if="{{serviceError}}"
         class="auth-page__error-state"
-        title="暂时无法继续"
+        title="Cannot continue right now"
         desc="{{serviceError}}"
-        buttonText="重试"
+        buttonText="Retry"
         type="auth"
         compact="{{true}}"
         bind:action="retryNext"
       ></empty-state>
-      <dark-input-field icon="✉" value="{{email}}" placeholder="请输入邮箱" bind:input="onEmailInput"></dark-input-field>
+      <dark-input-field icon="✉" value="{{email}}" placeholder="Enter email" bind:input="onEmailInput"></dark-input-field>
       <form-error-text message="{{errorText}}"></form-error-text>
-      <view class="auth-page__primary" bindtap="onNext">下一步</view>
+      <view class="auth-page__primary" bindtap="onNext">Next</view>
     </view>
 
     <view class="auth-page__agreement">

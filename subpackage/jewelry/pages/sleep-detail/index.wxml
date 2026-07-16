@@ -1,16 +1,22 @@
 <view class="sleep-page">
+  <view
+    class="sleep-page-back"
+    style="top: {{backButtonTop}}px;"
+    bindtap="handleBack"
+  >
+    <view class="page-back-chevron"></view>
+  </view>
   <scroll-view class="sleep-scroll" scroll-y="true">
     <view class="sleep-body">
       <view class="sleep-top-spacer" style="height: {{topSpacer}}px;"></view>
       <view class="sleep-topbar">
-        <button class="topbar-button" hover-class="topbar-button-hover" bindtap="goBack">‹</button>
-        <text class="topbar-title">睡眠</text>
-        <view class="calendar-icon" aria-label="日历"></view>
+        <text class="topbar-title">Sleep</text>
+        <view class="calendar-icon" aria-label="Calendar"></view>
       </view>
 
       <view class="sleep-tabs">
         <text
-          wx:for="{{['日','周','月']}}"
+          wx:for="{{['Day','Week','Month']}}"
           wx:key="*this"
           class="sleep-tab {{activeTab === item ? 'sleep-tab-active' : ''}}"
           data-tab="{{item}}"
@@ -26,38 +32,38 @@
 
       <view class="detail-card overview-card">
         <view class="detail-card-heading">
-          <text class="detail-card-title">睡眠概览</text>
-          <text class="detail-card-caption">{{activeTab}}视图</text>
+          <text class="detail-card-title">Sleep Overview</text>
+          <text class="detail-card-caption">{{activeTab}} View</text>
         </view>
         <view class="overview-grid">
           <view class="overview-item">
-            <text class="overview-label">总时长</text>
+            <text class="overview-label">Total Duration</text>
             <text class="overview-value">{{sleep.duration}}</text>
           </view>
           <view class="overview-item">
-            <text class="overview-label">入睡时间</text>
+            <text class="overview-label">Sleep Time</text>
             <text class="overview-value">{{sleep.sleepTime}}</text>
           </view>
           <view class="overview-item">
-            <text class="overview-label">清醒时间</text>
+            <text class="overview-label">Wake Time</text>
             <text class="overview-value">{{sleep.wakeTime}}</text>
           </view>
           <view class="overview-item">
-            <text class="overview-label">睡眠评分</text>
+            <text class="overview-label">Sleep Score</text>
             <text class="overview-value overview-accent">{{sleep.score}}</text>
           </view>
           <view class="overview-item">
-            <text class="overview-label">夜间清醒</text>
+            <text class="overview-label">Night Wakings</text>
             <text class="overview-value">{{sleep.awakenings}}</text>
           </view>
         </view>
       </view>
 
       <view class="detail-card ratio-card">
-        <text class="detail-card-title">睡眠比例</text>
+        <text class="detail-card-title">Sleep Ratio</text>
         <view class="ratio-content">
           <view class="ratio-ring">
-            <view class="ratio-ring-core">睡眠</view>
+            <view class="ratio-ring-core">Sleep</view>
           </view>
           <view class="stage-list">
             <view wx:for="{{stages}}" wx:key="name" class="stage-row">
@@ -70,35 +76,35 @@
       </view>
 
       <view class="detail-card quality-card">
-        <text class="detail-card-title">睡眠质量</text>
+        <text class="detail-card-title">Sleep Quality</text>
         <view class="quality-grid">
           <view class="quality-item">
-            <text class="quality-label">质量评分</text>
+            <text class="quality-label">Quality Score</text>
             <text class="quality-value">{{quality.score}}</text>
           </view>
           <view class="quality-item">
-            <text class="quality-label">睡眠效率</text>
+            <text class="quality-label">Sleep Efficiency</text>
             <text class="quality-value">{{quality.efficiency}}</text>
           </view>
           <view class="quality-item">
-            <text class="quality-label">入睡耗时</text>
+            <text class="quality-label">Sleep Latency</text>
             <text class="quality-value">{{quality.latency}}</text>
           </view>
           <view class="quality-item">
-            <text class="quality-label">夜间清醒</text>
+            <text class="quality-label">Night Wakings</text>
             <text class="quality-value">{{quality.awakenings}}</text>
           </view>
         </view>
       </view>
 
       <view class="detail-card timeline-card">
-        <text class="detail-card-title">睡眠阶段时间轴</text>
+        <text class="detail-card-title">Sleep Stage Timeline</text>
         <view class="timeline">
           <view wx:for="{{stages}}" wx:key="name" class="timeline-segment" style="width: {{item.width}}; background-color: {{item.color}};"></view>
         </view>
         <view class="timeline-labels">
-          <text>入睡</text>
-          <text>清醒</text>
+          <text>Asleep</text>
+          <text>Awake</text>
         </view>
         <view class="timeline-legend">
           <view wx:for="{{stages}}" wx:key="name" class="legend-item">

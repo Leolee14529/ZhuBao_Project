@@ -1,11 +1,13 @@
 const share = require("../../../../utils/share");
 const productData = require("../../utils/products");
 const pageLayout = require("../../utils/page-layout");
+const topLayout = require("../../../../utils/top-layout");
 const initialColumns = productData.splitProducts(productData.PRODUCTS);
 
 Page({
   data: {
     topSpacer: pageLayout.getContentOffset(64),
+    backButtonTop: topLayout.getTopLayout().backButtonTop,
     activeFilter: "all",
     filters: productData.decorateFilters("all"),
     currentProducts: productData.PRODUCTS,
@@ -25,7 +27,10 @@ Page({
   },
   applyNavLayout() {
     const topSpacer = pageLayout.getContentOffset(64);
-    if (topSpacer !== this.data.topSpacer) this.setData({ topSpacer });
+    const backButtonTop = topLayout.getTopLayout().backButtonTop;
+    if (topSpacer !== this.data.topSpacer || backButtonTop !== this.data.backButtonTop) {
+      this.setData({ topSpacer, backButtonTop });
+    }
   },
   applyFilter(filterId) {
     const currentProducts = productData.getProductsByFilter(filterId);
@@ -56,7 +61,7 @@ Page({
   },
   showSearchHint() {
     wx.showToast({
-      title: "搜索功能筹备中",
+      title: "Search is coming soon",
       icon: "none"
     });
   },
@@ -70,5 +75,8 @@ Page({
     wx.redirectTo({
       url: "/pages/home/index"
     });
+  },
+  handleBack() {
+    this.goBack();
   }
 });

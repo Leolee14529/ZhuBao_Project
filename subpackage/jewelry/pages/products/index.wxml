@@ -1,17 +1,22 @@
 <view class="products-page">
+  <view
+    class="page-back-button"
+    style="top: {{backButtonTop}}px;"
+    bindtap="handleBack"
+  >
+    <view class="page-back-chevron"></view>
+  </view>
   <scroll-view class="products-scroll" scroll-y="true" enhanced="true" bounces="true" show-scrollbar="false">
     <view class="products-body">
       <view class="page-top-spacer" style="height: {{topSpacer}}px;"></view>
 
       <view class="topbar">
-        <button class="icon-button back-button" bindtap="goBack" aria-label="返回">
-          <view class="back-chevron"></view>
-        </button>
+        <view class="topbar-leading"></view>
         <view class="title-block">
-          <text class="page-title">风格参考</text>
-          <text class="page-subtitle">色彩与材质参考</text>
+          <text class="page-title">Style Reference</text>
+          <text class="page-subtitle">Color and MaterialReference</text>
         </view>
-        <button class="icon-button search-button" bindtap="showSearchHint" aria-label="搜索">
+        <button class="icon-button search-button" bindtap="showSearchHint" aria-label="Search">
           <view class="search-ring"></view>
           <view class="search-line"></view>
         </button>
@@ -20,7 +25,7 @@
       <view class="feature-band">
         <view class="feature-copy">
           <text class="feature-kicker">STYLE REFERENCE</text>
-          <text class="feature-title">珠宝风格灵感</text>
+          <text class="feature-title">Jewelry Style Inspiration</text>
         </view>
       </view>
 
@@ -50,7 +55,7 @@
                 <text class="product-type">{{item.type}}</text>
                 <text class="product-desc">{{item.desc}}</text>
                 <view class="product-foot">
-                  <text class="product-more">风格说明</text>
+                  <text class="product-more">Style Notes</text>
                 </view>
               </view>
             </view>
@@ -70,7 +75,7 @@
                 <text class="product-type">{{item.type}}</text>
                 <text class="product-desc">{{item.desc}}</text>
                 <view class="product-foot">
-                  <text class="product-more">风格说明</text>
+                  <text class="product-more">Style Notes</text>
                 </view>
               </view>
             </view>

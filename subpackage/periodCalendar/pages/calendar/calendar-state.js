@@ -1,5 +1,5 @@
 const cycleEngine = require("../../utils/cycle-engine");
-const topLayout = require("../../../utils/top-layout");
+const topLayout = require("../../../../utils/top-layout");
 
 function getSafeArea() {
   try {
@@ -58,7 +58,7 @@ function create(profile) {
     selectedDetail: hasCycleData ?
       cycleEngine.buildSelectedDetail(built.weeks, todayDateKey, todayDate) : null,
     summaryDays: summary ? summary.daysUntil : "--",
-    summaryNextStart: summary ? summary.nextStartLabel : "设置后生成周期参考",
+    summaryNextStart: summary ? summary.nextStartLabel : "Set up to generate period references",
     cycleProfile,
     weeks: built.weeks
   });

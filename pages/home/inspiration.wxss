@@ -155,7 +155,7 @@
 
 .inspiration-back-title {
   font-size: 26rpx;
-  letter-spacing: 6rpx;
+  letter-spacing: 0;
 }
 
 .inspiration-back-tip {

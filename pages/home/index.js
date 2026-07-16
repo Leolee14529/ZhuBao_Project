@@ -7,63 +7,63 @@ const MOOD_RETRY_DELAY_MS = 60000;
 const DEFAULT_INSPIRATION = {
   id: "inspiration-01",
   no: "NO.01",
-  symbol: "润",
-  title: "清润",
-  subtitle: "今日色彩 / 青绿色",
-  text: "把注意力放回手边的一件小事。慢慢呼吸 6 次。佩戴参考：玉石、银色、柔光银白。"
+  symbol: "Xun",
+  title: "Fresh",
+  subtitle: "Today's Color / Emerald Green",
+  text: "Return your attention to one small thing nearby. Take six slow breaths. Jewelry reference: jade, silver, soft silver white."
 };
 const INSPIRATIONS = [
   DEFAULT_INSPIRATION,
   {
     id: "inspiration-02",
     no: "NO.02",
-    symbol: "明",
-    title: "明亮",
-    subtitle: "今日色彩 / 暖白色",
-    text: "把已经成形的想法写成一句话。慢慢转动手腕 30 秒。佩戴参考：白玉、柔光银白。"
+    symbol: "Glow",
+    title: "Bright",
+    subtitle: "Today's Color / Warm White",
+    text: "Turn one formed idea into a sentence. Rotate your wrists slowly for 30 seconds. Jewelry reference: white jade and soft silver white."
   },
   {
     id: "inspiration-03",
     no: "NO.03",
-    symbol: "稳",
-    title: "沉稳",
-    subtitle: "今日色彩 / 蜜糖色",
-    text: "把节奏放慢一点，先完成一件确定的小事。肩颈放松 30 秒。佩戴参考：黄翡、暖金色。"
+    symbol: "Calm",
+    title: "Grounded",
+    subtitle: "Today's Color / Honey",
+    text: "Slow the pace a little and finish one clear, small task first. Relax your shoulders and neck for 30 seconds. Jewelry reference: yellow jade and warm gold."
   },
   {
     id: "inspiration-04",
     no: "NO.04",
-    symbol: "柔",
-    title: "柔光",
-    subtitle: "今日色彩 / 银白色",
-    text: "给一句话留出停顿，沟通会更轻松。闭眼呼吸 6 次。佩戴参考：冰种、银白色。"
+    symbol: "Soft",
+    title: "Soft Light",
+    subtitle: "Today's Color / Silver White",
+    text: "Leave a pause before the next sentence; communication will feel easier. Close your eyes and breathe six times. Jewelry reference: icy jade and silver white."
   },
   {
     id: "inspiration-05",
     no: "NO.05",
-    symbol: "展",
-    title: "舒展",
-    subtitle: "今日色彩 / 蓝绿色",
-    text: "把视线从屏幕移开，看向远处 30 秒。佩戴参考：蓝水、墨翠、冷调蓝黑。"
+    symbol: "Ease",
+    title: "Open",
+    subtitle: "Today's Color / Blue Green",
+    text: "Look away from the screen and focus on something distant for 30 seconds. Jewelry reference: blue water jade, dark jade, and cool blue black."
   }
 ];
 const DEFAULT_MOOD = {
   mood_id: "default",
-  name: "正在生成",
-  description: "系统正在为你准备今天的状态。",
-  tag: "陪伴",
-  emoji: "🌿",
+  name: "Preparing",
+  description: "Your daily mood is being prepared.",
+  tag: "Companion",
+  emoji: "🌶",
   theme_color: "#7BAE9D",
   bg_color: "#EDF6F2",
   text_color: "#243B34",
-  background_mood: "浅绿雾感",
-  encouragement: "今天也先照顾好自己。"
+  background_mood: "Pale green mist",
+  encouragement: "Take care of yourself first today."
 };
 const FALLBACK_MOOD = {
   ...DEFAULT_MOOD,
-  name: "今天也慢慢来",
-  description: "不用急，先照顾好自己的节奏。",
-  encouragement: "先从一件很小的事开始。"
+  name: "Take it slowly today",
+  description: "No rush. Stay with your own rhythm first.",
+  encouragement: "Start with one very small thing."
 };
 
 function delayMoodRetry(page, cycleDate) {
@@ -93,22 +93,22 @@ function getInitialTopSpacer() {
 Page({
   data: {
     topSpacer: getInitialTopSpacer(),
-    destinyLine: "今日灵感与珠宝风格参考",
+    destinyLine: "Daily inspiration and jewelry style reference",
     flipped: false,
     cardClass: "",
     inspiration: DEFAULT_INSPIRATION,
     ...moodRuntime.buildView(DEFAULT_MOOD, DEFAULT_MOOD),
     device: {
-      title: "设备",
-      name: "暂无设备",
-      status: "未连接",
+      title: "Device",
+      name: "No device",
+      status: "Disconnected",
       battery: "0%",
       batteryWidth: "0%"
     },
     leftProducts: [
       {
         image: "/pages/home/assets/product-1.jpg",
-        tag: "灵感",
+        tag: "Inspiration",
         cardClass: "product-card-tall"
       },
       {
@@ -257,7 +257,7 @@ Page({
   },
   openDevice() {
     wx.showToast({
-      title: "功能暂未开放",
+      title: "Feature not available yet",
       icon: "none"
     });
   }

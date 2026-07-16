@@ -19,7 +19,7 @@ Page({
   acceptAndGoBack() {
     auth.acceptPrivacyConsent();
     wx.showToast({
-      title: "已同意隐私政策",
+      title: "Privacy Policy accepted",
       icon: "success"
     });
     setTimeout(() => this.goBack(), 300);

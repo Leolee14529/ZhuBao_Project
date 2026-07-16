@@ -132,7 +132,7 @@
 .fortune-symbol {
   font-size: 62rpx;
   font-weight: 500;
-  letter-spacing: 4rpx;
+  letter-spacing: 0;
 }
 
 .fortune-title {
@@ -175,7 +175,7 @@
 .fortune-back-title {
   font-size: 44rpx;
   font-weight: 500;
-  letter-spacing: 6rpx;
+  letter-spacing: 0;
 }
 
 .fortune-back-copy {

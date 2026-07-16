@@ -1,10 +1,12 @@
 const share = require("../../../../utils/share");
 const productData = require("../../utils/products");
 const pageLayout = require("../../utils/page-layout");
+const topLayout = require("../../../../utils/top-layout");
 
 Page({
   data: {
     topSpacer: pageLayout.getContentOffset(64),
+    backButtonTop: topLayout.getTopLayout().backButtonTop,
     product: null,
     palette: []
   },
@@ -22,7 +24,7 @@ Page({
     }
 
     return {
-      title: "海米算力 | " + product.name,
+      title: "Haimi Power | " + product.name,
       path: productData.buildProductDetailRoute(product.id),
       imageUrl: product.image
     };
@@ -35,7 +37,7 @@ Page({
       : productData.PRODUCT_DETAIL_PAGE_PATH;
 
     return {
-      title: product ? "海米算力 | " + product.name : "海米算力 | 风格展示",
+      title: product ? "Haimi Power | " + product.name : "Haimi Power | Style Detail",
       query: "from=timeline&page=" + encodeURIComponent(path),
       imageUrl: product ? product.image : "/subpackage/jewelry/assets/product-6.jpg"
     };
@@ -43,7 +45,10 @@ Page({
 
   applyNavLayout() {
     const topSpacer = pageLayout.getContentOffset(64);
-    if (topSpacer !== this.data.topSpacer) this.setData({ topSpacer });
+    const backButtonTop = topLayout.getTopLayout().backButtonTop;
+    if (topSpacer !== this.data.topSpacer || backButtonTop !== this.data.backButtonTop) {
+      this.setData({ topSpacer, backButtonTop });
+    }
   },
 
   loadProduct(productId) {
@@ -65,5 +70,9 @@ Page({
     wx.redirectTo({
       url: productData.PRODUCTS_PAGE_PATH
     });
+  },
+
+  handleBack() {
+    this.goBack();
   }
 });

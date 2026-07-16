@@ -5,7 +5,7 @@
         <view class="page-top-spacer" style="height: {{topSpacer}}px;"></view>
         <view class="page-header">
           <view class="header-copy">
-            <text class="hello-line">你好</text>
+            <text class="hello-line">Hello</text>
             <text class="destiny-line">{{destinyLine}}</text>
           </view>
         </view>
@@ -16,7 +16,7 @@
             <view class="inspiration-head">
               <view class="inspiration-label">
                 <view class="inspiration-dot"></view>
-                <text>今日灵感</text>
+                <text>Today's Inspiration</text>
               </view>
               <text class="inspiration-no">{{inspiration.no}}</text>
             </view>
@@ -37,7 +37,7 @@
             <view class="inspiration-back-grid"></view>
             <view class="inspiration-back-core"></view>
             <text class="inspiration-back-title">DAILY INSPIRATION</text>
-            <text class="inspiration-back-tip">点击翻面</text>
+            <text class="inspiration-back-tip">Tap to flip</text>
           </view>
         </view>
 
@@ -46,11 +46,11 @@
             <view class="mood-card__header">
               <view class="mood-card__caption" style="{{moodAccentStyle}}">
                 <view class="mood-card__dot" style="{{moodDotStyle}}"></view>
-                <text class="mood-card__title">今日心情</text>
+                <text class="mood-card__title">Today's Mood</text>
               </view>
               <text class="mood-card__tag" style="{{moodTagStyle}}">{{mood.tag}}</text>
             </view>
-            <text class="mood-card__hint">系统为你生成了今天的状态</text>
+            <text class="mood-card__hint">Your daily mood is ready</text>
             <text class="mood-card__name">{{mood.name}}</text>
             <text class="mood-card__desc">{{mood.description}}</text>
           </view>
@@ -58,7 +58,7 @@
             <view class="color-card__header">
               <view class="mood-card__caption" style="{{moodAccentStyle}}">
                 <view class="mood-card__dot" style="{{moodDotStyle}}"></view>
-                <text class="mood-card__title">今日色彩</text>
+                <text class="mood-card__title">Today's Color</text>
               </view>
             </view>
             <view class="color-card__value-row">
@@ -93,8 +93,8 @@
         </view>
 
         <view class="section-head">
-          <text class="section-title">风格参考</text>
-          <button class="section-link" bindtap="openProducts">更多参考 ›</button>
+          <text class="section-title">Style Reference</text>
+          <button class="section-link" bindtap="openProducts">More Ideas ›</button>
         </view>
 
         <view class="gallery">
@@ -124,15 +124,15 @@
   <view class="bottom-nav">
     <button class="nav-item active" bindtap="noop">
       <view class="nav-top"></view>
-      <text class="nav-label">首页</text>
+      <text class="nav-label">Home</text>
     </button>
     <button class="nav-item" bindtap="goData">
       <view class="nav-top"></view>
-      <text class="nav-label">记录</text>
+      <text class="nav-label">Records</text>
     </button>
     <button class="nav-item" bindtap="goSettings">
       <view class="nav-top"></view>
-      <text class="nav-label">设置</text>
+      <text class="nav-label">Settings</text>
     </button>
   </view>
 </view>

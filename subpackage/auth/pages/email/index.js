@@ -44,13 +44,13 @@ Page({
     const { email, agreed } = this.data;
     if (!agreed) {
       this.setData({
-        errorText: "请先阅读并同意用户协议与隐私政策"
+        errorText: "Please read and agree to the User Agreement and Privacy Policy first"
       });
       return;
     }
     if (!/.+@.+\..+/.test(email)) {
       this.setData({
-        errorText: "请输入有效的邮箱地址"
+        errorText: "Enter a valid email address"
       });
       return;
     }
@@ -58,7 +58,7 @@ Page({
       url: "/subpackage/auth/pages/password/index",
       fail: () => {
         this.setData({
-          serviceError: "当前无法继续，请稍后再试"
+          serviceError: "Cannot continue right now. Please try again later."
         });
       }
     });
