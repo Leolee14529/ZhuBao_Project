@@ -78,16 +78,6 @@ test("protected endpoints reject missing tokens", async () => {
   assert.equal(body.code, "AUTH_TOKEN_REQUIRED");
 });
 
-test("random fortune endpoint returns a fortune card payload", async () => {
-  const { response, body } = await request("/api/fortunes/random");
-  assert.equal(response.status, 200);
-  assert.equal(body.success, true);
-  assert.ok(body.data.fortune.id);
-  assert.ok(body.data.fortune.no);
-  assert.ok(body.data.fortune.symbol);
-  assert.ok(body.data.fortune.text);
-});
-
 test("authenticated user owns calculated and saved results", async () => {
   const auth = await login("api-test-owner");
   const headers = {

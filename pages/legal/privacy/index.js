@@ -1,9 +1,11 @@
 const auth = require("../../../utils/auth");
+const i18n = require("../../../utils/i18n");
 
 Page({
   data: {
     headerTop: 64,
-    consentMode: false
+    consentMode: false,
+    copy: i18n.getCopy("legal")
   },
   onLoad(options) {
     const app = getApp();
@@ -16,11 +18,12 @@ Page({
     this.setData({
       consentMode: options && options.mode === "consent"
     });
+    this.unsubscribeLocale = i18n.subscribe(() => this.setData({ copy: i18n.getCopy("legal") }));
   },
   acceptAndGoBack() {
     auth.acceptPrivacyConsent();
     wx.showToast({
-      title: "已同意隐私政策",
+      title: i18n.t("legal.privacyAccepted"),
       icon: "success"
     });
     setTimeout(() => this.goBack(), 300);
@@ -31,5 +34,8 @@ Page({
         wx.redirectTo({ url: "/pages/home/index" });
       }
     });
+  },
+  onUnload() {
+    if (this.unsubscribeLocale) this.unsubscribeLocale();
   }
 });

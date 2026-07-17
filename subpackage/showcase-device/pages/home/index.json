@@ -2,7 +2,6 @@
   "navigationStyle": "custom",
   "usingComponents": {
     "capsule-actions": "/subpackage/showcase-device/components/capsule-actions/capsule-actions",
-    "fortune-card": "/subpackage/showcase-device/components/fortune-card/fortune-card",
     "insight-card": "/subpackage/showcase-device/components/insight-card/insight-card",
     "device-module": "/subpackage/showcase-device/components/device-module/device-module",
     "product-grid": "/subpackage/showcase-device/components/product-grid/product-grid",

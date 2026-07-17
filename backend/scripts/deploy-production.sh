@@ -35,6 +35,20 @@ if [[ -z "${DATABASE_URL:-}" ]]; then
   echo "[deploy] DATABASE_URL is required for production migration"
   exit 2
 fi
+if [[ -z "${ZHUBAO_BACKUP_DIR:-}" ]]; then
+  echo "[deploy] ZHUBAO_BACKUP_DIR is required for database backups"
+  exit 2
+fi
+if [[ "$ZHUBAO_BACKUP_DIR" != /* || "$ZHUBAO_BACKUP_DIR" == "/" ]]; then
+  echo "[deploy] ZHUBAO_BACKUP_DIR must be a specific absolute directory"
+  exit 2
+fi
+
+NODE_MAJOR="$(node -p 'process.versions.node.split(".")[0]')"
+if [[ "$NODE_MAJOR" != "24" ]]; then
+  echo "[deploy] Node 24 is required; active version is $(node -v)"
+  exit 2
+fi
 
 if command -v corepack >/dev/null 2>&1; then
   corepack enable
@@ -44,6 +58,23 @@ pnpm install --frozen-lockfile
 pnpm run check:syntax
 pnpm run check:lines
 pnpm test
+
+if ! command -v pg_dump >/dev/null 2>&1; then
+  echo "[deploy] pg_dump is required for migration backups"
+  exit 2
+fi
+umask 077
+mkdir -p -- "$ZHUBAO_BACKUP_DIR"
+BACKUP_TIMESTAMP="$(date -u +%Y%m%dT%H%M%SZ)"
+BACKUP_PATH="$ZHUBAO_BACKUP_DIR/zhubao-${BACKUP_TIMESTAMP}-${TARGET_COMMIT}.dump"
+echo "[deploy] creating database backup $BACKUP_PATH"
+pg_dump --format=custom --file="$BACKUP_PATH" "$DATABASE_URL"
+if [[ ! -s "$BACKUP_PATH" ]]; then
+  echo "[deploy] database backup is empty; aborting migration"
+  exit 2
+fi
+echo "[deploy] database backup verified"
+
 pnpm run db:migrate
 
 if [[ -n "${ZHUBAO_RESTART_CMD:-}" ]]; then

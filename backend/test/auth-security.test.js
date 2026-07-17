@@ -98,6 +98,8 @@ test("account deletion removes JSON wuxing data", async () => {
 
 test("server errors do not expose database codes or messages", () => {
   const captured = {};
+  const errorLogs = [];
+  const originalConsoleError = console.error;
   const res = {
     headersSent: false,
     status(statusCode) {
@@ -110,14 +112,21 @@ test("server errors do not expose database codes or messages", () => {
     }
   };
 
-  errorHandler(
-    { status: 500, code: "23505", message: "duplicate key value violates unique constraint users_openid_key" },
-    { requestId: "req-test", method: "POST", originalUrl: "/api/auth/wechat-login" },
-    res,
-    () => null
-  );
+  try {
+    console.error = (line) => errorLogs.push(String(line));
+    errorHandler(
+      { status: 500, code: "23505", message: "duplicate key value violates unique constraint users_openid_key" },
+      { requestId: "req-test", method: "POST", originalUrl: "/api/auth/wechat-login" },
+      res,
+      () => null
+    );
+  } finally {
+    console.error = originalConsoleError;
+  }
 
   assert.equal(captured.status, 500);
   assert.equal(captured.body.code, "INTERNAL_ERROR");
   assert.equal(captured.body.message, "Internal server error");
+  assert.doesNotMatch(errorLogs.join("\n"), /23505|duplicate key|openid/i);
+  assert.match(errorLogs.join("\n"), /INTERNAL_ERROR/);
 });

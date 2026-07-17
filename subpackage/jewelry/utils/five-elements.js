@@ -1,5 +1,6 @@
 var STORAGE_KEY = "jewelryBirthProfile";
 var auth = require("../../../utils/auth");
+var i18n = require("../../../utils/i18n");
 var ELEMENT_META = {
   wood: {
     key: "wood",
@@ -175,6 +176,29 @@ function buildProfileForInput(birthInput, options) {
 function buildCurrentProfile() {
   return buildProfileFromResult(getSavedWuxingResult()) || buildEmptyProfile(getSavedBirthInput());
 }
+function getWeakestKey(profile) {
+  var items = profile && profile.elements ? profile.elements : [];
+  return items.length ? items[items.length - 1].key : "none";
+}
+function localizeProfile(profile, locale) {
+  var safeProfile = profile || buildEmptyProfile();
+  var copy = Object.assign({}, safeProfile);
+  copy.focusElement = safeProfile.focusKey ? i18n.t("elements." + safeProfile.focusKey, null, locale) : i18n.t("elements.none", null, locale);
+  copy.destinyLine = safeProfile.focusKey ? i18n.t("elements.strong", {
+    strong: copy.focusElement,
+    weak: i18n.t("elements." + getWeakestKey(safeProfile), null, locale)
+  }, locale) : i18n.t("elements.empty", null, locale);
+  copy.summaryText = safeProfile.focusKey ? i18n.t("elements.recorded", null, locale) : i18n.t("elements.empty", null, locale);
+  copy.radarNote = safeProfile.focusKey ? i18n.t("elements.balanced", null, locale) : i18n.t("elements.empty", null, locale);
+  copy.elements = (safeProfile.elements || []).map(function (item) {
+    return Object.assign({}, item, {
+      name: i18n.t("elements." + item.key, null, locale),
+      jade: i18n.t("elements.noData", null, locale),
+      suitable: i18n.t("elements.noData", null, locale)
+    });
+  });
+  return copy;
+}
 function buildProfile(birthInput) {
   var safeInput = birthInput && birthInput.date && birthInput.time ? birthInput : getDefaultBirthInput();
   var dateParts = safeInput.date.split("-").map(function (item) {
@@ -246,7 +270,7 @@ function buildProfile(birthInput) {
     });
     return current ? current.value : 0.65;
   });
-  var note = "当前状态：五行能量分布均衡，身心状态稳定。";
+  var note = "当前五行分布较为均衡，可作为饰品风格参考。";
   if (highest - lowest >= 10) {
     note = "当前状态：" + dominantMeta.cn + "偏旺，" + weakestMeta.cn + "偏弱，建议佩戴" + weakestMeta.jade + "调和气场。";
   }
@@ -255,7 +279,7 @@ function buildProfile(birthInput) {
     focusElement: dominantMeta.cn,
     focusKey: dominantKey,
     destinyLine: dominantMeta.cn + "势偏强 · " + weakestMeta.cn + "需补足",
-    summaryText: "出生时间已录入，可按命理偏向查看五行分布",
+    summaryText: "出生时间已录入，可查看五行分布与饰品风格参考",
     radarValues: radarValues,
     radarNote: note,
     elements: elements
@@ -268,6 +292,6 @@ module.exports = {
   getSavedWuxingResult: getSavedWuxingResult, normalizeBirthInput: normalizeBirthInput,
   isResultForBirthInput: isResultForBirthInput, buildEmptyProfile: buildEmptyProfile,
   buildProfileFromResult: buildProfileFromResult, buildProfileForInput: buildProfileForInput,
-  buildCurrentProfile: buildCurrentProfile,
+  buildCurrentProfile: buildCurrentProfile, localizeProfile: localizeProfile,
   buildProfile: buildProfile
 };

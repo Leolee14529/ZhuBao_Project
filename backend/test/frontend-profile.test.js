@@ -109,3 +109,18 @@ test("current profile does not fall back to local heuristic without server resul
   assert.equal(profile.focusElement, "无");
   assert.equal(profile.destinyLine, "暂无真实五行数据");
 });
+
+test("localized element profiles use the selected language without changing their data keys", () => {
+  const localized = fiveElements.localizeProfile({
+    focusKey: "water",
+    elements: [
+      { key: "water", color: "#3b82f6" },
+      { key: "wood", color: "#10b981" }
+    ]
+  }, "en-US");
+
+  assert.equal(localized.focusElement, "Water");
+  assert.equal(localized.destinyLine, "Water is stronger · Wood needs balance");
+  assert.deepEqual(localized.elements.map((item) => item.key), ["water", "wood"]);
+  assert.deepEqual(localized.elements.map((item) => item.name), ["Water", "Wood"]);
+});

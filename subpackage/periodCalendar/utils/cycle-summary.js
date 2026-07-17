@@ -42,11 +42,12 @@ function buildSummary(cycleStarts, todayDate) {
   });
 
   if (!nextStart) {
-    return { daysUntil: "--", nextStartLabel: "暂无预测结果" };
+    return { daysUntil: "--", nextStartLabel: "暂无预测结果", nextStartDateKey: "" };
   }
   return {
     daysUntil: String(dates.diffDays(todayDate, nextStart)),
-    nextStartLabel: "预计" + dates.formatDateKey(nextStart) + "开始"
+    nextStartLabel: "预计" + dates.formatDateKey(nextStart) + "开始",
+    nextStartDateKey: dates.formatDateKey(nextStart)
   };
 }
 

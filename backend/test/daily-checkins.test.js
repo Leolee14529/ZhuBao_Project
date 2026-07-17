@@ -112,3 +112,13 @@ test("daily check-ins validate input, upsert by date, and stay private to their 
   assert.equal(removed.body.data.deleted, true);
   assert.equal(removed.body.data.checkin.checkinDate, "2026-07-12");
 });
+
+test("production smoke covers the authenticated daily-checkin lifecycle", () => {
+  const smoke = fs.readFileSync(path.join(__dirname, "../scripts/smoke-production-auth.js"), "utf8");
+  assert.doesNotMatch(smoke, /SmokePass2026/);
+  assert.match(smoke, /\/api\/daily-checkins/);
+  assert.match(smoke, /daily check-in create/);
+  assert.match(smoke, /daily check-in update/);
+  assert.match(smoke, /daily check-in list/);
+  assert.match(smoke, /daily check-in delete/);
+});

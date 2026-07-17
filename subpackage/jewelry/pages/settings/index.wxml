@@ -11,18 +11,18 @@
           <view class="profile-copy">
             <text class="profile-title">{{profileTitle}}</text>
             <view class="profile-subtitle-row">
-              <text class="profile-subtitle">暂无设备型号</text>
+              <text class="profile-subtitle">{{copy.noDeviceModel}}</text>
               <view class="profile-subtitle-dot"></view>
-              <text class="profile-subtitle">暂无设备版本</text>
+              <text class="profile-subtitle">{{copy.noDeviceVersion}}</text>
             </view>
           </view>
         </view>
 
-        <block wx:for="{{sections}}" wx:key="title">
+        <block wx:for="{{sections}}" wx:key="id">
           <view class="section">
             <text class="section-title">{{item.title}}</text>
             <view class="section-card">
-              <block wx:for="{{item.items}}" wx:key="label">
+              <block wx:for="{{item.items}}" wx:key="id">
                 <view
                   class="setting-row {{item.rowClass}}"
                   data-is-language="{{item.isLanguage}}"
@@ -34,19 +34,19 @@
                   </view>
                   <view class="row-right">
                     <text wx:if="{{item.isLanguage}}" class="row-value {{item.valueClass}}">{{currentLanguage}}</text>
-                    <text wx:elif="{{item.isRing}}" class="row-value {{item.valueClass}}">{{isDeviceBound ? '已连接' : '未连接'}}</text>
+                    <text wx:elif="{{item.isRing}}" class="row-value {{item.valueClass}}">{{ringStatus}}</text>
                     <text wx:elif="{{item.value}}" class="row-value {{item.valueClass}}">{{item.value}}</text>
-                    <view
-                      wx:if="{{item.toggle}}"
-                      class="toggle {{item.isSleep ? (sleepEnabled ? 'toggle-on' : 'toggle-off') : ''}}{{item.isBell ? (notificationsEnabled ? ' toggle-on' : ' toggle-off') : ''}}"
-                      data-key="{{item.isSleep ? 'sleepEnabled' : (item.isBell ? 'notificationsEnabled' : '')}}"
-                      catchtap="onToggleTap"
-                      bindtouchstart="onToggleTouchStart"
-                      bindtouchend="onToggleTouchEnd"
-                    >
-                      <view class="toggle-knob"></view>
-                    </view>
                     <text wx:if="{{item.arrow}}" class="row-arrow">></text>
+                  </view>
+                </view>
+                <view wx:if="{{item.isLanguage && languageExpanded}}" class="language-options">
+                  <view class="language-option" data-locale="zh-CN" catchtap="selectLanguage">
+                    <text class="language-option__text">{{copy.chinese}}</text>
+                    <text wx:if="{{locale === 'zh-CN'}}" class="language-option__check">✓</text>
+                  </view>
+                  <view class="language-option language-option-last" data-locale="en-US" catchtap="selectLanguage">
+                    <text class="language-option__text">{{copy.english}}</text>
+                    <text wx:if="{{locale === 'en-US'}}" class="language-option__check">✓</text>
                   </view>
                 </view>
               </block>
@@ -55,34 +55,34 @@
         </block>
 
         <view class="section">
-          <text class="section-title">PRIVACY</text>
+          <text class="section-title">{{copy.privacy}}</text>
           <view class="section-card">
             <view class="setting-row" bindtap="openAgreement">
-              <view class="row-left"><text class="row-label">用户协议</text></view>
+              <view class="row-left"><text class="row-label">{{copy.agreement}}</text></view>
               <view class="row-right"><text class="row-arrow">></text></view>
             </view>
             <view class="setting-row" bindtap="openPrivacy">
-              <view class="row-left"><text class="row-label">隐私政策</text></view>
+              <view class="row-left"><text class="row-label">{{copy.privacyPolicy}}</text></view>
               <view class="row-right"><text class="row-arrow">></text></view>
             </view>
             <view class="setting-row" bindtap="openWechatPrivacy">
-              <view class="row-left"><text class="row-label">微信隐私保护指引</text></view>
+              <view class="row-left"><text class="row-label">{{copy.wechatPrivacy}}</text></view>
               <view class="row-right"><text class="row-arrow">></text></view>
             </view>
             <view class="setting-row" bindtap="clearCycleData">
-              <view class="row-left"><text class="row-label">清除经期本地数据</text></view>
+              <view class="row-left"><text class="row-label">{{copy.clearCycle}}</text></view>
               <view class="row-right"><text class="row-arrow">></text></view>
             </view>
             <view class="setting-row" bindtap="deleteWuxingProfile">
-              <view class="row-left"><text class="row-label">删除出生资料和五行结果</text></view>
+              <view class="row-left"><text class="row-label">{{copy.deleteBirth}}</text></view>
               <view class="row-right"><text class="row-arrow">></text></view>
             </view>
             <view class="setting-row" bindtap="withdrawConsent">
-              <view class="row-left"><text class="row-label">撤回同意</text></view>
+              <view class="row-left"><text class="row-label">{{copy.withdrawConsent}}</text></view>
               <view class="row-right"><text class="row-arrow">></text></view>
             </view>
             <view class="setting-row setting-row-last danger-row" bindtap="deleteAccount">
-              <view class="row-left"><text class="row-label danger-label">注销账号并删除服务器数据</text></view>
+              <view class="row-left"><text class="row-label danger-label">{{copy.deleteAccount}}</text></view>
               <view class="row-right"><text class="row-arrow">></text></view>
             </view>
           </view>
@@ -95,7 +95,7 @@
               <view class="logout-arrow"></view>
               <view class="logout-arrow-head"></view>
             </view>
-            <text class="logout-text">退出登录</text>
+            <text class="logout-text">{{copy.logout}}</text>
           </view>
         </button>
 

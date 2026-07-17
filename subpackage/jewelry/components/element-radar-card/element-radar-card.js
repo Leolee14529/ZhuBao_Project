@@ -1,16 +1,18 @@
+const i18n = require("../../../../utils/i18n");
+
 Component({
   properties: {
     title: {
       type: String,
-      value: "五行能量平衡"
+      value: ""
     },
     subtitle: {
       type: String,
-      value: "实时能量分布雷达"
+      value: ""
     },
     note: {
       type: String,
-      value: "当前状态：五行能量分布均衡，身心状态稳定。"
+      value: ""
     },
     values: {
       type: Array,
@@ -24,10 +26,13 @@ Component({
   },
 
   lifetimes: {
-    ready: function () {
-      this._isReady = true;
-      this.drawRadar();
-    }
+    attached() {
+      const sync = () => this.setData({ labels: i18n.getCopy("elements") });
+      sync();
+      this.unsubscribeLocale = i18n.subscribe(sync);
+    },
+    ready() { this._isReady = true; this.drawRadar(); },
+    detached() { if (this.unsubscribeLocale) this.unsubscribeLocale(); }
   },
 
   methods: {
@@ -147,5 +152,6 @@ Component({
         y: centerY + Math.sin(angle) * radius
       };
     }
-  }
+  },
+  data: { labels: {} }
 });

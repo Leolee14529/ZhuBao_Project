@@ -1,9 +1,9 @@
 const config = require("./config");
 const auth = require("./auth");
+const i18n = require("./i18n");
 
-const DEFAULT_ERROR_MESSAGE = "请求失败，请稍后再试";
 function createRequestError(message, code, statusCode, data) {
-  const error = new Error(message || DEFAULT_ERROR_MESSAGE);
+  const error = new Error(message || i18n.t("errors.requestFailed"));
   error.code = code || "REQUEST_FAILED";
   error.statusCode = statusCode || 0;
   error.data = data || null;
@@ -12,11 +12,11 @@ function createRequestError(message, code, statusCode, data) {
 
 function normalizePath(path) {
   if (!path || typeof path !== "string") {
-    throw createRequestError("请求路径不能为空", "REQUEST_PATH_REQUIRED", 0);
+    throw createRequestError(i18n.t("errors.requestFailed"), "REQUEST_PATH_REQUIRED", 0);
   }
 
   if (/^https?:\/\//i.test(path)) {
-    throw createRequestError("请求路径必须使用相对路径", "REQUEST_PATH_INVALID", 0);
+    throw createRequestError(i18n.t("errors.requestFailed"), "REQUEST_PATH_INVALID", 0);
   }
 
   return path.charAt(0) === "/" ? path : "/" + path;
@@ -42,7 +42,7 @@ function buildHeader(header) {
 }
 
 function clearAuthState() {
-  auth.clearAllLocalPersonalData();
+  auth.clearAuthState();
 }
 
 function getCurrentPageUrl() {
@@ -77,7 +77,7 @@ function request(options) {
       baseUrl = config.getApiBaseUrl();
       if (!baseUrl) {
         throw createRequestError(
-          "当前版本尚未配置服务器地址",
+          i18n.t("errors.apiMissing"),
           "API_BASE_URL_MISSING",
           0
         );
@@ -103,7 +103,7 @@ function request(options) {
         }
 
         const requestError = createRequestError(
-          body.message || DEFAULT_ERROR_MESSAGE,
+          i18n.t(body.code === "VALIDATION_ERROR" ? "errors.validation" : "errors.requestFailed"),
           body.code || "REQUEST_FAILED",
           statusCode,
           body
@@ -115,7 +115,7 @@ function request(options) {
       },
       fail(error) {
         reject(createRequestError(
-          error && error.errMsg ? error.errMsg : "网络请求失败，请稍后再试",
+          error && error.errMsg ? error.errMsg : i18n.t("errors.network"),
           "REQUEST_NETWORK_ERROR",
           0,
           error

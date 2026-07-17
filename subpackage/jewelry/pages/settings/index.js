@@ -1,34 +1,24 @@
 const request = require("../../../../utils/request");
 const auth = require("../../../../utils/auth");
 const privacy = require("../../../../utils/privacy");
+const i18n = require("../../../../utils/i18n");
+const navigation = require("../../../../utils/navigation");
+const settingsViewModel = require("../../utils/settings-view-model");
 
 Page({
   data: {
     topSpacer: 40,
-    currentLanguage: "中文",
+    locale: i18n.getLocale(),
+    copy: i18n.getCopy("settings"),
+    currentLanguage: i18n.t("settings.chinese"),
+    languageExpanded: false,
     isDeviceBound: false,
-    sleepEnabled: false,
-    notificationsEnabled: false,
-    profileTitle: "珠宝用户",
+    profileTitle: i18n.t("profile.guest"),
+    profileSuffix: "",
+    ringStatus: i18n.t("settings.disconnected"),
     avatarLetter: "U",
     isLoggingOut: false,
-    toggleTouchStartX: 0,
-    sections: [
-      {
-        title: "DEVICE",
-        items: [
-          { isRing: true, label: "指环连接 (Ring)", arrow: false, rowClass: "", valueClass: "row-value-shifted" },
-          { isSleep: true, label: "睡眠模式", toggle: true, toggleClass: "toggle-off", rowClass: "setting-row-last" }
-        ]
-      },
-      {
-        title: "PREFERENCES",
-        items: [
-          { isBell: true, label: "消息通知", toggle: true, toggleClass: "toggle-off", rowClass: "" },
-          { isLanguage: true, label: "语言 (Language)", arrow: false, rowClass: "setting-row-last" }
-        ]
-      }
-    ]
+    sections: settingsViewModel.buildSections(i18n.getCopy("settings"))
   },
   onLoad() {
     if (!auth.requireLogin({ source: "/subpackage/jewelry/pages/settings/index" })) return;
@@ -39,18 +29,50 @@ Page({
         topSpacer: navLayout.contentOffset
       });
     }
+    this.applyLocale();
     this.loadCurrentUser();
   },
   onShow() {
     auth.requireLogin({ source: "/subpackage/jewelry/pages/settings/index" });
+    this.applyLocale();
+  },
+  onUnload() {
+    if (this.unsubscribeLocale) this.unsubscribeLocale();
+  },
+  applyLocale() {
+    const locale = i18n.getLocale();
+    const copy = i18n.getCopy("settings", locale);
+    this.setData({
+      locale,
+      copy,
+      currentLanguage: locale === "en-US" ? copy.english : copy.chinese,
+      profileTitle: this.data.profileSuffix ? i18n.t("profile.user", { suffix: this.data.profileSuffix }, locale) : i18n.t("profile.guest", null, locale),
+      ringStatus: this.data.isDeviceBound ? copy.connected : copy.disconnected,
+      sections: settingsViewModel.buildSections(copy)
+    });
+    if (!this.unsubscribeLocale) {
+      this.unsubscribeLocale = i18n.subscribe((nextLocale) => {
+        const nextCopy = i18n.getCopy("settings", nextLocale);
+        this.setData({
+          locale: nextLocale,
+          copy: nextCopy,
+          currentLanguage: nextLocale === "en-US" ? nextCopy.english : nextCopy.chinese,
+          profileTitle: this.data.profileSuffix ? i18n.t("profile.user", { suffix: this.data.profileSuffix }, nextLocale) : i18n.t("profile.guest", null, nextLocale),
+          ringStatus: this.data.isDeviceBound ? nextCopy.connected : nextCopy.disconnected,
+          sections: settingsViewModel.buildSections(nextCopy)
+        });
+      });
+    }
   },
   loadCurrentUser() {
     request.get("/api/users/me")
       .then((data) => {
         const user = data.user || {};
-        const title = "用户 " + String(user.id || "").slice(-6);
+        const suffix = String(user.id || "").slice(-6);
+        const title = i18n.t("profile.user", { suffix });
         this.setData({
           profileTitle: title,
+          profileSuffix: suffix,
           avatarLetter: title.charAt(0).toUpperCase() || "U"
         });
         wx.setStorageSync("userInfo", user);
@@ -60,16 +82,10 @@ Page({
       });
   },
   goHome() {
-    console.warn("[ROUTE]", "from subpackage/jewelry/pages/settings/index.js/goHome", "to", "/subpackage/jewelry/pages/home/index", "reason", "tab home");
-    wx.redirectTo({
-      url: "/subpackage/jewelry/pages/home/index"
-    });
+    navigation.navigateToPage("/pages/home/index");
   },
   goData() {
-    console.warn("[ROUTE]", "from subpackage/jewelry/pages/settings/index.js/goData", "to", "/subpackage/jewelry/pages/data/index", "reason", "tab data");
-    wx.redirectTo({
-      url: "/subpackage/jewelry/pages/data/index"
-    });
+    navigation.navigateToPage("/subpackage/jewelry/pages/data/index");
   },
   logout() {
     if (this.data.isLoggingOut) return;
@@ -89,7 +105,7 @@ Page({
           return;
         }
         wx.showToast({
-          title: error && error.message ? error.message : "退出失败，请稍后再试",
+          title: error && error.message ? error.message : i18n.t("settings.logoutFailed"),
           icon: "none"
         });
         this.setData({ isLoggingOut: false });
@@ -104,38 +120,38 @@ Page({
   openWechatPrivacy() {
     privacy.openWechatPrivacyContract().catch((error) => {
       wx.showToast({
-        title: error && error.message ? error.message : "微信隐私保护指引暂时无法打开",
+        title: error && error.message ? error.message : i18n.t("errors.privacyAgree"),
         icon: "none"
       });
     });
   },
   clearCycleData() {
     wx.showModal({
-      title: "清除经期记录",
-      content: "将清除本机保存的经期记录和确认状态，不会影响服务器账号。",
-      confirmText: "清除",
+      title: i18n.t("settings.clearCycleTitle"),
+      content: i18n.t("settings.clearCycleContent"),
+      confirmText: i18n.t("common.delete"),
       success: (res) => {
         if (!res.confirm) return;
         auth.clearCycleData();
-        wx.showToast({ title: "已清除本机经期记录", icon: "success" });
+        wx.showToast({ title: i18n.t("settings.clearCycleDone"), icon: "success" });
       }
     });
   },
   deleteWuxingProfile() {
     wx.showModal({
-      title: "删除出生资料",
-      content: "将删除出生资料和五行结果，本地和服务器记录都会清空。",
-      confirmText: "删除",
+      title: i18n.t("settings.deleteBirthTitle"),
+      content: i18n.t("settings.deleteBirthContent"),
+      confirmText: i18n.t("common.delete"),
       success: (res) => {
         if (!res.confirm) return;
         request.delete("/api/wuxing/profile")
           .then(() => {
             auth.clearWuxingLocalData();
-            wx.showToast({ title: "已删除五行资料", icon: "success" });
+            wx.showToast({ title: i18n.t("settings.deleteBirthDone"), icon: "success" });
           })
           .catch((error) => {
             wx.showToast({
-              title: error && error.message ? error.message : "删除失败，请重试",
+              title: error && error.message ? error.message : i18n.t("settings.deleteFailed"),
               icon: "none"
             });
           });
@@ -144,9 +160,9 @@ Page({
   },
   withdrawConsent() {
     wx.showModal({
-      title: "撤回同意",
-      content: "撤回后将退出登录并清除本机个人数据。再次使用登录或保存功能时需重新同意。",
-      confirmText: "撤回",
+      title: i18n.t("settings.withdrawTitle"),
+      content: i18n.t("settings.withdrawContent"),
+      confirmText: i18n.t("settings.withdrawConsent"),
       success: (res) => {
         if (!res.confirm) return;
         request.post("/api/auth/logout").catch(() => null).then(() => {
@@ -158,15 +174,15 @@ Page({
   },
   deleteAccount() {
     wx.showModal({
-      title: "注销账号",
-      content: "将删除账号、全部服务器业务数据、出生资料、五行结果，并清除本机经期记录。该操作不可恢复。",
-      confirmText: "注销",
+      title: i18n.t("settings.deleteAccountTitle"),
+      content: i18n.t("settings.deleteAccountContent"),
+      confirmText: i18n.t("common.delete"),
       success: (res) => {
         if (!res.confirm) return;
         request.delete("/api/users/me")
           .then((data) => {
             if (!data || data.deleted !== true) {
-              throw new Error("注销失败，请重试");
+              throw new Error(i18n.t("settings.deleteFailed"));
             }
             auth.clearAllLocalPersonalData();
             wx.reLaunch({ url: "/pages/login/index" });
@@ -174,7 +190,7 @@ Page({
           .catch((error) => {
             if (error && error.statusCode === 401) return;
             wx.showToast({
-              title: error && error.message ? error.message : "注销失败，请重试",
+              title: error && error.message ? error.message : i18n.t("settings.deleteFailed"),
               icon: "none"
             });
           });
@@ -187,33 +203,14 @@ Page({
       return;
     }
     if (isLanguage) {
+      this.setData({ languageExpanded: !this.data.languageExpanded });
       return;
     }
   },
-  onToggleTap(event) {
-    const { key } = event.currentTarget.dataset;
-    if (!key) return;
-    this.setData({
-      [key]: !this.data[key]
-    });
-  },
-  onToggleTouchStart(event) {
-    const touch = event.touches && event.touches[0];
-    if (!touch) return;
-    this.setData({
-      toggleTouchStartX: touch.clientX
-    });
-  },
-  onToggleTouchEnd(event) {
-    const { key } = event.currentTarget.dataset;
-    const touch = event.changedTouches && event.changedTouches[0];
-    if (!key || !touch) return;
-
-    const deltaX = touch.clientX - this.data.toggleTouchStartX;
-    if (Math.abs(deltaX) < 12) return;
-
-    this.setData({
-      [key]: deltaX > 0
-    });
+  selectLanguage(event) {
+    const locale = event.currentTarget.dataset.locale;
+    if (!locale) return;
+    i18n.setLocale(locale);
+    this.setData({ languageExpanded: false });
   }
 });

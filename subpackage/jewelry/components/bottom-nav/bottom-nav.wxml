@@ -1,8 +1,0 @@
-<view class="bottom-nav">
-  <block wx:for="{{tabs}}" wx:key="id">
-    <button class="nav-item {{item.itemClass}}" hover-class="nav-item-pressed" data-tab="{{item.id}}" bindtap="switchTab">
-      <text class="nav-label">{{item.label}}</text>
-      <view class="nav-indicator"></view>
-    </button>
-  </block>
-</view>

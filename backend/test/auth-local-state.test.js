@@ -52,3 +52,44 @@ test("entering guest mode clears current account personal data", () => {
   assert.equal(storage.guestMode, true);
   assert.equal(storage["periodCalendarCycleProfile:user:d"], undefined);
 });
+
+test("expired sessions redirect to login without deleting current account cycle data", () => {
+  const storage = {};
+  const auth = loadAuth(storage);
+
+  auth.acceptAuthenticatedSession("token-e", { id: "e" });
+  auth.setPersonalData(auth.CYCLE_KEY, { cycleLength: "29" });
+  auth.redirectToLogin("/subpackage/jewelry/pages/data/index");
+
+  assert.equal(storage.token, undefined);
+  assert.equal(storage.userInfo, undefined);
+  assert.deepEqual(storage["periodCalendarCycleProfile:user:e"], { cycleLength: "29" });
+});
+
+test("request logout cleanup removes only the session and preserves personal data", () => {
+  const storage = {};
+  const auth = loadAuth(storage);
+
+  auth.acceptAuthenticatedSession("token-f", { id: "f" });
+  auth.setPersonalData(auth.CYCLE_KEY, { cycleLength: "30" });
+  delete require.cache[require.resolve("../../utils/request")];
+  const request = require("../../utils/request");
+  request.clearAuthState();
+
+  assert.equal(storage.token, undefined);
+  assert.equal(storage.userInfo, undefined);
+  assert.deepEqual(storage["periodCalendarCycleProfile:user:f"], { cycleLength: "30" });
+});
+
+test("sleep detail remains a safe login restore target", () => {
+  const storage = {};
+  const launches = [];
+  const auth = loadAuth(storage);
+  global.wx.reLaunch = (options) => launches.push(options.url);
+
+  auth.redirectToLogin("/subpackage/jewelry/pages/sleep-detail/index");
+
+  assert.deepEqual(launches, [
+    "/pages/login/index?redirect=%2Fsubpackage%2Fjewelry%2Fpages%2Fsleep-detail%2Findex"
+  ]);
+});

@@ -1,126 +1,59 @@
-﻿<view class="data-page">
+<view class="data-page">
   <scroll-view class="data-scroll" scroll-y="true">
     <view class="page-body">
       <view class="page-top-spacer" style="height: {{topSpacer}}px;"></view>
       <view class="page-header">
-        <text class="page-title">数据记录</text>
-        <text class="page-subtitle">今日记录</text>
+        <text class="page-title">{{copy.title}}</text>
+        <text class="page-subtitle">{{copy.subtitle}}</text>
       </view>
 
       <view class="score-card">
         <view class="score-copy">
-          <view class="score-label-row">
-            <view class="score-dot"></view>
-            <text class="score-label">今日测评</text>
-          </view>
-          <text class="score-value">0 <text class="score-unit">/ 100</text></text>
-          <text class="score-text">暂无真实记录数据。</text>
+          <view class="score-label-row"><view class="score-dot"></view><text class="score-label">{{copy.score}}</text></view>
+          <text class="score-value" wx:if="{{!loading}}">{{record.entryCount}} <text class="score-unit">{{copy.entriesUnit}}</text></text>
+          <text class="score-value score-loading" wx:else>{{copy.loading}}</text>
+          <text class="score-text" wx:if="{{loadError}}">{{loadError}}</text>
+          <text class="score-text" wx:elif="{{record.hasRecord}}">{{copy.recorded}}</text>
+          <text class="score-text" wx:else>{{copy.noRecord}}</text>
         </view>
-        <view class="score-ring">
-          <view class="score-ring-inner">
-            <text>→</text>
-          </view>
-        </view>
+        <button class="retry-button" wx:if="{{loadError}}" bindtap="retryLoad">{{copy.retry}}</button>
+        <view class="score-ring" wx:else><view class="score-ring-inner"><text>✓</text></view></view>
       </view>
 
       <view class="period-entry" bindtap="openPeriodCalendar">
-        <text class="period-entry-title">智能经期日历</text>
-        <text class="period-entry-arrow">›</text>
+        <text class="period-entry-title">{{copy.calendar}}</text><text class="period-entry-arrow">›</text>
       </view>
 
-      <view class="key-stats">
-        <view class="key-stat key-stat-left">
-          <view class="key-stat-icon icon-rose">♥</view>
-          <view class="key-stat-copy">
-            <text class="key-stat-value">0 <text class="small-unit">bpm</text></text>
-            <text class="key-stat-label">静息心率</text>
-          </view>
+      <view class="health-card sleep-entry" hover-class="health-card-hover" bindtap="openSleepDetail">
+        <view class="health-card-main">
+          <view class="health-card-heading"><view class="health-icon sleep-icon">☾</view><text class="health-title">{{copy.sleep}}</text></view>
+          <text class="health-duration">{{record.sleep}}</text>
+          <text class="panel-subtitle">{{copy.sleepSource}}</text>
         </view>
-        <view class="key-stat key-stat-right">
-          <view class="key-stat-icon icon-green">●</view>
-          <view class="key-stat-copy">
-            <text class="key-stat-value">0 <text class="small-unit">%</text></text>
-            <text class="key-stat-label">HRV 指数</text>
-          </view>
-        </view>
+        <view class="health-card-side"><text class="health-arrow">›</text></view>
       </view>
 
-      <view class="panel">
-        <text class="panel-title">心率趋势</text>
-        <text class="panel-subtitle">24小时心率波动</text>
-        <view class="chart-area">
-          <view class="chart-line chart-line-top"></view>
-          <view class="chart-line chart-line-mid"></view>
-          <view class="chart-bars">
-            <view class="bar bar-1"></view>
-            <view class="bar bar-2"></view>
-            <view class="bar bar-3"></view>
-            <view class="bar bar-4"></view>
-            <view class="bar bar-5"></view>
-            <view class="bar bar-6"></view>
-            <view class="bar bar-7"></view>
-          </view>
+      <view class="panel" wx:if="{{canEdit && record.hasRecord}}">
+        <text class="panel-title">{{copy.recordDetails}}</text>
+        <view class="record-grid">
+          <view class="record-item"><text class="record-label">{{copy.moodScore}}</text><text class="record-value">{{record.mood}}</text></view>
+          <view class="record-item"><text class="record-label">{{copy.energyScore}}</text><text class="record-value">{{record.energy}}</text></view>
+          <view class="record-item record-item-wide"><text class="record-label">{{copy.wearing}}</text><text class="record-value">{{record.wearing}}</text></view>
         </view>
+        <view class="tag-list" wx:if="{{record.tags.length}}"><text class="record-tag" wx:for="{{record.tags}}" wx:key="*this">{{item}}</text></view>
+        <view class="record-note"><text class="record-label">{{copy.note}}</text><text class="record-note-text">{{record.note}}</text></view>
+        <view class="record-actions"><button class="record-action record-action-primary" bindtap="openEditor">{{copy.editRecord}}</button><button class="record-action record-action-danger" bindtap="deleteRecord">{{copy.deleteRecord}}</button></view>
       </view>
 
-      <view class="panel">
-        <text class="panel-title">睡眠结构</text>
-        <text class="panel-subtitle">总时长 0小时 0分</text>
-        <view class="sleep-cards">
-          <block wx:for="{{sleep}}" wx:key="name">
-            <view class="sleep-card {{item.cardClass}}">
-              <view class="sleep-top-line" style="background-color: {{item.color}};"></view>
-              <text class="sleep-name">{{item.name}}</text>
-              <text class="sleep-value">{{item.value}}<text class="sleep-unit">小时</text></text>
-            </view>
-          </block>
-        </view>
-        <view class="sleep-bar">
-          <block wx:for="{{sleep}}" wx:key="name">
-            <view class="sleep-segment" style="width: {{item.width}}; background-color: {{item.color}};"></view>
-          </block>
-        </view>
+      <view class="panel empty-panel" wx:if="{{showEmpty}}">
+        <text class="panel-title">{{copy.emptyTitle}}</text>
+        <text class="panel-subtitle">{{copy.emptyDesc}}</text>
+        <button class="create-record-button" bindtap="openEditor">{{copy.createRecord}}</button>
       </view>
-
-      <view class="energy-card">
-        <view class="energy-icon">✦</view>
-        <view class="energy-copy">
-          <text class="energy-title">身体能量</text>
-          <text class="energy-desc">暂无真实能量数据</text>
-        </view>
-        <text class="energy-value">0<text class="small-unit">/100</text></text>
-      </view>
-
-      <view class="panel">
-        <text class="panel-title">五行玉石适配</text>
-        <text class="panel-subtitle">{{hasWuxingResult ? '基于您八字的佩戴建议' : '保存出生资料后生成建议'}}</text>
-        <view class="element-ring">
-          <view class="element-ring-core">
-            <text class="ring-small">主推</text>
-            <text class="ring-main">{{focusElement}}</text>
-          </view>
-        </view>
-        <view class="element-list">
-          <block wx:for="{{elements}}" wx:key="name">
-            <view class="element-row {{item.rowClass}}">
-              <view class="element-left">
-                <view class="element-dot" style="background-color: {{item.color}};"></view>
-                <view class="element-copy">
-                  <text class="element-name">{{item.name}}</text>
-                  <text class="element-jade">{{item.jade}}</text>
-                </view>
-              </view>
-              <text class="element-suitable">{{item.suitable}}</text>
-            </view>
-          </block>
-        </view>
-      </view>
-
-      <element-radar-card values="{{radarValues}}" note="{{radarNote}}"></element-radar-card>
-
       <view class="bottom-space"></view>
     </view>
   </scroll-view>
-
+  <view class="undo-bar" wx:if="{{undoView.visible}}"><text>{{copy.deleted}}</text><button loading="{{undoView.restoring}}" disabled="{{!undoView.canRetry}}" bindtap="undoDelete">{{copy.undo}}</button></view>
+  <daily-record-editor visible="{{editorVisible}}" value="{{editorValue}}" date-key="{{dateKey}}" copy="{{copy}}" saving="{{saving}}" bind:close="closeEditor" bind:save="saveRecord" bind:invalid="handleEditorInvalid"></daily-record-editor>
   <bottom-nav active="data"></bottom-nav>
 </view>

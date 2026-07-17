@@ -1,8 +1,5 @@
-const routeDebug = require("./utils/route-debug");
-
 App({
   onLaunch() {
-    routeDebug.installRouteDebug();
     this.globalData.navLayout = this.getNavLayout();
   },
   getNavLayout() {
@@ -15,8 +12,9 @@ App({
     };
 
     try {
-      const systemInfo = wx.getSystemInfoSync();
-      const statusBarHeight = systemInfo.statusBarHeight || fallback.statusBarHeight;
+      if (!wx.getWindowInfo) return fallback;
+      const windowInfo = wx.getWindowInfo();
+      const statusBarHeight = windowInfo.statusBarHeight || fallback.statusBarHeight;
       const menuButton = wx.getMenuButtonBoundingClientRect ? wx.getMenuButtonBoundingClientRect() : null;
 
       if (!menuButton || !menuButton.bottom) {

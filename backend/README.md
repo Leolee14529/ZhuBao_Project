@@ -111,12 +111,6 @@ token 只以 SHA-256 哈希形式存储。退出登录会撤销当前 session。
 
 后端只保存密码哈希，不保存明文密码；账号名会统一转为小写。
 
-### 灵签
-
-- `GET /api/fortunes/random`
-
-当前从后端灵签池随机返回一条，支持 `previousId` 查询参数避免连续重复。后续可在 `backend/services/fortuneService.js` 内替换为数据库或运营配置来源。
-
 ### 五行
 
 - `POST /api/wuxing/calculate`
@@ -150,8 +144,8 @@ pnpm audit --prod
 
 1. 配置 PostgreSQL 和备份策略。
 2. 注入生产环境变量。
-3. 执行 `pnpm install --frozen-lockfile`。
-4. 执行数据库迁移。
+3. 确认当前运行时为 Node 24，并设置数据库备份目录。
+4. 执行 `pnpm install --frozen-lockfile`，通过测试后先备份再执行数据库迁移。
 5. 启动服务并检查 `/health/live`、`/health/ready`。
 6. 配置 HTTPS 反向代理和微信请求域名。
 7. 小流量验证登录、五行保存、读取、退出。
@@ -161,8 +155,11 @@ pnpm audit --prod
 ```bash
 export ZHUBAO_RESTART_CMD='pm2 restart zhubao-backend --update-env'
 export ZHUBAO_API_BASE_URL='https://jewelry-api.birdai-glasses.com'
+export ZHUBAO_BACKUP_DIR='/root/zhubao-backups'
 bash backend/scripts/deploy-production.sh
 ```
+
+部署脚本会拒绝 Node 24 以外的运行时，并在迁移前用 `pg_dump` 创建权限受限的自定义格式备份；备份文件为空时不会执行迁移。
 
 如果服务器使用 systemd 或 Docker，把 `ZHUBAO_RESTART_CMD` 替换成对应重启命令。部署后可单独执行账号密码登录冒烟测试：
 

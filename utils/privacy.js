@@ -1,12 +1,13 @@
 const PRIVACY_URL = "/pages/legal/privacy/index";
 const auth = require("./auth");
+const i18n = require("./i18n");
 
 function showLocalPrivacy() {
   wx.navigateTo({
     url: PRIVACY_URL + "?mode=consent",
     fail() {
       wx.showToast({
-        title: "请先阅读隐私政策",
+        title: i18n.t("errors.privacyRead"),
         icon: "none"
       });
     }
@@ -17,7 +18,7 @@ function openWechatPrivacyContract() {
   return new Promise((resolve, reject) => {
     if (!wx.openPrivacyContract) {
       showLocalPrivacy();
-      reject(new Error("当前微信版本暂不支持打开官方隐私指引"));
+      reject(new Error(i18n.t("errors.privacyAgree")));
       return;
     }
 
@@ -25,7 +26,7 @@ function openWechatPrivacyContract() {
       success: resolve,
       fail() {
         showLocalPrivacy();
-        reject(new Error("微信隐私保护指引暂时无法打开"));
+        reject(new Error(i18n.t("errors.privacyAgree")));
       }
     });
   });
@@ -34,35 +35,35 @@ function openWechatPrivacyContract() {
 function requestWechatPrivacyAuthorization() {
   return new Promise((resolve, reject) => {
     wx.showModal({
-      title: "隐私保护提示",
-      content: "继续使用前，请先阅读并同意微信隐私保护指引和海米算力隐私政策。",
-      confirmText: "同意",
-      cancelText: "查看",
+      title: i18n.t("settings.privacy"),
+      content: i18n.t("login.agreementRequired"),
+      confirmText: i18n.t("common.confirm"),
+      cancelText: i18n.t("common.back"),
       success(res) {
         if (res.cancel) {
           openWechatPrivacyContract().catch(() => null);
-          reject(new Error("请先同意隐私保护指引"));
+          reject(new Error(i18n.t("errors.privacyAgree")));
           return;
         }
         if (!res.confirm) {
-          reject(new Error("请先同意隐私保护指引"));
+          reject(new Error(i18n.t("errors.privacyAgree")));
           return;
         }
         if (!wx.requirePrivacyAuthorize) {
           showLocalPrivacy();
-          reject(new Error("当前微信版本暂不支持隐私授权，请升级微信后重试"));
+          reject(new Error(i18n.t("errors.privacyAgree")));
           return;
         }
         wx.requirePrivacyAuthorize({
           success: resolve,
           fail() {
             showLocalPrivacy();
-            reject(new Error("请先同意隐私保护指引"));
+            reject(new Error(i18n.t("errors.privacyAgree")));
           }
         });
       },
       fail() {
-        reject(new Error("隐私授权暂时不可用，请稍后再试"));
+        reject(new Error(i18n.t("errors.privacyAgree")));
       }
     });
   });
@@ -71,17 +72,17 @@ function requestWechatPrivacyAuthorization() {
 function checkWechatPrivacyReady(options) {
   const opts = options || {};
   if (opts.agreed === false) {
-    return Promise.reject(new Error("请先阅读并同意用户协议与隐私政策"));
+    return Promise.reject(new Error(i18n.t("login.agreementRequired")));
   }
   if (opts.action !== "login" && !auth.hasPrivacyConsent()) {
     showLocalPrivacy();
-    return Promise.reject(new Error("请先重新同意用户协议与隐私政策"));
+    return Promise.reject(new Error(i18n.t("login.agreementRequired")));
   }
 
   return new Promise((resolve, reject) => {
     if (!wx.getPrivacySetting) {
       showLocalPrivacy();
-      reject(new Error("当前微信版本暂不支持隐私授权，请升级微信后重试"));
+      reject(new Error(i18n.t("errors.privacyAgree")));
       return;
     }
 
@@ -95,7 +96,7 @@ function checkWechatPrivacyReady(options) {
       },
       fail() {
         showLocalPrivacy();
-        reject(new Error("隐私授权状态获取失败，请稍后重试"));
+        reject(new Error(i18n.t("errors.privacyAgree")));
       }
     });
   });

@@ -1,0 +1,26 @@
+<view class="sleep-page">
+  <scroll-view class="sleep-scroll" scroll-y="true">
+    <view class="sleep-body">
+      <view style="height: {{topSpacer}}px;"></view>
+      <view class="sleep-topbar"><button class="topbar-button" bindtap="goBack">‹</button><text class="topbar-title">{{copy.title}}</text></view>
+      <text class="date-value">{{date}}</text>
+
+      <view class="detail-card">
+        <view class="detail-card-heading"><text class="detail-card-title">{{copy.overview}}</text><text class="detail-card-caption">{{copy.source}}</text></view>
+        <view class="sleep-total">
+          <text class="sleep-total-label">{{copy.total}}</text>
+          <text class="sleep-total-value" wx:if="{{!loading}}">{{sleep}}</text>
+          <text class="sleep-total-value" wx:else>{{copy.loading}}</text>
+        </view>
+        <text class="load-error" wx:if="{{loadError}}">{{loadError}}</text>
+        <button class="retry-button" wx:if="{{loadError}}" bindtap="retryLoad">{{copy.retry}}</button>
+      </view>
+
+      <view class="detail-card honest-empty-card">
+        <text class="detail-card-title">{{copy.stageTitle}}</text>
+        <text class="empty-title">{{copy.stageUnavailable}}</text>
+        <text class="empty-description">{{copy.recordOnly}}</text>
+      </view>
+    </view>
+  </scroll-view>
+</view>

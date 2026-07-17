@@ -1,6 +1,6 @@
-const HOME_SHARE_PATH = "/subpackage/jewelry/pages/home/index";
+const HOME_SHARE_PATH = "/pages/home/index";
 const HOME_SHARE_IMAGE = "/subpackage/jewelry/assets/product-1.jpg";
-const HOME_SHARE_TITLE = "海米算力 | 五行能量珠宝";
+const i18n = require("./i18n");
 
 function enableShareMenu() {
   if (typeof wx === "undefined" || !wx.showShareMenu) return;
@@ -13,7 +13,7 @@ function enableShareMenu() {
 
 function getHomeShareAppMessage() {
   return {
-    title: HOME_SHARE_TITLE,
+    title: i18n.getLocale() === "en-US" ? "Ting's | Smart Jewelry" : "海米算力 | 五行饰品风格",
     path: HOME_SHARE_PATH,
     imageUrl: HOME_SHARE_IMAGE
   };
@@ -21,7 +21,7 @@ function getHomeShareAppMessage() {
 
 function getHomeShareTimeline() {
   return {
-    title: HOME_SHARE_TITLE,
+    title: i18n.getLocale() === "en-US" ? "Ting's | Smart Jewelry" : "海米算力 | 五行饰品风格",
     query: "from=timeline",
     imageUrl: HOME_SHARE_IMAGE
   };

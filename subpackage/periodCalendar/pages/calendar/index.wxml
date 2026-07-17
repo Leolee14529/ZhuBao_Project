@@ -3,11 +3,10 @@
     topbar-height="{{topbarHeight}}"
     back-button-top="{{backButtonTop}}"
     bind:back="onBackTap"
-    bind:capsule="onCapsuleTap"
   />
 
   <view class="page-content">
-    <text class="page-title">智能经期日历</text>
+    <text class="page-title">{{copy.title}}</text>
 
     <month-switcher
       month-label="{{monthLabel}}"
@@ -26,9 +25,9 @@
           <view class="cycle-empty-state__icon-dot"></view>
         </view>
       </view>
-      <text class="cycle-empty-state__title">还没有周期记录</text>
-      <text class="cycle-empty-state__desc">先设置你的经期信息，系统会生成预测日历</text>
-      <view class="cycle-empty-state__button" bindtap="onSetupCycle">去设置周期</view>
+      <text class="cycle-empty-state__title">{{copy.emptyTitle}}</text>
+      <text class="cycle-empty-state__desc">{{copy.emptyDesc}}</text>
+      <view class="cycle-empty-state__button" bindtap="onSetupCycle">{{copy.setup}}</view>
     </view>
 
     <block wx:else>
@@ -39,21 +38,21 @@
       <view wx:if="{{selectedDetail}}" class="detail-card">
         <text class="detail-date">{{selectedDetail.fullDate}}</text>
         <view class="detail-row">
-          <text class="detail-label">状态：</text>
+          <text class="detail-label">{{copy.status}}</text>
           <text class="detail-value">{{selectedDetail.statusLabel}}</text>
         </view>
         <view class="detail-row">
-          <text class="detail-label">备注：</text>
+          <text class="detail-label">{{copy.remark}}</text>
           <text class="detail-value">{{selectedDetail.remark}}</text>
         </view>
       </view>
 
       <view class="summary-block">
-        <text class="summary-title">距离下次经期还有</text>
-        <text class="summary-value">{{summaryDays}}天</text>
+        <text class="summary-title">{{copy.until}}</text>
+        <text class="summary-value">{{summaryDays}} {{copy.day}}</text>
         <text class="summary-note">{{summaryNextStart}}</text>
-        <view class="summary-action" bindtap="onSetupCycle">调整经期周期</view>
-        <view class="summary-clear-action" bindtap="onClearCycleData">清除本机经期记录</view>
+        <view class="summary-action" bindtap="onSetupCycle">{{copy.adjust}}</view>
+        <view class="summary-clear-action" bindtap="onClearCycleData">{{copy.clear}}</view>
       </view>
     </block>
   </view>
@@ -61,54 +60,54 @@
   <view wx:if="{{showCycleSetup}}" class="cycle-setup-mask" catchtap="onCloseCycleSetup">
     <view class="cycle-setup-sheet" catchtap="noop">
       <view class="cycle-setup-sheet__handle"></view>
-      <text class="cycle-setup-sheet__title">设置周期</text>
-      <text class="cycle-setup-sheet__desc">只做前端保存，设置完成后会直接显示预测日历与倒计时结果。</text>
+      <text class="cycle-setup-sheet__title">{{copy.setupTitle}}</text>
+      <text class="cycle-setup-sheet__desc">{{copy.setupDesc}}</text>
       <view class="cycle-privacy-confirm" bindtap="onToggleCyclePrivacy">
         <view class="cycle-privacy-confirm__box {{cyclePrivacyConfirmed ? 'cycle-privacy-confirm__box--checked' : ''}}">
           <text wx:if="{{cyclePrivacyConfirmed}}" class="cycle-privacy-confirm__mark">✓</text>
         </view>
         <view class="cycle-privacy-confirm__copy">
-          <text class="cycle-privacy-confirm__title">我已知晓经期数据说明</text>
-          <text class="cycle-privacy-confirm__desc">经期记录仅保存在本机，不上传服务器，不构成医疗、诊断、避孕、生育或健康建议；清除缓存或卸载可能导致数据丢失。</text>
+          <text class="cycle-privacy-confirm__title">{{copy.privacyTitle}}</text>
+          <text class="cycle-privacy-confirm__desc">{{copy.privacyDesc}}</text>
         </view>
       </view>
 
       <view class="cycle-field">
-        <text class="cycle-field__label">上次经期开始日期</text>
+        <text class="cycle-field__label">{{copy.lastStart}}</text>
         <picker mode="date" end="{{todayDateKey}}" value="{{cycleProfile.lastPeriodDate}}" bindchange="onCycleDateChange">
           <view class="cycle-field__picker">{{cycleProfile.lastPeriodDate}}</view>
         </picker>
       </view>
 
       <view class="cycle-field">
-        <text class="cycle-field__label">平均周期</text>
+        <text class="cycle-field__label">{{copy.averageCycle}}</text>
         <input
           class="cycle-field__input"
           type="number"
           maxlength="2"
           value="{{cycleProfile.cycleLength}}"
-          placeholder="例：28"
+          placeholder="{{copy.example28}}"
           placeholder-class="cycle-field__placeholder"
           bindinput="onCycleLengthInput"
         />
       </view>
 
       <view class="cycle-field">
-        <text class="cycle-field__label">经期持续天数</text>
+        <text class="cycle-field__label">{{copy.periodLength}}</text>
         <input
           class="cycle-field__input"
           type="number"
           maxlength="2"
           value="{{cycleProfile.periodLength}}"
-          placeholder="例：5"
+          placeholder="{{copy.example5}}"
           placeholder-class="cycle-field__placeholder"
           bindinput="onPeriodLengthInput"
         />
       </view>
 
       <view class="cycle-setup-sheet__actions">
-        <view class="cycle-setup-sheet__button cycle-setup-sheet__button--ghost" bindtap="onCloseCycleSetup">取消</view>
-        <view class="cycle-setup-sheet__button cycle-setup-sheet__button--primary {{isSavingCycle ? 'cycle-setup-sheet__button--disabled' : ''}}" bindtap="onSaveCycleSetup">{{isSavingCycle ? '保存中' : '保存并查看日历'}}</view>
+        <view class="cycle-setup-sheet__button cycle-setup-sheet__button--ghost" bindtap="onCloseCycleSetup">{{commonCancel}}</view>
+        <view class="cycle-setup-sheet__button cycle-setup-sheet__button--primary {{isSavingCycle ? 'cycle-setup-sheet__button--disabled' : ''}}" bindtap="onSaveCycleSetup">{{isSavingCycle ? commonSaving : copy.saveView}}</view>
       </view>
     </view>
   </view>

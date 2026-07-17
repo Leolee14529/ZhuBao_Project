@@ -1,7 +1,14 @@
+const i18n = require("../../../../utils/i18n");
+
 Component({
   properties: {
     monthLabel: String,
     periodStartedToday: Boolean
+  },
+  data: { reminder: i18n.t("calendar.reminder") },
+  lifetimes: {
+    attached() { this.unsubscribeLocale = i18n.subscribe(() => this.setData({ reminder: i18n.t("calendar.reminder") })); },
+    detached() { if (this.unsubscribeLocale) this.unsubscribeLocale(); }
   },
   methods: {
     onPrevTap() {

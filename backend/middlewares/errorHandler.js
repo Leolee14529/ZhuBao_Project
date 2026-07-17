@@ -14,8 +14,8 @@ function errorHandler(error, req, res, next) {
     requestId: req.requestId,
     method: req.method,
     path: req.originalUrl,
-    code: error.code || code,
-    message: error.message
+    code,
+    message
   }));
 
   return sendError(res, status, code, message, req.requestId);

@@ -1,5 +1,6 @@
 const LOGIN_URL = "/pages/login/index";
-const HOME_URL = "/subpackage/jewelry/pages/home/index";
+const HOME_URL = "/pages/home/index";
+const i18n = require("./i18n");
 
 const TOKEN_KEY = "token";
 const USER_KEY = "userInfo";
@@ -17,6 +18,13 @@ const PERSONAL_KEYS = [
   PERIOD_PRIVACY_KEY,
   BIRTH_NOTICE_KEY
 ];
+const SAFE_LOGIN_REDIRECTS = new Set([
+  "/subpackage/jewelry/pages/data/index",
+  "/subpackage/jewelry/pages/settings/index",
+  "/subpackage/jewelry/pages/five-elements/index",
+  "/subpackage/jewelry/pages/sleep-detail/index",
+  "/subpackage/periodCalendar/pages/calendar/index"
+]);
 
 let isRedirectingToLogin = false;
 
@@ -154,19 +162,19 @@ function hasPrivacyConsent() {
   return safeGet(PRIVACY_CONSENT_KEY) === true;
 }
 
+function getSafeLoginRedirect(source) {
+  return SAFE_LOGIN_REDIRECTS.has(source) ? source : "";
+}
+
 function buildLoginUrl(source) {
-  const allowRestore = source === "/subpackage/jewelry/pages/data/index" ||
-    source === "/subpackage/jewelry/pages/settings/index" ||
-    source === "/subpackage/jewelry/pages/five-elements/index" ||
-    source === "/subpackage/periodCalendar/pages/calendar/index";
-  if (!allowRestore) return LOGIN_URL;
-  return LOGIN_URL + "?redirect=" + encodeURIComponent(source);
+  const redirect = getSafeLoginRedirect(source);
+  return redirect ? LOGIN_URL + "?redirect=" + encodeURIComponent(redirect) : LOGIN_URL;
 }
 
 function redirectToLogin(source) {
   if (isRedirectingToLogin) return;
   isRedirectingToLogin = true;
-  clearAllLocalPersonalData();
+  clearAuthState();
   wx.reLaunch({
     url: buildLoginUrl(source),
     complete() {
@@ -183,7 +191,7 @@ function requireLogin(options) {
 
   if (opts.redirectToLogin !== false) {
     wx.showToast({
-      title: opts.reason || "请先登录后使用",
+      title: opts.reason || i18n.t("errors.loginRequired"),
       icon: "none"
     });
     setTimeout(() => redirectToLogin(opts.source), 500);
@@ -218,6 +226,7 @@ module.exports = {
   clearAllLocalPersonalData,
   acceptPrivacyConsent,
   hasPrivacyConsent,
+  getSafeLoginRedirect,
   redirectToLogin,
   requireLogin
 };

@@ -2,6 +2,8 @@ const cycleEngine = require("../../utils/cycle-engine");
 const cycleProfileService = require("../../utils/cycle-profile");
 const auth = require("../../../../utils/auth");
 const privacy = require("../../../../utils/privacy");
+const i18n = require("../../../../utils/i18n");
+const calendarI18n = require("../../utils/calendar-i18n");
 Page({
   cycleStorageKey: auth.CYCLE_KEY,
   data: {
@@ -17,12 +19,15 @@ Page({
     selectedDateKey: "",
     selectedDetail: null,
     summaryDays: "--",
-    summaryNextStart: "暂无预测结果",
+    summaryNextStart: i18n.t("cycle.noPrediction"),
+    copy: i18n.getCopy("calendar"),
+    commonCancel: i18n.t("common.cancel"),
+    commonSaving: i18n.t("common.saving"),
     cyclePrivacyConfirmed: false,
     isSavingCycle: false,
     cycleProfile: { lastPeriodDate: "", cycleLength: "28", periodLength: "5", todayPeriodStartEnabled: false, adjustments: {} },
     weeks: [],
-    legendItems: [{ key: "period", label: "经期" }, { key: "periodForecast", label: "预测经期" }, { key: "ovulation", label: "参考日" }, { key: "fertile", label: "参考窗口" }, { key: "safe", label: "其他日期" }]
+    legendItems: calendarI18n.buildLegend()
   },
   onLoad() {
     if (!auth.requireLogin({ source: "/subpackage/periodCalendar/pages/calendar/index" })) return;
@@ -32,9 +37,13 @@ Page({
     const normalizedProfile = cycleEngine.normalizeProfile({ lastPeriodDate: todayDateKey, cycleLength: "28", periodLength: "5", todayPeriodStartEnabled: false, adjustments: {} });
     this.setData({ todayDateKey, selectedDateKey: todayDateKey, cycleProfile: normalizedProfile });
     this.loadCycleProfile();
+    this.unsubscribeLocale = i18n.subscribe(() => { this.applyLocale(); this.refreshCalendar(this.data.viewYear, this.data.viewMonth); });
+    this.applyLocale();
     this.initializeViewMonth();
   },
-  onShow() { auth.requireLogin({ source: "/subpackage/periodCalendar/pages/calendar/index" }); },
+  onShow() { auth.requireLogin({ source: "/subpackage/periodCalendar/pages/calendar/index" }); this.applyLocale(); },
+  onUnload() { if (this.unsubscribeLocale) this.unsubscribeLocale(); },
+  applyLocale() { this.setData({ copy: i18n.getCopy("calendar"), commonCancel: i18n.t("common.cancel"), commonSaving: i18n.t("common.saving"), legendItems: calendarI18n.buildLegend() }); },
   initializeViewMonth() {
     const today = cycleEngine.getTodayDate();
     const year = today.getFullYear();
@@ -43,7 +52,7 @@ Page({
     this.refreshCalendar(year, month);
   },
   updateSafeArea() {
-    const info = wx.getWindowInfo ? wx.getWindowInfo() : wx.getSystemInfoSync();
+    const info = wx.getWindowInfo ? wx.getWindowInfo() : { statusBarHeight: 20, windowWidth: 375 };
     const menuButton = wx.getMenuButtonBoundingClientRect ? wx.getMenuButtonBoundingClientRect() : null;
     const windowWidth = info.windowWidth || 375;
     const rpxToPx = windowWidth / 750;
@@ -63,16 +72,17 @@ Page({
     this.setData({ hasCycleData: true, cycleProfile: cycleEngine.normalizeProfile(profile) });
   },
   refreshCalendar(year, month) {
-    const monthLabel = cycleEngine.formatMonthLabel(year, month);
+    const monthLabel = i18n.formatMonth(year, month);
     if (!this.data.hasCycleData) {
-      this.setData({ monthLabel, weeks: [], selectedDetail: null, summaryDays: "--", summaryNextStart: "暂无预测结果" });
+      this.setData({ monthLabel, weeks: [], selectedDetail: null, summaryDays: "--", summaryNextStart: i18n.t("cycle.noPrediction") });
       return;
     }
     const built = cycleEngine.buildWeeks(this.data.cycleProfile, year, month, this.data.selectedDateKey);
     const todayDate = cycleEngine.getTodayDate();
     const summary = cycleEngine.buildSummary(built.cycleStarts, todayDate);
-    const selectedDetail = cycleEngine.buildSelectedDetail(built.weeks, this.data.selectedDateKey, todayDate);
-    this.setData({ monthLabel, weeks: built.weeks, selectedDetail, summaryDays: summary.daysUntil, summaryNextStart: summary.nextStartLabel });
+    const selectedDetail = calendarI18n.localizeDetail(cycleEngine.buildSelectedDetail(built.weeks, this.data.selectedDateKey, todayDate));
+    const summaryNextStart = summary.nextStartDateKey ? i18n.t("cycle.estimatedStart", { date: i18n.formatDateKey(summary.nextStartDateKey) }) : i18n.t("cycle.noPrediction");
+    this.setData({ monthLabel, weeks: built.weeks, selectedDetail, summaryDays: summary.daysUntil, summaryNextStart });
   },
   onBackTap() {
     const pages = getCurrentPages();
@@ -80,10 +90,8 @@ Page({
       wx.navigateBack();
       return;
     }
-    console.warn("[ROUTE]", "from subpackage/periodCalendar/pages/calendar/index.js/onBackTap", "to", "/subpackage/jewelry/pages/data/index", "reason", "fallback back");
     wx.redirectTo({ url: "/subpackage/jewelry/pages/data/index" });
   },
-  onCapsuleTap() { wx.showToast({ title: "更多功能待接入", icon: "none" }); },
   onPrevMonth() {
     let { viewYear, viewMonth } = this.data;
     viewMonth -= 1;
@@ -111,12 +119,7 @@ Page({
     this.setData({ viewYear: year, viewMonth: month, selectedDateKey: this.data.todayDateKey });
     this.refreshCalendar(year, month);
   },
-  onSetupCycle() {
-    this.setData({
-      showCycleSetup: true,
-      cyclePrivacyConfirmed: !!auth.getPersonalData(auth.PERIOD_PRIVACY_KEY)
-    });
-  },
+  onSetupCycle() { this.setData({ showCycleSetup: true, cyclePrivacyConfirmed: !!auth.getPersonalData(auth.PERIOD_PRIVACY_KEY) }); },
   noop() {},
   onCloseCycleSetup() { this.setData({ showCycleSetup: false }); },
   onCycleDateChange(event) { this.setData({ "cycleProfile.lastPeriodDate": event.detail.value }); },
@@ -128,11 +131,7 @@ Page({
     const value = (event.detail.value || "").replace(/[^\d]/g, "").slice(0, 2);
     this.setData({ "cycleProfile.periodLength": value });
   },
-  onToggleCyclePrivacy() {
-    this.setData({
-      cyclePrivacyConfirmed: !this.data.cyclePrivacyConfirmed
-    });
-  },
+  onToggleCyclePrivacy() { this.setData({ cyclePrivacyConfirmed: !this.data.cyclePrivacyConfirmed }); },
   onSaveCycleSetup() {
     if (!auth.requireLogin({ source: "/subpackage/periodCalendar/pages/calendar/index" })) return;
     if (this.data.isSavingCycle) return;
@@ -143,7 +142,7 @@ Page({
       todayDate
     );
     if (prepared.error) {
-      wx.showToast({ title: prepared.error, icon: "none" });
+      wx.showToast({ title: i18n.t("errors.validation"), icon: "none" });
       return;
     }
     const profile = prepared.profile;
@@ -161,7 +160,7 @@ Page({
     });
     this.refreshCalendar(this.data.viewYear, this.data.viewMonth);
     wx.showToast({
-      title: "周期设置完成",
+      title: i18n.t("calendar.saved"),
       icon: "success"
         });
       })
@@ -170,7 +169,7 @@ Page({
       })
       .catch((error) => {
         wx.showToast({
-          title: error && error.message ? error.message : "请先确认经期数据说明",
+          title: error && error.message ? error.message : i18n.t("calendar.privacyRequired"),
           icon: "none"
         });
         this.setData({ isSavingCycle: false });
@@ -180,7 +179,7 @@ Page({
     if (this.data.showCycleSetup) {
       return this.data.cyclePrivacyConfirmed ?
         Promise.resolve(true) :
-        Promise.reject(new Error("请先勾选经期数据说明"));
+        Promise.reject(new Error(i18n.t("calendar.privacyRequired")));
     }
     if (this.data.cyclePrivacyConfirmed || auth.getPersonalData(auth.PERIOD_PRIVACY_KEY)) {
       return Promise.resolve(true);
@@ -191,7 +190,7 @@ Page({
         cyclePrivacyConfirmed: false
       });
     }
-    return Promise.reject(new Error("请先勾选经期数据说明"));
+    return Promise.reject(new Error(i18n.t("calendar.privacyRequired")));
   },
   ensureCyclePrivacyReady() {
     return this.confirmCyclePrivacy()
@@ -221,7 +220,7 @@ Page({
       this.refreshCalendar(this.data.viewYear, this.data.viewMonth);
     }).catch((error) => {
       wx.showToast({
-        title: error && error.message ? error.message : "请先确认经期数据说明",
+        title: error && error.message ? error.message : i18n.t("calendar.privacyRequired"),
         icon: "none"
       });
     });
@@ -243,7 +242,7 @@ Page({
     );
     if (!nextProfile) {
       wx.showToast({
-        title: "当前日期无法调整预测",
+        title: i18n.t("calendar.cannotAdjust"),
         icon: "none"
       });
       return;
@@ -255,21 +254,21 @@ Page({
       });
       this.refreshCalendar(this.data.viewYear, this.data.viewMonth);
       wx.showToast({
-        title: "已重新预测后续周期",
+        title: i18n.t("calendar.adjusted"),
         icon: "success"
       });
     }).catch((error) => {
       wx.showToast({
-        title: error && error.message ? error.message : "请先确认经期数据说明",
+        title: error && error.message ? error.message : i18n.t("calendar.privacyRequired"),
         icon: "none"
       });
     });
   },
   onClearCycleData() {
     wx.showModal({
-      title: "清除经期记录",
-      content: "将清除本机保存的经期记录和确认状态，不会影响服务器账号。",
-      confirmText: "清除",
+      title: i18n.t("settings.clearCycleTitle"),
+      content: i18n.t("settings.clearCycleContent"),
+      confirmText: i18n.t("common.delete"),
       success: (res) => {
         if (!res.confirm) return;
         const todayDate = cycleEngine.getTodayDate();
@@ -290,7 +289,7 @@ Page({
           cycleProfile: profile
         });
         this.refreshCalendar(this.data.viewYear, this.data.viewMonth);
-        wx.showToast({ title: "已清除本机经期记录", icon: "success" });
+        wx.showToast({ title: i18n.t("settings.clearCycleDone"), icon: "success" });
       }
     });
   }

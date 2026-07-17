@@ -1,3 +1,5 @@
+const i18n = require("../../../../utils/i18n");
+
 Component({
   properties: {
     weeks: {
@@ -6,7 +8,13 @@ Component({
     }
   },
   data: {
-    weekLabels: ["日", "一", "二", "三", "四", "五", "六"]
+    weekLabels: i18n.t("cycle.weekday")
+  },
+  lifetimes: {
+    attached() {
+      this.unsubscribeLocale = i18n.subscribe(() => this.setData({ weekLabels: i18n.t("cycle.weekday") }));
+    },
+    detached() { if (this.unsubscribeLocale) this.unsubscribeLocale(); }
   },
   methods: {
     onDayTap(event) {

@@ -1,61 +1,30 @@
 <view class="login-page">
-  <view class="login-backdrop">
-    <image class="login-bg" src="/assets/auth/bg-login.jpg" mode="aspectFill"></image>
-    <view class="login-shade"></view>
-  </view>
+  <view class="login-backdrop"><image class="login-bg" src="/assets/auth/bg-login.jpg" mode="aspectFill" fade-in="{{false}}"></image><view class="login-shade"></view></view>
   <status-bar></status-bar>
   <view class="login-content">
-    <view class="brand-block">
-      <view class="brand-mark"><view></view></view>
-      <text class="brand-name">Ting's</text>
-      <text class="brand-subtitle">COMPUTING POWER JEWELRY</text>
-      <text class="brand-description">智能珠宝与个人定制</text>
-    </view>
+    <view class="brand-block"><view class="brand-mark"><view class="brand-mark-inner"></view></view><text class="brand-name">Ting's</text><text class="brand-description">{{copy.description}}</text></view>
     <view class="login-form">
       <view wx:if="{{accountAuthEnabled}}" class="mode-tabs">
-        <view class="mode-tab {{loginMode === 'wechat' ? 'mode-tab-on' : ''}}" data-mode="wechat" bindtap="switchLoginMode">微信</view>
-        <view class="mode-tab {{loginMode === 'account' ? 'mode-tab-on' : ''}}" data-mode="account" bindtap="switchLoginMode">账号</view>
+        <view class="mode-tabs-indicator {{loginMode === 'account' ? 'mode-tabs-indicator-account' : ''}}"></view>
+        <view class="mode-tab {{loginMode === 'wechat' ? 'mode-tab-on' : ''}}" data-mode="wechat" bindtap="switchLoginMode">{{copy.wechatLogin}}</view>
+        <view class="mode-tab {{loginMode === 'account' ? 'mode-tab-on' : ''}}" data-mode="account" bindtap="switchLoginMode">{{copy.accountLogin}}</view>
       </view>
-      <text class="login-kicker">欢迎来到 Ting's</text>
-      <text class="login-title">保存你的专属定制与健康记录</text>
-      <text class="login-summary">登录后可跨设备同步五行结果、珠宝定制和设备数据。</text>
-      <empty-state
-        wx:if="{{serviceError}}"
-        title="登录暂时不可用"
-        desc="{{serviceError}}"
-        buttonText="重试"
-        type="auth"
-        compact="{{true}}"
-        bind:action="retryLogin"
-      ></empty-state>
-      <block wx:if="{{accountAuthEnabled && loginMode === 'account'}}">
-        <view class="field">
-          <input value="{{accountName}}" bindinput="onAccountInput" placeholder="账号 / 邮箱" placeholder-class="placeholder" confirm-type="next"></input>
+      <view class="auth-panel-stage {{loginMode === 'account' ? 'auth-panel-stage-account' : ''}} {{serviceError ? 'auth-panel-stage-error' : ''}}">
+        <view class="auth-panel auth-panel-wechat {{loginMode === 'wechat' ? 'auth-panel-active' : 'auth-panel-inactive'}}">
+          <empty-state wx:if="{{serviceError && loginMode === 'wechat'}}" class="login-error" title="{{copy.unavailable}}" desc="{{serviceError}}" buttonText="{{copy.retry}}" type="auth" compact="{{true}}" bind:action="retryLogin"></empty-state>
+          <button class="primary" bindtap="login" loading="{{isLoggingIn}}" disabled="{{isLoggingIn || isModeTransitioning}}" hover-class="primary-hover"><text>{{copy.wechatOneTap}}</text></button>
         </view>
-        <view class="field">
-          <input value="{{password}}" bindinput="onPasswordInput" password="{{true}}" placeholder="密码" placeholder-class="placeholder" confirm-type="done"></input>
-        </view>
-        <button class="primary" bindtap="accountLogin" loading="{{isAccountSubmitting}}" disabled="{{isLoggingIn || isAccountSubmitting || isCreatingAccount}}" hover-class="primary-hover"><text>账号登录</text></button>
-        <button class="secondary" bindtap="accountRegister" loading="{{isCreatingAccount}}" disabled="{{isLoggingIn || isAccountSubmitting || isCreatingAccount}}" hover-class="secondary-hover"><text>创建账号</text></button>
-      </block>
-      <block wx:else>
-        <button class="primary" bindtap="login" loading="{{isLoggingIn}}" disabled="{{isLoggingIn || isAccountSubmitting || isCreatingAccount}}" hover-class="primary-hover"><text>微信登录</text></button>
-      </block>
-      <view class="agreement-row" bindtap="toggleAgreement">
-        <view class="agreement-check {{agreed ? 'agreement-check-on' : ''}}">
-          <text wx:if="{{agreed}}">✓</text>
-        </view>
-        <view class="agreement-copy">
-          <text>我已阅读并同意</text>
-          <text class="agreement-link" catchtap="openAgreement">《用户协议》</text>
-          <text>和</text>
-          <text class="agreement-link" catchtap="openPrivacy">《隐私政策》</text>
+        <view class="auth-panel auth-panel-account {{loginMode === 'account' ? 'auth-panel-active' : 'auth-panel-inactive'}}">
+          <empty-state wx:if="{{serviceError && loginMode === 'account'}}" class="login-error" title="{{copy.unavailable}}" desc="{{serviceError}}" buttonText="{{copy.retry}}" type="auth" compact="{{true}}" bind:action="retryLogin"></empty-state>
+          <view class="field"><input class="login-input" value="{{accountName}}" bindinput="onAccountInput" placeholder="{{copy.accountPlaceholder}}" placeholder-class="placeholder" confirm-type="next"></input></view>
+          <view class="field"><input class="login-input" value="{{password}}" bindinput="onPasswordInput" password="{{true}}" placeholder="{{copy.passwordPlaceholder}}" placeholder-class="placeholder" confirm-type="done"></input></view>
+          <button class="primary" bindtap="accountLogin" loading="{{isAccountSubmitting}}" disabled="{{isAccountSubmitting || isCreatingAccount || isModeTransitioning}}" hover-class="primary-hover"><text>{{copy.accountLogin}}</text></button>
+          <button class="secondary" bindtap="accountRegister" loading="{{isCreatingAccount}}" disabled="{{isAccountSubmitting || isCreatingAccount || isModeTransitioning}}" hover-class="secondary-hover"><text>{{copy.createAccount}}</text></button>
+          <text class="account-notice">{{copy.accountNotice}}</text>
         </view>
       </view>
-      <view class="link-row">
-        <text class="privacy-guide-link" bindtap="openWechatPrivacy">微信隐私保护指引</text>
-        <text class="guest-link" bindtap="enterGuest">暂不登录，先浏览</text>
-      </view>
+      <button class="agreement-row" bindtap="toggleAgreement" hover-class="agreement-row-hover"><view class="agreement-check {{agreed ? 'agreement-check-on' : ''}}"><text wx:if="{{agreed}}">✓</text></view><view class="agreement-copy"><text>{{copy.agreementPrefix}}</text><text class="agreement-link" catchtap="openAgreement">{{copy.agreement}}</text><text>{{copy.and}}</text><text class="agreement-link" catchtap="openPrivacy">{{copy.privacy}}</text></view></button>
+      <view class="link-row"><text class="guest-link" bindtap="enterGuest">{{copy.guest}}</text></view>
     </view>
   </view>
 </view>

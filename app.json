@@ -9,7 +9,7 @@
     {
       "root": "subpackage/jewelry",
       "name": "jewelry",
-      "pages": ["pages/home/index", "pages/data/index", "pages/settings/index", "pages/five-elements/index"]
+      "pages": ["pages/data/index", "pages/sleep-detail/index", "pages/settings/index", "pages/five-elements/index"]
     },
     {
       "root": "subpackage/periodCalendar",

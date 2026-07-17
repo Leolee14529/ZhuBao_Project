@@ -3,7 +3,6 @@ const cors = require("cors");
 const helmet = require("helmet");
 const { rateLimit, ipKeyGenerator } = require("express-rate-limit");
 const authRouter = require("./routes/auth");
-const fortunesRouter = require("./routes/fortunes");
 const dailyCheckinsRouter = require("./routes/dailyCheckins");
 const usersRouter = require("./routes/users");
 const wuxingRouter = require("./routes/wuxing");
@@ -119,7 +118,6 @@ function createApp(config = loadConfig()) {
     createAccountRateLimiter()
   );
   app.use("/api/auth", authRouter);
-  app.use("/api/fortunes", fortunesRouter);
   app.use("/api/daily-checkins", dailyCheckinsRouter);
   app.use("/api/users", usersRouter);
   app.use("/api/wuxing", wuxingRouter);

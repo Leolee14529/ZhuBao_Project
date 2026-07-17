@@ -2,7 +2,7 @@
   <view class="image-wrap">
     <image class="product-image" src="{{image}}" mode="aspectFill"></image>
     <view class="shade"></view>
-    <text wx:if="{{isNew}}" class="tag">新品</text>
+    <text wx:if="{{isNew}}" class="tag">{{newLabel}}</text>
   </view>
   <view class="product-meta">
     <view><text class="name">{{name}}</text><text class="type">{{type}}</text></view>

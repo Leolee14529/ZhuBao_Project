@@ -2,6 +2,7 @@ const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const path = require("node:path");
 const test = require("node:test");
+const { PROHIBITED_REVIEW_TERMS } = require("./helpers/review-policy");
 
 const root = path.resolve(__dirname, "..", "..");
 
@@ -94,12 +95,14 @@ test("login page keeps a visible first screen", () => {
   const appStyle = readText("app.wxss");
   const loginPage = readText("pages/login/index.wxml");
   const loginStyle = readText("pages/login/index.wxss");
+  const i18nCopy = readText("utils/i18n-copy.js");
 
   assert.ok(appStyle.includes("min-height: 100vh"));
   assert.ok(loginPage.includes("class=\"login-page\""));
   assert.ok(loginPage.includes("class=\"login-bg\""));
   assert.ok(loginPage.includes("class=\"brand-name\""));
-  assert.ok(loginPage.includes("微信登录"));
+  assert.ok(loginPage.includes("copy.wechatLogin"));
+  assert.ok(i18nCopy.includes('wechatLogin: "微信登录"'));
   assert.match(loginStyle, /\.login-page\{[^}]*min-height:100vh/);
   assert.match(loginStyle, /\.login-page\{[^}]*overflow-y:auto/);
   assert.match(loginStyle, /\.login-page\{[^}]*background:#000/);
@@ -109,11 +112,14 @@ test("login page exposes account password entry wired to backend auth", () => {
   const loginPage = readText("pages/login/index.wxml");
   const loginLogic = readText("pages/login/index.js");
   const migration = readText("backend/db/migrations/002_account_password_login.sql");
+  const i18nCopy = readText("utils/i18n-copy.js");
 
   assert.ok(loginPage.includes("mode-tab"));
   assert.ok(loginPage.includes("accountAuthEnabled"));
-  assert.ok(loginPage.includes("账号登录"));
-  assert.ok(loginPage.includes("创建账号"));
+  assert.ok(loginPage.includes("copy.accountLogin"));
+  assert.ok(loginPage.includes("copy.createAccount"));
+  assert.ok(i18nCopy.includes('accountLogin: "账号登录"'));
+  assert.ok(i18nCopy.includes('createAccount: "创建账号"'));
   assert.ok(loginLogic.includes("accountAuthEnabled: true"));
   assert.ok(loginLogic.includes("/api/auth/account-login"));
   assert.ok(loginLogic.includes("/api/auth/account-register"));
@@ -154,8 +160,10 @@ test("release login defaults to wechat before account password", () => {
 test("period setup exposes an in-sheet data notice confirmation", () => {
   const calendarPage = readText("subpackage/periodCalendar/pages/calendar/index.wxml");
   const calendarLogic = readText("subpackage/periodCalendar/pages/calendar/index.js");
+  const i18nCopy = readText("utils/i18n-copy.js");
 
-  assert.ok(calendarPage.includes("我已知晓经期数据说明"));
+  assert.ok(calendarPage.includes("copy.privacyTitle"));
+  assert.ok(i18nCopy.includes('privacyTitle: "我已知晓经期数据说明"'));
   assert.ok(calendarPage.includes("bindtap=\"onToggleCyclePrivacy\""));
   assert.ok(calendarLogic.includes("cyclePrivacyConfirmed"));
   assert.ok(calendarLogic.includes("auth.getPersonalData(auth.PERIOD_PRIVACY_KEY)"));
@@ -168,7 +176,7 @@ test("period calendar is a safe login restore target", () => {
   const periodRoute = "/subpackage/periodCalendar/pages/calendar/index";
 
   assert.ok(authLogic.includes(periodRoute));
-  assert.ok(loginLogic.includes(periodRoute));
+  assert.ok(loginLogic.includes("auth.getSafeLoginRedirect"));
 });
 
 test("runtime wuxing data is not committed with the review package", () => {
@@ -202,10 +210,12 @@ test("review entry opens the browseable home before login", () => {
   assert.equal(appConfig.pages[0], "pages/home/index");
 
   const entrySource = readText("pages/home/index.js");
-  assert.equal(entrySource.includes("/subpackage/jewelry/pages/home/index"), true);
+  assert.equal(entrySource.includes("/subpackage/jewelry/pages/home/index"), false);
+  assert.equal(entrySource.includes("inspiration"), true);
   assert.equal(entrySource.includes("wx.login"), false);
   assert.equal(entrySource.includes("requirePrivacyAuthorize"), false);
-  assert.equal(entrySource.includes("requireLogin"), false);
+  const onLoadSource = entrySource.slice(entrySource.indexOf("onLoad()"), entrySource.indexOf("onShow()"));
+  assert.equal(onLoadSource.includes("requireLogin"), false);
 });
 
 test("active client does not request phone, nickname, or avatar interfaces", () => {
@@ -239,42 +249,49 @@ test("active client does not request phone, nickname, or avatar interfaces", () 
 
 test("five-element preview is available before login", () => {
   const source = readText("subpackage/jewelry/pages/five-elements/index.js");
+  const i18nCopy = readText("utils/i18n-copy.js");
   const onLoadSource = source.slice(
     source.indexOf("onLoad: function"),
     source.indexOf("onDateChange: function")
   );
   assert.equal(onLoadSource.includes("requireLogin"), false);
-  assert.equal(source.includes("登录后可保存和同步五行结果"), true);
+  assert.equal(source.includes('i18n.t("five.loginToSave")'), true);
+  assert.equal(i18nCopy.includes('loginToSave: "登录后可保存和同步五行结果"'), true);
 });
 
 test("active review text does not contain prohibited promise language", () => {
   const files = [
     ...listFiles("pages", [".js", ".wxml"]),
-    ...listFiles("subpackage/jewelry", [".js", ".wxml"]),
-    ...listFiles("subpackage/periodCalendar", [".js", ".wxml"])
+    ...listFiles("subpackage", [".js", ".json", ".wxml"]),
+    ...listFiles("backend/routes", [".js"]),
+    ...listFiles("backend/services", [".js"]),
+    ...listFiles("backend/scripts", [".js"]),
+    "backend/app.js",
+    "backend/README.md",
+    "utils/i18n-copy.js",
+    "交接文档.md"
   ];
-  const prohibited = [
-    "治疗",
-    "改善疾病",
-    "调理身体",
-    "疗愈",
-    "保证",
-    "必然有效",
-    "助孕",
-    "生育预测",
-    "精准命理",
-    "改运",
-    "转运",
-    "旺财",
-    "排卵日",
-    "易孕期",
-    "安全期"
-  ];
-
   for (const file of files) {
-    const text = readText(file);
-    for (const word of prohibited) {
+    const text = readText(file).toLowerCase();
+    for (const word of PROHIBITED_REVIEW_TERMS) {
       assert.equal(text.includes(word), false, `${file} contains prohibited word ${word}`);
     }
   }
+});
+
+test("release project config keeps request-domain validation enabled", () => {
+  const config = JSON.parse(readText("project.config.json"));
+
+  assert.equal(config.setting && config.setting.urlCheck, true);
+});
+
+test("privacy policy discloses every server-side daily record field", () => {
+  const copy = require("../../utils/i18n-copy");
+  const chinese = copy["zh-CN"].legal.privacyParagraphs.join("\n");
+  const english = copy["en-US"].legal.privacyParagraphs.join("\n");
+
+  assert.ok(chinese.includes("心情、精力、睡眠时长、饰品佩戴状态、标签和备注"));
+  assert.ok(chinese.includes("保存在服务器"));
+  assert.ok(english.includes("mood, energy, sleep duration, jewelry-wearing status, tags, and notes"));
+  assert.ok(english.includes("stored on the server"));
 });

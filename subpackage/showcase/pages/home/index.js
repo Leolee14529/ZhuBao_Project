@@ -2,13 +2,12 @@ Page({
   data: {
     topSpacer: 40,
     activeTab: "home",
-    fortuneFlipped: false,
     stats: [
       {
         accent: "#87a9ff",
         title: "今日心情",
         value: "暂无",
-        desc: "心率 · 0 bpm"
+        desc: "暂无设备数据"
       },
       {
         accent: "#ff7aa8",
@@ -20,12 +19,12 @@ Page({
     device: {
       name: "暂无设备",
       status: "未连接",
-      battery: "0%",
+      battery: "--",
       sync: "暂无同步数据",
       metrics: [
-        { label: "体温", value: "0°C" },
-        { label: "步数", value: "0" },
-        { label: "睡眠", value: "0 h" }
+        { label: "体温", value: "--" },
+        { label: "步数", value: "--" },
+        { label: "睡眠", value: "--" }
       ]
     },
     products: [
@@ -45,11 +44,6 @@ Page({
     if (navLayout && navLayout.contentOffset) {
       this.setData({ topSpacer: navLayout.contentOffset });
     }
-  },
-  handleFortuneToggle() {
-    this.setData({
-      fortuneFlipped: !this.data.fortuneFlipped
-    });
   },
   handleTabChange(e) {
     const { tab } = e.detail;

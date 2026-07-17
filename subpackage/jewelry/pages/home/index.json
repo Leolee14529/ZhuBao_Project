@@ -1,8 +1,0 @@
-{
-  "navigationStyle": "custom",
-  "usingComponents": {
-    "divination-card": "/subpackage/jewelry/components/divination-card/divination-card",
-    "device-card": "/subpackage/jewelry/components/device-card/device-card",
-    "bottom-nav": "/subpackage/jewelry/components/bottom-nav/bottom-nav"
-  }
-}

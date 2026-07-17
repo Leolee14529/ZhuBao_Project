@@ -2,6 +2,7 @@ var fiveElements = require("../../utils/five-elements");
 var request = require("../../../../utils/request");
 var auth = require("../../../../utils/auth");
 var privacy = require("../../../../utils/privacy");
+var i18n = require("../../../../utils/i18n");
 
 Page({
   data: {
@@ -9,11 +10,14 @@ Page({
     birthDate: "",
     birthTime: "",
     gender: "female",
-    genderOptions: ["女", "男"],
+    copy: i18n.getCopy("five"),
+    genderOptions: [i18n.t("five.female"), i18n.t("five.male")],
     genderIndex: 0,
     isSaving: false,
     isLoggedIn: false,
-    focusElement: "木",
+    focusElement: i18n.t("elements.wood"),
+    focusLabel: i18n.t("five.focus", { element: i18n.t("elements.wood") }),
+    commonSaving: i18n.t("common.saving"),
     destinyLine: "",
     previewTags: []
   },
@@ -36,6 +40,8 @@ Page({
       gender: birthInput.gender,
       genderIndex: birthInput.gender === "male" ? 1 : 0
     });
+    this.unsubscribeLocale = i18n.subscribe(() => { this.applyLocale(); this.refreshPreview(); });
+    this.applyLocale();
     this.refreshPreview();
     this.loadLatestResult();
   },
@@ -43,7 +49,9 @@ Page({
     this.setData({
       isLoggedIn: auth.isLoggedIn()
     });
+    this.applyLocale();
   },
+  onUnload: function () { if (this.unsubscribeLocale) this.unsubscribeLocale(); },
 
   onDateChange: function (event) {
     this.setData({
@@ -119,8 +127,10 @@ Page({
   },
 
   applyPreviewProfile: function (profile) {
+    profile = fiveElements.localizeProfile(profile);
     this.setData({
       focusElement: profile.focusElement,
+      focusLabel: i18n.t("five.focus", { element: profile.focusElement }),
       destinyLine: profile.destinyLine,
       previewTags: profile.elements.slice(0, 5).map(function (item) {
         return {
@@ -159,7 +169,7 @@ Page({
     if (!auth.isLoggedIn()) {
       auth.requireLogin({
         source: "/subpackage/jewelry/pages/five-elements/index",
-        reason: "登录后可保存和同步五行结果"
+        reason: i18n.t("five.loginToSave")
       });
       return;
     }
@@ -185,7 +195,7 @@ Page({
       fiveElements.saveBirthInput(birthInput);
       fiveElements.saveWuxingResult(data.result);
       wx.showToast({
-        title: "已更新五行",
+        title: i18n.t("five.updated"),
         icon: "success"
       });
       setTimeout(function () {
@@ -199,7 +209,7 @@ Page({
       }, 450);
     }).catch(function (error) {
       wx.showToast({
-        title: error && error.message ? error.message : "保存失败，请重试",
+        title: error && error.message ? error.message : i18n.t("errors.saveFailed"),
         icon: "none"
       });
     }).then(function () {
@@ -212,20 +222,20 @@ Page({
     }
     return new Promise(function (resolve, reject) {
       wx.showModal({
-        title: "出生资料用途说明",
-        content: "将保存出生日期、出生时间、性别，用于五行计算和饰品风格推荐；可在设置中删除；不构成命理、健康或功效承诺。",
-        confirmText: "同意保存",
-        cancelText: "取消",
+        title: i18n.t("five.noticeTitle"),
+        content: i18n.t("five.noticeContent"),
+        confirmText: i18n.t("five.consent"),
+        cancelText: i18n.t("common.cancel"),
         success: function (res) {
           if (!res.confirm) {
-            reject(new Error("已取消保存"));
+            reject(new Error(i18n.t("five.cancelled")));
             return;
           }
           auth.setPersonalData(auth.BIRTH_NOTICE_KEY, true);
           resolve(true);
         },
         fail: function () {
-          reject(new Error("暂时无法保存，请稍后重试"));
+          reject(new Error(i18n.t("five.unavailable")));
         }
       });
     });
@@ -238,9 +248,17 @@ Page({
       });
       return;
     }
-    console.warn("[ROUTE]", "from subpackage/jewelry/pages/five-elements/index.js/goBack", "to", "/subpackage/jewelry/pages/home/index", "reason", "fallback back");
     wx.redirectTo({
-      url: "/subpackage/jewelry/pages/home/index"
+      url: "/pages/home/index"
+    });
+  },
+  applyLocale: function () {
+    var copy = i18n.getCopy("five");
+    this.setData({
+      copy: copy,
+      commonSaving: i18n.t("common.saving"),
+      focusLabel: i18n.t("five.focus", { element: this.data.focusElement }),
+      genderOptions: [copy.female, copy.male]
     });
   }
 });

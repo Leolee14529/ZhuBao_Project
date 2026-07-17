@@ -2,9 +2,9 @@ const request = require("../../utils/request");
 const auth = require("../../utils/auth");
 const privacy = require("../../utils/privacy");
 const config = require("../../utils/config");
+const i18n = require("../../utils/i18n");
 
-const HOME_URL = "/subpackage/jewelry/pages/home/index";
-const DEFAULT_LOGIN_ERROR = "登录暂时不可用，请稍后再试";
+const HOME_URL = "/pages/home/index";
 const WX_LOGIN_TIMEOUT_MS = 12000;
 const WX_LOGIN_MAX_ATTEMPTS = 2;
 
@@ -14,20 +14,24 @@ Page({
     isLoggingIn: false,
     isAccountSubmitting: false,
     isCreatingAccount: false,
+    isModeTransitioning: false,
     loginMode: "wechat",
     accountAuthEnabled: true,
     accountName: "",
     password: "",
     lastAccountAction: "login",
     agreed: false,
-    redirect: ""
+    redirect: "",
+    copy: i18n.getCopy("login")
   },
   onLoad(options) {
     this.setData({
       agreed: false,
       accountAuthEnabled: config.isAccountAuthEnabled(),
-      redirect: this.safeDecodeRedirect(options && options.redirect)
+      redirect: this.safeDecodeRedirect(options && options.redirect),
+      copy: i18n.getCopy("login")
     });
+    this.unsubscribeLocale = i18n.subscribe(() => this.setData({ copy: i18n.getCopy("login") }));
     if (auth.getAuthState().status !== "anonymous") {
       this.goHome().catch(() => null);
     }
@@ -46,7 +50,7 @@ Page({
       .catch((error) => {
         console.error("wechat login failed", error);
         this.setData({
-          serviceError: error && error.message ? error.message : DEFAULT_LOGIN_ERROR
+          serviceError: error && error.message ? error.message : i18n.t("login.unavailable")
         });
       })
       .then(() => {
@@ -63,7 +67,7 @@ Page({
   },
   submitAccount(action) {
     if (!this.data.accountAuthEnabled) {
-      this.setData({ serviceError: "账号登录暂未开放，请使用微信登录" });
+      this.setData({ serviceError: i18n.t("login.accountUnavailable") });
       return;
     }
     if (this.isAuthBusy()) return;
@@ -74,7 +78,7 @@ Page({
     const accountName = this.data.accountName.trim();
     const password = this.data.password;
     if (!accountName || !password) {
-      this.setData({ serviceError: "请输入账号和密码" });
+      this.setData({ serviceError: i18n.t("login.accountRequired") });
       return;
     }
 
@@ -90,7 +94,7 @@ Page({
       .catch((error) => {
         console.error("account auth failed", error);
         this.setData({
-          serviceError: error && error.message ? error.message : DEFAULT_LOGIN_ERROR
+          serviceError: error && error.message ? error.message : i18n.t("login.unavailable")
         });
       })
       .then(() => {
@@ -99,8 +103,8 @@ Page({
   },
   ensureLoginReady() {
     if (!this.data.agreed) {
-      this.setData({ serviceError: "请先阅读并同意用户协议与隐私政策" });
-      return Promise.reject(new Error("请先阅读并同意用户协议与隐私政策"));
+      this.setData({ serviceError: i18n.t("login.agreementRequired") });
+      return Promise.reject(new Error(i18n.t("login.agreementRequired")));
     }
 
     return privacy.checkWechatPrivacyReady({
@@ -113,7 +117,7 @@ Page({
     const user = data && data.user;
 
     if (!token || !user) {
-      throw new Error(DEFAULT_LOGIN_ERROR);
+      throw new Error(i18n.t("login.unavailable"));
     }
 
     auth.acceptAuthenticatedSession(token, user);
@@ -137,7 +141,7 @@ Page({
 
         settled = true;
         console.error("[login] wx.login timeout", { attempt: currentAttempt });
-        reject(new Error("微信登录超时，请稍后重试"));
+        reject(new Error(i18n.t("login.timeout")));
       }, WX_LOGIN_TIMEOUT_MS);
 
       const finish = (callback) => {
@@ -157,14 +161,14 @@ Page({
             return;
           }
 
-          finish(() => reject(new Error(DEFAULT_LOGIN_ERROR)));
+          finish(() => reject(new Error(i18n.t("login.unavailable"))));
         },
         fail: (error) => {
           console.error("[login] wx.login fail", {
             attempt: currentAttempt,
             error
           });
-          finish(() => reject(new Error(DEFAULT_LOGIN_ERROR)));
+          finish(() => reject(new Error(i18n.t("login.unavailable"))));
         }
       });
     }).catch((error) => {
@@ -197,14 +201,7 @@ Page({
     }
   },
   getSafeRedirect() {
-    const redirect = this.data.redirect;
-    if (redirect === "/subpackage/jewelry/pages/data/index" ||
-      redirect === "/subpackage/jewelry/pages/settings/index" ||
-      redirect === "/subpackage/jewelry/pages/five-elements/index" ||
-      redirect === "/subpackage/periodCalendar/pages/calendar/index") {
-      return redirect;
-    }
-    return "";
+    return auth.getSafeLoginRedirect(this.data.redirect);
   },
   toggleAgreement() {
     this.setData({
@@ -217,10 +214,14 @@ Page({
     const mode = event.currentTarget.dataset.mode;
     if (mode !== "account" && mode !== "wechat") return;
     if (mode === "account" && !this.data.accountAuthEnabled) return;
+    if (mode === this.data.loginMode) return;
     this.setData({
       loginMode: mode,
+      isModeTransitioning: true,
       serviceError: ""
     });
+    clearTimeout(this.modeTransitionTimer);
+    this.modeTransitionTimer = setTimeout(() => this.setData({ isModeTransitioning: false }), 240);
   },
   onAccountInput(event) {
     this.setData({
@@ -243,7 +244,7 @@ Page({
   openWechatPrivacy() {
     privacy.openWechatPrivacyContract().catch((error) => {
       this.setData({
-        serviceError: error && error.message ? error.message : "微信隐私保护指引暂时无法打开"
+        serviceError: error && error.message ? error.message : i18n.t("login.privacyOpenFailed")
       });
     });
   },
@@ -263,5 +264,9 @@ Page({
       return;
     }
     this.login();
+  },
+  onUnload() {
+    clearTimeout(this.modeTransitionTimer);
+    if (this.unsubscribeLocale) this.unsubscribeLocale();
   }
 });

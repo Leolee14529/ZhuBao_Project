@@ -7,7 +7,8 @@ const baseUrl = String(
   DEFAULT_BASE_URL
 ).replace(/\/+$/, "");
 
-const password = process.env.ZHUBAO_SMOKE_PASSWORD || "SmokePass2026!";
+const password = process.env.ZHUBAO_SMOKE_PASSWORD ||
+  `Zb${crypto.randomBytes(16).toString("hex")}9a`;
 const accountName = process.env.ZHUBAO_SMOKE_ACCOUNT ||
   `smoke_${Date.now()}_${crypto.randomBytes(3).toString("hex")}`;
 
@@ -66,8 +67,7 @@ async function main() {
     }), 400, "wechat auth route");
     assertStatus(await request("/api/auth/logout", { method: "POST" }), 401, "logout route auth guard");
     assertStatus(await request("/api/wuxing/latest"), 401, "wuxing auth guard");
-    assertSuccess(await request("/api/fortunes/random"), "fortune random");
-
+    assertStatus(await request("/api/daily-checkins"), 401, "daily check-in auth guard");
     const register = await request("/api/auth/account-register", {
       method: "POST",
       body: JSON.stringify({ accountName, password })
@@ -99,6 +99,55 @@ async function main() {
     assertSuccess(me, "current user");
     if (!me.body.data.user || me.body.data.user.id !== registered.user.id) {
       throw new Error("current user does not match login session");
+    }
+
+    const checkinDate = new Date().toISOString().slice(0, 10);
+    const checkinHeaders = {
+      authorization: `Bearer ${signedIn.token}`,
+      "content-type": "application/json"
+    };
+    const checkinInput = {
+      checkinDate,
+      mood: 4,
+      energy: 3,
+      sleepMinutes: 420,
+      isWearingJewelry: true,
+      tags: ["平静"],
+      note: "production smoke"
+    };
+    const createdCheckin = await request("/api/daily-checkins", {
+      method: "POST",
+      headers: checkinHeaders,
+      body: JSON.stringify(checkinInput)
+    });
+    assertSuccess(createdCheckin, "daily check-in create");
+
+    const updatedCheckin = await request("/api/daily-checkins", {
+      method: "POST",
+      headers: checkinHeaders,
+      body: JSON.stringify({ ...checkinInput, energy: 5 })
+    });
+    assertSuccess(updatedCheckin, "daily check-in update");
+    if (updatedCheckin.body.data.checkin.energy !== 5) {
+      throw new Error("daily check-in update did not persist");
+    }
+
+    const listedCheckins = await request(
+      `/api/daily-checkins?from=${checkinDate}&to=${checkinDate}&limit=1`,
+      { headers: checkinHeaders }
+    );
+    assertSuccess(listedCheckins, "daily check-in list");
+    if (!listedCheckins.body.data.checkins || listedCheckins.body.data.checkins.length !== 1) {
+      throw new Error("daily check-in list did not return the smoke record");
+    }
+
+    const removedCheckin = await request(`/api/daily-checkins/${checkinDate}`, {
+      method: "DELETE",
+      headers: checkinHeaders
+    });
+    assertSuccess(removedCheckin, "daily check-in delete");
+    if (removedCheckin.body.data.deleted !== true) {
+      throw new Error("daily check-in delete did not remove the smoke record");
     }
 
     const deleted = await request("/api/users/me", {

@@ -1,11 +1,35 @@
-<view class="entry-page">
-  <view class="entry-glow entry-glow-top"></view>
-  <view class="entry-glow entry-glow-bottom"></view>
-  <view class="entry-content">
-    <view class="brand-mark"><view></view></view>
-    <text class="brand-name">Ting's</text>
-    <text class="brand-subtitle">Computing Power Jewelry</text>
-    <text class="entry-status">{{redirectFailed ? '首页加载失败，请重试' : '正在进入首页'}}</text>
-    <button wx:if="{{redirectFailed}}" class="retry-button" bindtap="openServiceHome">重新进入</button>
-  </view>
+<view class="home-page">
+  <scroll-view class="home-scroll" scroll-y="true" enhanced="true" bounces="true" show-scrollbar="false">
+    <view class="page-body">
+      <view class="page-top-spacer" style="height: {{topSpacer}}px;"></view>
+      <view class="page-header">
+        <text class="hello-line">{{copy.hello}}</text>
+        <text class="destiny-line">{{copy.homeIntro}}</text>
+      </view>
+
+      <view class="inspiration-card {{flipped ? 'inspiration-card-flipped' : ''}}" bindtap="toggleInspiration">
+        <view class="inspiration-front">
+          <view class="inspiration-grid"></view>
+          <view class="inspiration-head"><text class="inspiration-label">{{copy.dailyInspiration}}</text><text class="inspiration-no">{{inspiration.no}}</text></view>
+          <view class="inspiration-center"><view class="inspiration-ring"><text>{{inspiration.symbol}}</text></view><text class="inspiration-title">{{inspiration.title}}</text><text class="inspiration-subtitle">{{copy.todayColor}} / {{inspiration.color}}</text></view>
+          <text class="inspiration-text">{{copy.inspirationTip}}</text>
+        </view>
+        <view class="inspiration-back"><text class="inspiration-back-title">{{copy.dailyInspiration}}</text><text class="inspiration-back-tip">{{copy.flipHint}}</text></view>
+      </view>
+
+      <view class="stats-row">
+        <view class="stat-card mood-card"><view class="card-caption"><view class="caption-dot"></view><text>{{copy.mood}}</text></view><text class="mood-name">{{copy.moodName}}</text><text class="card-desc">{{copy.moodDesc}}</text></view>
+        <view class="stat-card color-card"><view class="card-caption"><view class="caption-dot"></view><text>{{copy.todayColor}}</text></view><view class="color-value"><text>{{inspiration.color}}</text><view class="color-swatch"></view></view><text class="card-desc">{{copy.colorDesc}}</text></view>
+      </view>
+
+      <button class="primary-action" disabled="{{primaryActionDisabled}}" bindtap="openDailyRecord">{{primaryAction}}</button>
+
+      <view class="device-card device-card-disabled"><image class="device-icon" src="/subpackage/jewelry/assets/device-bluetooth.png" mode="aspectFill"></image><view class="device-main"><text class="device-title">{{copy.device}}</text><text class="device-name">{{copy.noDevice}}</text></view><view class="device-side"><text class="device-status">{{copy.disconnected}}</text></view></view>
+
+      <view class="section-head"><text class="section-title">{{copy.styleReference}}</text></view>
+      <view class="gallery"><view class="gallery-col"><block wx:for="{{leftProducts}}" wx:key="image"><view class="product-card {{item.cardClass}}"><image class="product-image" src="{{item.image}}" mode="aspectFill" lazy-load="true"></image></view></block></view><view class="gallery-col"><block wx:for="{{rightProducts}}" wx:key="image"><view class="product-card {{item.cardClass}}"><image class="product-image" src="{{item.image}}" mode="aspectFill" lazy-load="true"></image></view></block></view></view>
+      <view class="bottom-space"></view>
+    </view>
+  </scroll-view>
+  <bottom-nav active="home"></bottom-nav>
 </view>
