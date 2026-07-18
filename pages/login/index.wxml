@@ -1,6 +1,5 @@
 <view class="login-page">
   <view class="login-backdrop"><image class="login-bg" src="/assets/auth/bg-login.jpg" mode="aspectFill" fade-in="{{false}}"></image><view class="login-shade"></view></view>
-  <status-bar></status-bar>
   <view class="login-content">
     <view class="brand-block"><view class="brand-mark"><view class="brand-mark-inner"></view></view><text class="brand-name">Ting's</text><text class="brand-description">{{copy.description}}</text></view>
     <view class="login-form">

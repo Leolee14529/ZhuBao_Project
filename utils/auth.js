@@ -175,13 +175,20 @@ function redirectToLogin(source) {
   if (isRedirectingToLogin) return;
   isRedirectingToLogin = true;
   clearAuthState();
-  wx.reLaunch({
-    url: buildLoginUrl(source),
-    complete() {
-      setTimeout(() => {
-        isRedirectingToLogin = false;
-      }, 300);
-    }
+  const finishRedirect = () => {
+    setTimeout(() => {
+      isRedirectingToLogin = false;
+    }, 300);
+  };
+  const url = buildLoginUrl(source);
+  wx.navigateTo({
+    url,
+    animationType: "slide-in-right",
+    animationDuration: 220,
+    fail() {
+      wx.redirectTo({ url, complete: finishRedirect });
+    },
+    complete: finishRedirect
   });
 }
 

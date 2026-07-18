@@ -44,17 +44,28 @@ const zhCN = {
     homeIntro: "今日灵感与珠宝风格参考", dailyInspiration: "今日灵感", todayColor: "今日色彩", inspirationTitle: "清润", inspirationColor: "青绿色", inspirationTip: "把注意力放回手边的一件小事，慢慢呼吸 6 次。", flipHint: "点击翻面",
     mood: "今日状态", moodName: "今天也慢慢来", moodDesc: "不用急，先照顾好自己的节奏。", colorDesc: "为今天选择一件喜欢的饰品。", styleReference: "风格参考", moreReferences: "更多参考", signInToRecord: "登录后记录今天", loadingRecord: "正在读取今日记录", recordUnavailable: "记录暂不可用", recordToday: "记录今天", viewToday: "查看今日记录", navHome: "首页", navData: "记录", navSettings: "设置"
   },
+  products: {
+    title: "风格参考", subtitle: "色彩与材质参考", back: "返回", kicker: "STYLE REFERENCE", featureTitle: "珠宝风格灵感",
+    search: "搜索", searchPlaceholder: "搜索名称、类型或风格", clearSearch: "清除", noResults: "没有找到对应风格，试试其他关键词。",
+    filters: [{ id: "all", label: "全部" }, { id: "new", label: "近期" }, { id: "necklace", label: "项链" }, { id: "earwear", label: "耳饰" }, { id: "ring", label: "戒指" }, { id: "material", label: "材质" }],
+    moodFilterTitle: "按此刻的情绪选择", moodFilterHint: "情绪风格", moods: [{ id: "all", label: "全部情绪" }, { id: "calm", label: "平静" }, { id: "focused", label: "专注" }, { id: "bright", label: "明亮" }, { id: "relaxed", label: "松弛" }, { id: "grounded", label: "沉稳" }],
+    tags: { recent: "近期", display: "展示", material: "材质" }, styleNotes: "风格说明",
+    detailTitle: "风格展示", detailSubtitle: "完整图文参考", previewImage: "点击查看大图", colorMaterial: "色彩与材质", stylingReference: "搭配参考", moodReference: "情绪与色彩参考", moodReferenceDesc: "从当下的感受出发选择色彩与材质，只作为穿搭灵感，不替代你的真实感受。", recordFeeling: "记录今日感受", recordFeelingHint: "进入记录页，保存你此刻真实的状态",
+    shareList: "海米算力 | 珠宝风格参考", shareDetail: "海米算力 | {{name}}"
+  },
   data: {
     title: "数据记录", subtitle: "今日记录", score: "今日记录", noRecord: "今天还没有记录。", recorded: "已读取今天保存的真实记录。", calendar: "周期记录", entriesUnit: "条",
     loading: "加载中", loadFailed: "记录加载失败，请检查网络后重试。", retry: "重试", emptyTitle: "暂无今日记录", emptyDesc: "完成今日记录后，这里会显示你保存的状态。",
-    sleep: "睡眠记录", sleepSource: "来自今日记录中的睡眠时长", noSleep: "暂无睡眠记录", hoursUnit: "小时", minutesUnit: "分钟",
+    sleep: "睡眠记录", sleepSource: "来自今日记录中的睡眠时长", noSleep: "暂无睡眠记录", hoursUnit: "小时", minutesUnit: "分钟", sleepTrend: "近 7 日睡眠", sleepTrendSubtitle: "只统计你主动保存的睡眠时长", viewSleepTrend: "查看详情", averageSleep: "平均时长", recordedNights: "记录晚数", recordedNightsUnit: "晚", averageSleepEmpty: "--", noSleepTrend: "记录睡眠时长后，这里会形成趋势。",
     recordDetails: "今日状态", moodScore: "心情", energyScore: "精力", wearing: "饰品佩戴", wearingYes: "今日已佩戴", wearingNo: "今日未佩戴", note: "备注", noNote: "暂无备注",
+    weekRhythm: "近 7 日节奏", weekRhythmSubtitle: "只呈现你真实保存的记录", weekDays: ["日", "一", "二", "三", "四", "五", "六"], weekRecorded: "记录天数", averageMood: "平均心情", jewelryDays: "饰品陪伴", weekRecordedUnit: "天", averageMoodUnit: "分", jewelryDaysUnit: "天", timesUnit: "次", weekSummary: "你的近 7 日节奏已根据真实记录更新。", noWeeklyRecords: "记录几天后，这里会出现你的节奏。", weeklyLoadFailed: "近 7 日记录暂时无法读取。",
+    feelings: "感受记录", feelingsSubtitle: "近 7 日出现较多的关键词", noFeelings: "保存感受标签后，这里会形成你的关键词。", todayFeeling: "今日感受", feelingReady: "已生成", feelingPending: "待记录", calmPace: "状态较稳，适合把注意力留给眼前的一件事。", gentlePace: "今天可以放慢一点，先照顾好自己的节奏。", brightPace: "今天的状态有光，可以顺着这份能量做喜欢的事。", jewelryCompanion: "饰品是今天的一份陪伴，不替代你的感受与判断。", selfCompanion: "没有佩戴也没关系，真正重要的是你当下的感受。", noTodayFeeling: "完成今日记录后，这里会生成一条只基于真实记录的提示。",
     createRecord: "记录今天", editRecord: "编辑记录", deleteRecord: "删除记录", saveRecord: "保存记录", saving: "保存中", saved: "记录已保存", saveFailed: "保存失败，请重试", formInvalid: "请检查评分和睡眠时长",
     sleepDuration: "睡眠时长", feelingTags: "感受标签", notePlaceholder: "可选，最多 200 字", deleteTitle: "删除今日记录", deleteContent: "删除后可在 5 秒内撤销。", deleteConfirm: "删除", deleteFailed: "删除失败，请重试", deleted: "今日记录已删除", undo: "撤销", undoFailed: "撤销失败，请重新记录",
     tagOptions: [{ value: "专注", label: "专注" }, { value: "放松", label: "放松" }, { value: "社交", label: "社交" }, { value: "疲惫", label: "疲惫" }, { value: "平静", label: "平静" }]
   },
   sleepDetail: {
-    title: "睡眠记录", overview: "今日睡眠", source: "来自今日记录", total: "记录时长", loading: "加载中", retry: "重试",
+    title: "睡眠记录", overview: "睡眠概览", source: "来自每日记录", total: "记录时长", loading: "加载中", retry: "重试", rangeDay: "日", rangeWeek: "周", rangeMonth: "月", previous: "上一段", next: "下一段", trendTitle: "睡眠时长趋势", averageSleep: "平均时长", recordedNights: "记录晚数", recordedNightsUnit: "晚", averageSleepEmpty: "--", noSleepTrend: "这段时间还没有保存睡眠时长。", weekDays: ["日", "一", "二", "三", "四", "五", "六"],
     noRecord: "暂无睡眠记录", loadFailed: "睡眠记录加载失败，请稍后重试。", stageTitle: "睡眠阶段", stageUnavailable: "暂无睡眠阶段数据",
     recordOnly: "当前只记录用户填写的睡眠总时长，不推测深睡、浅睡或清醒比例。", hoursUnit: "小时", minutesUnit: "分钟"
   },
@@ -159,17 +170,28 @@ const enUS = {
     homeIntro: "Today’s inspiration and jewelry-style reference", dailyInspiration: "Today’s inspiration", todayColor: "Today’s color", inspirationTitle: "Clear glow", inspirationColor: "Jade green", inspirationTip: "Bring your attention back to one small thing at hand and take six slow breaths.", flipHint: "Tap to flip",
     mood: "Today’s state", moodName: "Take it gently today", moodDesc: "There is no need to rush. Care for your own rhythm first.", colorDesc: "Choose a piece of jewelry you like for today.", styleReference: "Style reference", moreReferences: "More", signInToRecord: "Sign in to record today", loadingRecord: "Loading today's entry", recordUnavailable: "Journal unavailable", recordToday: "Record today", viewToday: "View today's entry", navHome: "Home", navData: "Journal", navSettings: "Settings"
   },
+  products: {
+    title: "Style reference", subtitle: "Color and material studies", back: "Back", kicker: "STYLE REFERENCE", featureTitle: "Jewelry form library",
+    search: "Search", searchPlaceholder: "Search name, type, or style", clearSearch: "Clear", noResults: "No matching style. Try another keyword.",
+    filters: [{ id: "all", label: "All" }, { id: "new", label: "Recent" }, { id: "necklace", label: "Necklaces" }, { id: "earwear", label: "Earwear" }, { id: "ring", label: "Rings" }, { id: "material", label: "Materials" }],
+    moodFilterTitle: "Choose by how you feel", moodFilterHint: "Mood style", moods: [{ id: "all", label: "All moods" }, { id: "calm", label: "Calm" }, { id: "focused", label: "Focused" }, { id: "bright", label: "Bright" }, { id: "relaxed", label: "Relaxed" }, { id: "grounded", label: "Grounded" }],
+    tags: { recent: "Recent", display: "Display", material: "Material" }, styleNotes: "Style notes",
+    detailTitle: "Style study", detailSubtitle: "Full image and styling notes", previewImage: "View full image", colorMaterial: "Color and material", stylingReference: "Styling reference", moodReference: "Mood and color reference", moodReferenceDesc: "Begin with how you feel, then use color and material as styling inspiration—not as a substitute for your real feelings.", recordFeeling: "Record today's feeling", recordFeelingHint: "Open the journal and save how you actually feel",
+    shareList: "Ting's | Jewelry style reference", shareDetail: "Ting's | {{name}}"
+  },
   data: {
     title: "Journal", subtitle: "Today", score: "Today's journal", noRecord: "No entry for today yet.", recorded: "Showing your saved entry for today.", calendar: "Cycle journal", entriesUnit: "entries",
     loading: "Loading", loadFailed: "The entry could not be loaded. Check your network and try again.", retry: "Retry", emptyTitle: "No entry today", emptyDesc: "Your saved state will appear here after you complete today's entry.",
-    sleep: "Sleep journal", sleepSource: "From the sleep duration in today's entry", noSleep: "No sleep entry", hoursUnit: "h ", minutesUnit: "m",
+    sleep: "Sleep journal", sleepSource: "From the sleep duration in today's entry", noSleep: "No sleep entry", hoursUnit: "h ", minutesUnit: "m", sleepTrend: "7-day sleep", sleepTrendSubtitle: "Only durations you saved are counted", viewSleepTrend: "View details", averageSleep: "Average", recordedNights: "Nights logged", recordedNightsUnit: " nights", averageSleepEmpty: "--", noSleepTrend: "Save sleep duration to build your trend.",
     recordDetails: "Today's state", moodScore: "Mood", energyScore: "Energy", wearing: "Jewelry", wearingYes: "Worn today", wearingNo: "Not worn today", note: "Note", noNote: "No note",
+    weekRhythm: "7-day rhythm", weekRhythmSubtitle: "Built only from entries you saved", weekDays: ["S", "M", "T", "W", "T", "F", "S"], weekRecorded: "Days logged", averageMood: "Avg. mood", jewelryDays: "Jewelry days", weekRecordedUnit: "d", averageMoodUnit: "", jewelryDaysUnit: "d", timesUnit: "x", weekSummary: "Your 7-day rhythm is updated from real entries.", noWeeklyRecords: "Log a few days to reveal your rhythm.", weeklyLoadFailed: "Your 7-day entries could not be loaded.",
+    feelings: "Feeling notes", feelingsSubtitle: "Your most frequent tags from the last 7 days", noFeelings: "Save feeling tags to build your personal keywords.", todayFeeling: "Today's reflection", feelingReady: "Ready", feelingPending: "Pending", calmPace: "Your state feels steady. Keep your attention on one thing in front of you.", gentlePace: "Take today a little slower and care for your own rhythm first.", brightPace: "There is light in today's state. Follow that energy toward something you enjoy.", jewelryCompanion: "Jewelry can be a companion today, not a substitute for your own feelings or judgment.", selfCompanion: "It is fine not to wear anything. What matters is how you feel right now.", noTodayFeeling: "Complete today's entry for a reflection grounded only in what you saved.",
     createRecord: "Record today", editRecord: "Edit entry", deleteRecord: "Delete entry", saveRecord: "Save entry", saving: "Saving", saved: "Entry saved", saveFailed: "Could not save. Try again.", formInvalid: "Check the scores and sleep duration.",
     sleepDuration: "Sleep duration", feelingTags: "Feeling tags", notePlaceholder: "Optional, up to 200 characters", deleteTitle: "Delete today's entry", deleteContent: "You can undo this for 5 seconds.", deleteConfirm: "Delete", deleteFailed: "Could not delete. Try again.", deleted: "Today's entry deleted", undo: "Undo", undoFailed: "Undo failed. Create the entry again.",
     tagOptions: [{ value: "专注", label: "Focused" }, { value: "放松", label: "Relaxed" }, { value: "社交", label: "Social" }, { value: "疲惫", label: "Tired" }, { value: "平静", label: "Calm" }]
   },
   sleepDetail: {
-    title: "Sleep journal", overview: "Today's sleep", source: "From today's entry", total: "Recorded duration", loading: "Loading", retry: "Retry",
+    title: "Sleep journal", overview: "Sleep overview", source: "From daily entries", total: "Recorded duration", loading: "Loading", retry: "Retry", rangeDay: "Day", rangeWeek: "Week", rangeMonth: "Month", previous: "Previous", next: "Next", trendTitle: "Sleep-duration trend", averageSleep: "Average", recordedNights: "Nights logged", recordedNightsUnit: " nights", averageSleepEmpty: "--", noSleepTrend: "No sleep duration was saved in this period.", weekDays: ["S", "M", "T", "W", "T", "F", "S"],
     noRecord: "No sleep entry", loadFailed: "The sleep entry could not be loaded. Try again later.", stageTitle: "Sleep stages", stageUnavailable: "No sleep-stage data",
     recordOnly: "Only the sleep duration you entered is recorded. Deep, light, and awake stages are not estimated.", hoursUnit: "h ", minutesUnit: "m"
   },

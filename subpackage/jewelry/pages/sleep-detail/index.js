@@ -9,6 +9,10 @@ Page({
     copy: i18n.getCopy("sleepDetail"),
     date: "",
     sleep: "--",
+    rangeMode: "day",
+    anchorDateKey: dailyCheckins.toDateKey(),
+    trend: recordViewModel.buildSleepTrend([], dailyCheckins.toDateKey(), "day", i18n.getCopy("sleepDetail")),
+    canMoveNext: false,
     hasRecord: false,
     loading: true,
     loadError: ""
@@ -30,24 +34,23 @@ Page({
   },
   applyLocale() {
     const copy = i18n.getCopy("sleepDetail");
-    const dateKey = dailyCheckins.toDateKey();
-    const sleep = this.currentCheckin
-      ? recordViewModel.formatSleep(this.currentCheckin.sleepMinutes, copy)
-      : copy.noRecord;
-    this.setData({ copy, date: i18n.formatDateKey(dateKey), sleep });
+    const trend = recordViewModel.buildSleepTrend(this.currentCheckins || [], this.data.anchorDateKey, this.data.rangeMode, copy);
+    this.setData({ copy, trend, date: this.formatRange(trend), sleep: this.getFocusedSleep(trend, copy) });
   },
   loadSleepRecord() {
-    const dateKey = dailyCheckins.toDateKey();
+    const range = recordViewModel.buildSleepRange(this.data.anchorDateKey, this.data.rangeMode);
     this.setData({ loading: true, loadError: "" });
-    dailyCheckins.listByDate(dateKey)
+    dailyCheckins.listRange(range.from, range.to, range.limit)
       .then((checkins) => {
-        this.currentCheckin = checkins[0] || null;
+        this.currentCheckins = checkins;
+        const trend = recordViewModel.buildSleepTrend(checkins, this.data.anchorDateKey, this.data.rangeMode, this.data.copy);
         this.setData({
           loading: false,
-          hasRecord: Boolean(this.currentCheckin),
-          sleep: this.currentCheckin
-            ? recordViewModel.formatSleep(this.currentCheckin.sleepMinutes, this.data.copy)
-            : this.data.copy.noRecord
+          hasRecord: trend.hasRecords,
+          trend,
+          date: this.formatRange(trend),
+          sleep: this.getFocusedSleep(trend, this.data.copy),
+          canMoveNext: this.data.anchorDateKey < dailyCheckins.toDateKey()
         });
       })
       .catch((error) => {
@@ -55,9 +58,34 @@ Page({
           this.setData({ loading: false });
           return;
         }
-        this.currentCheckin = null;
+        this.currentCheckins = [];
         this.setData({ loading: false, hasRecord: false, loadError: this.data.copy.loadFailed, sleep: this.data.copy.noRecord });
       });
+  },
+  changeRange(event) {
+    const mode = event.currentTarget.dataset.mode;
+    if (!mode || mode === this.data.rangeMode) return;
+    this.setData({ rangeMode: mode }, () => this.loadSleepRecord());
+  },
+  moveRange(event) {
+    const direction = Number(event.currentTarget.dataset.direction);
+    if (direction > 0 && !this.data.canMoveNext) return;
+    const amount = this.data.rangeMode === "month" ? 30 : this.data.rangeMode === "week" ? 7 : 1;
+    const anchor = new Date(this.data.anchorDateKey + "T12:00:00");
+    anchor.setDate(anchor.getDate() + direction * amount);
+    const todayKey = dailyCheckins.toDateKey();
+    const nextKey = dailyCheckins.toDateKey(anchor) > todayKey ? todayKey : dailyCheckins.toDateKey(anchor);
+    this.setData({ anchorDateKey: nextKey }, () => this.loadSleepRecord());
+  },
+  formatRange(trend) {
+    if (!trend || trend.from === trend.to) return i18n.formatDateKey(trend ? trend.to : this.data.anchorDateKey);
+    return i18n.formatDateKey(trend.from) + " — " + i18n.formatDateKey(trend.to);
+  },
+  getFocusedSleep(trend, copy) {
+    if (!trend || !trend.hasRecords) return copy.noRecord;
+    if (this.data.rangeMode !== "day") return trend.averageSleep;
+    const point = trend.points[trend.points.length - 1];
+    return point && point.duration ? point.duration : copy.noRecord;
   },
   retryLoad() {
     this.loadSleepRecord();

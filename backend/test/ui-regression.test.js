@@ -8,11 +8,14 @@ const read = (file) => fs.readFileSync(path.join(root, file), "utf8");
 
 test("login keeps the layered WeChat and account entry layout", () => {
   const view = read("pages/login/index.wxml");
+  const logic = read("pages/login/index.js");
 
   assert.ok(view.includes("mode-tabs-indicator"));
   assert.ok(view.includes("auth-panel-stage"));
   assert.ok(view.includes("auth-panel-wechat"));
   assert.ok(view.includes("auth-panel-account"));
+  assert.ok(logic.includes("if (auth.isLoggedIn())"));
+  assert.ok(!logic.includes('status !== "anonymous"'));
 });
 
 test("data page keeps real daily-record and honest sleep surfaces", () => {
@@ -27,7 +30,28 @@ test("data page keeps real daily-record and honest sleep surfaces", () => {
   assert.ok(!view.includes("activity.steps"));
   assert.ok(!view.includes("chart-bars"));
   assert.ok(logic.includes("openSleepDetail"));
+  assert.ok(logic.includes("dailyCheckins.listRange"));
+  assert.ok(view.includes("weekly-rhythm-panel"));
+  assert.ok(view.includes("feeling-summary-panel"));
+  assert.ok(view.includes("today-feeling-card"));
+  assert.ok(view.includes("sleep-trend-panel"));
+  assert.ok(logic.includes("buildSleepTrend"));
+  assert.ok(view.includes("weekly-retry-button"));
+  assert.ok(!read("subpackage/jewelry/pages/data/index.wxss").includes(".weekly-error button"));
   assert.ok(jewelry.pages.includes("pages/sleep-detail/index"));
+});
+
+test("sleep detail adds real range navigation without claiming device-only sleep stages", () => {
+  const logic = read("subpackage/jewelry/pages/sleep-detail/index.js");
+  const view = read("subpackage/jewelry/pages/sleep-detail/index.wxml");
+
+  assert.ok(logic.includes("dailyCheckins.listRange"));
+  assert.ok(logic.includes("changeRange"));
+  assert.ok(view.includes("sleep-range-tabs"));
+  assert.ok(view.includes("trend-points"));
+  assert.ok(view.includes("copy.stageUnavailable"));
+  assert.ok(!view.includes("Deep Sleep"));
+  assert.ok(!view.includes("REM"));
 });
 
 test("root home stays on the restored home experience instead of redirecting to the legacy subpackage page", () => {
@@ -81,6 +105,20 @@ test("all jewelry navigation surfaces use the same localized bottom-nav componen
   assert.match(navStyle, /min-height:\s*96rpx/);
 });
 
+test("app shell and bottom dock seal viewport edges without revealing page content", () => {
+  const appStyle = read("app.wxss");
+  const appConfig = JSON.parse(read("app.json"));
+  const navStyle = read("components/bottom-nav/bottom-nav.wxss");
+
+  assert.match(appStyle, /page\s*\{[^}]*background:\s*#000000/);
+  assert.equal(appConfig.window.backgroundColor, "#000000");
+  assert.match(navStyle, /bottom:\s*-2rpx/);
+  assert.match(navStyle, /left:\s*-2rpx/);
+  assert.match(navStyle, /right:\s*-2rpx/);
+  assert.match(navStyle, /border-radius:\s*0/);
+  assert.match(navStyle, /background:\s*#000000/);
+});
+
 test("page styles do not redefine selectors owned by the shared bottom-nav", () => {
   const activePageStyles = [
     "pages/home/index.wxss",
@@ -90,6 +128,19 @@ test("page styles do not redefine selectors owned by the shared bottom-nav", () 
 
   assert.doesNotMatch(activePageStyles, /(^|})\s*\.bottom-nav\b/);
   assert.doesNotMatch(activePageStyles, /(^|,|})\s*\.nav-item(?:\b|[:.])/);
+});
+
+test("settings aligns with the shared page and dock baselines", () => {
+  const appStyle = read("app.wxss");
+  const settingsStyle = read("subpackage/jewelry/pages/settings/index.wxss");
+
+  assert.match(settingsStyle, /\.scroll-container\s*\{[^}]*bottom:\s*0/);
+  assert.match(settingsStyle, /\.page-body\s*\{[^}]*padding:\s*0\s+20rpx\s+calc\(158rpx/);
+  const pageEnter = appStyle.slice(
+    appStyle.indexOf("@keyframes page-enter"),
+    appStyle.indexOf(".login-page")
+  );
+  assert.equal(pageEnter.includes("transform:"), false);
 });
 
 test("login delegates redirect validation to the canonical auth boundary", () => {
@@ -138,25 +189,25 @@ test("settings does not present non-functional sleep and notification toggles", 
   assert.equal(sections[0].items[1].value, "Not available");
 });
 
-test("home does not expose dead device and more-reference actions", () => {
+test("home restores the working style-reference action without exposing a dead device action", () => {
   const logic = read("pages/home/index.js");
   const view = read("pages/home/index.wxml");
 
-  assert.ok(!logic.includes("openProducts"));
+  assert.ok(logic.includes("openProducts"));
   assert.ok(!logic.includes("openDevice"));
-  assert.ok(!view.includes('bindtap="openProducts"'));
+  assert.match(view, /(?:bind|catch)tap="openProducts"/);
   assert.ok(!view.includes('bindtap="openDevice"'));
   assert.ok(!view.includes("device.battery"));
 });
 
-test("home exposes one stateful daily-record action backed by real check-ins", () => {
-  const logic = read("pages/home/index.js");
+test("home keeps the journal page available without showing a middle record CTA", () => {
   const view = read("pages/home/index.wxml");
+  const homeConfig = JSON.parse(read("pages/home/index.json"));
 
-  assert.ok(logic.includes("dailyCheckins.listByDate"));
-  assert.ok(logic.includes("openDailyRecord"));
-  assert.ok(view.includes('class="primary-action"'));
-  assert.ok(view.includes('bindtap="openDailyRecord"'));
+  assert.ok(homeConfig.usingComponents && homeConfig.usingComponents["bottom-nav"]);
+  assert.ok(view.includes('<bottom-nav active="home"></bottom-nav>'));
+  assert.ok(!view.includes('class="primary-action"'));
+  assert.ok(!view.includes('bindtap="openDailyRecord"'));
 });
 
 test("successful daily-record save replaces the empty panel with the saved record", () => {
@@ -170,10 +221,20 @@ test("successful daily-record save replaces the empty panel with the saved recor
 
 test("navigation and layout helpers avoid warning noise and deprecated system info", () => {
   const app = read("app.js");
+  const appStyle = read("app.wxss");
   const dock = read("components/bottom-nav/bottom-nav.js");
+  const navigation = read("utils/navigation.js");
 
   assert.ok(app.includes("wx.getWindowInfo"));
   assert.ok(!app.includes("wx.getSystemInfoSync"));
   assert.ok(!dock.includes("console.warn"));
   assert.ok(!app.includes("routeDebug"));
+  assert.ok(navigation.includes('animationType: "slide-in-right"'));
+  assert.ok(navigation.includes("const PAGE_ANIMATION_DURATION = 220"));
+  assert.ok(navigation.includes("animationDuration: PAGE_ANIMATION_DURATION"));
+  assert.match(appStyle, /@keyframes\s+page-enter/);
+  [
+    ".login-page", ".home-page", ".data-page", ".settings-page",
+    ".legal-page", ".sleep-page", ".customize-page", ".calendar-page"
+  ].forEach((pageClass) => assert.ok(appStyle.includes(pageClass)));
 });

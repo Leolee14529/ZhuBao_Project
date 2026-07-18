@@ -50,6 +50,67 @@
         <text class="panel-subtitle">{{copy.emptyDesc}}</text>
         <button class="create-record-button" bindtap="openEditor">{{copy.createRecord}}</button>
       </view>
+
+      <view class="panel weekly-rhythm-panel">
+        <view class="panel-heading-row">
+          <view><text class="panel-title">{{copy.weekRhythm}}</text><text class="panel-subtitle">{{copy.weekRhythmSubtitle}}</text></view>
+          <text class="panel-range">{{weekly.days[0].dateLabel}}—{{weekly.days[6].dateLabel}}</text>
+        </view>
+        <view class="weekly-loading" wx:if="{{weeklyLoading}}">{{copy.loading}}</view>
+        <view class="weekly-error" wx:elif="{{weeklyError}}"><text>{{weeklyError}}</text><button class="weekly-retry-button" bindtap="retryWeekly">{{copy.retry}}</button></view>
+        <block wx:else>
+          <view class="rhythm-chart" wx:if="{{weekly.hasRecords}}" aria-label="{{copy.weekRhythm}}">
+            <view class="rhythm-day {{item.isToday ? 'rhythm-day-today' : ''}}" wx:for="{{weekly.days}}" wx:key="dateKey">
+              <view class="rhythm-track"><view class="rhythm-bar {{item.value ? 'rhythm-bar-filled' : ''}}" style="height: {{item.barHeight}}rpx;"></view></view>
+              <text class="rhythm-value">{{item.value || '·'}}</text>
+              <text class="rhythm-label">{{item.dayLabel}}</text>
+            </view>
+          </view>
+          <view class="weekly-empty" wx:else>{{weekly.summary}}</view>
+          <view class="weekly-stats">
+            <view class="weekly-stat"><text class="weekly-stat-label">{{copy.weekRecorded}}</text><text class="weekly-stat-value">{{weekly.recordedDays}}</text></view>
+            <view class="weekly-stat"><text class="weekly-stat-label">{{copy.averageMood}}</text><text class="weekly-stat-value">{{weekly.averageMood}}</text></view>
+            <view class="weekly-stat"><text class="weekly-stat-label">{{copy.jewelryDays}}</text><text class="weekly-stat-value">{{weekly.jewelryDays}}</text></view>
+          </view>
+        </block>
+      </view>
+
+      <view class="panel feeling-summary-panel">
+        <text class="panel-title">{{copy.feelings}}</text>
+        <text class="panel-subtitle">{{copy.feelingsSubtitle}}</text>
+        <view class="feeling-list" wx:if="{{weekly.topFeelings.length}}">
+          <view class="feeling-item" wx:for="{{weekly.topFeelings}}" wx:key="label"><view class="feeling-accent"></view><text class="feeling-name">{{item.label}}</text><text class="feeling-count">{{item.countText}}</text></view>
+        </view>
+        <view class="feeling-empty" wx:else>{{copy.noFeelings}}</view>
+      </view>
+
+      <view class="today-feeling-card {{todayFeeling.hasRecord ? 'today-feeling-card-ready' : ''}}">
+        <view class="feeling-mark"><view class="feeling-mark-core"></view></view>
+        <view class="today-feeling-copy"><text class="today-feeling-title">{{copy.todayFeeling}}</text><text class="today-feeling-text">{{todayFeeling.title}}</text><text class="today-feeling-detail" wx:if="{{todayFeeling.detail}}">{{todayFeeling.detail}}</text></view>
+        <text class="today-feeling-status">{{todayFeeling.hasRecord ? copy.feelingReady : copy.feelingPending}}</text>
+      </view>
+
+      <view class="panel sleep-trend-panel">
+        <view class="panel-heading-row">
+          <view><text class="panel-title">{{copy.sleepTrend}}</text><text class="panel-subtitle">{{copy.sleepTrendSubtitle}}</text></view>
+          <button class="sleep-trend-more" bindtap="openSleepDetail">{{copy.viewSleepTrend}} ›</button>
+        </view>
+        <view class="weekly-loading" wx:if="{{weeklyLoading}}">{{copy.loading}}</view>
+        <view class="weekly-error" wx:elif="{{weeklyError}}"><text>{{weeklyError}}</text><button class="weekly-retry-button" bindtap="retryWeekly">{{copy.retry}}</button></view>
+        <block wx:else>
+          <view class="sleep-trend-chart" wx:if="{{sleepTrend.hasRecords}}">
+            <view class="sleep-trend-day {{item.isEnd ? 'sleep-trend-day-today' : ''}}" wx:for="{{sleepTrend.points}}" wx:key="dateKey">
+              <view class="sleep-trend-track"><view class="sleep-trend-bar" style="height: {{item.barHeight}}rpx;"></view></view>
+              <text class="sleep-trend-label">{{item.label}}</text>
+            </view>
+          </view>
+          <view class="weekly-empty" wx:else>{{sleepTrend.summary}}</view>
+          <view class="sleep-trend-stats">
+            <view class="sleep-trend-stat"><text>{{copy.averageSleep}}</text><text class="sleep-trend-value">{{sleepTrend.averageSleep}}</text></view>
+            <view class="sleep-trend-stat"><text>{{copy.recordedNights}}</text><text class="sleep-trend-value">{{sleepTrend.recordedNights}}</text></view>
+          </view>
+        </block>
+      </view>
       <view class="bottom-space"></view>
     </view>
   </scroll-view>

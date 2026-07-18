@@ -3,6 +3,7 @@ const auth = require("../../utils/auth");
 const privacy = require("../../utils/privacy");
 const config = require("../../utils/config");
 const i18n = require("../../utils/i18n");
+const navigation = require("../../utils/navigation");
 
 const HOME_URL = "/pages/home/index";
 const WX_LOGIN_TIMEOUT_MS = 12000;
@@ -32,7 +33,7 @@ Page({
       copy: i18n.getCopy("login")
     });
     this.unsubscribeLocale = i18n.subscribe(() => this.setData({ copy: i18n.getCopy("login") }));
-    if (auth.getAuthState().status !== "anonymous") {
+    if (auth.isLoggedIn()) {
       this.goHome().catch(() => null);
     }
   },
@@ -183,14 +184,8 @@ Page({
     });
   },
   goHome() {
-    return new Promise((resolve, reject) => {
-      const redirect = this.getSafeRedirect();
-      wx.reLaunch({
-        url: redirect || HOME_URL,
-        success: resolve,
-        fail: reject
-      });
-    });
+    const redirect = this.getSafeRedirect();
+    return navigation.replacePage(redirect || HOME_URL);
   },
   safeDecodeRedirect(value) {
     if (!value) return "";
@@ -251,7 +246,7 @@ Page({
   enterGuest() {
     if (this.isAuthBusy()) return;
     auth.enterGuestMode();
-    wx.reLaunch({ url: HOME_URL });
+    navigation.replacePage(HOME_URL).catch(() => null);
   },
   isAuthBusy() {
     return this.data.isLoggingIn ||

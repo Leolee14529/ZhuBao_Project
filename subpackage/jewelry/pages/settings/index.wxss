@@ -10,7 +10,7 @@
   left: 0;
   top: 0;
   right: 0;
-  bottom: 146rpx;
+  bottom: 0;
 }
 
 .settings-scroll {
@@ -19,7 +19,8 @@
 }
 
 .page-body {
-  padding: 52rpx 20rpx 228rpx;
+  padding: 0 20rpx calc(158rpx + constant(safe-area-inset-bottom));
+  padding: 0 20rpx calc(158rpx + env(safe-area-inset-bottom));
 }
 
 .page-top-spacer {

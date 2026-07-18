@@ -25,6 +25,11 @@ Page({
     saving: false,
     canEdit: false,
     showEmpty: false,
+    weeklyLoading: true,
+    weeklyError: "",
+    weekly: recordViewModel.buildWeeklyRecordView([], dailyCheckins.toDateKey(), i18n.getCopy("data")),
+    sleepTrend: recordViewModel.buildSleepTrend([], dailyCheckins.toDateKey(), "week", i18n.getCopy("data")),
+    todayFeeling: recordViewModel.buildTodayFeeling(null, i18n.getCopy("data")),
     undoView: recordViewModel.buildUndoView("idle")
   },
   onLoad() {
@@ -46,11 +51,20 @@ Page({
   applyLocale() {
     const copy = i18n.getCopy("data");
     const state = pageState(this.currentCheckin, this.data.loading, this.data.loadError, copy);
-    this.setData({ copy, record: state.record, canEdit: state.canEdit, showEmpty: state.showEmpty });
+    this.setData({
+      copy,
+      record: state.record,
+      canEdit: state.canEdit,
+      showEmpty: state.showEmpty,
+      weekly: recordViewModel.buildWeeklyRecordView(this.currentWeekCheckins || [], this.data.dateKey, copy),
+      sleepTrend: recordViewModel.buildSleepTrend(this.currentWeekCheckins || [], this.data.dateKey, "week", copy),
+      todayFeeling: recordViewModel.buildTodayFeeling(this.currentCheckin, copy)
+    });
   },
   loadDailyRecord() {
     const dateKey = dailyCheckins.toDateKey();
     this.setData({ loading: true, loadError: "", dateKey, canEdit: false, showEmpty: false });
+    this.loadWeeklyRecords(dateKey);
     dailyCheckins.listByDate(dateKey)
       .then((checkins) => {
         this.currentCheckin = checkins[0] || null;
@@ -59,7 +73,8 @@ Page({
           loading: false,
           record: state.record,
           canEdit: state.canEdit,
-          showEmpty: state.showEmpty
+          showEmpty: state.showEmpty,
+          todayFeeling: recordViewModel.buildTodayFeeling(this.currentCheckin, this.data.copy)
         });
       })
       .catch((error) => {
@@ -75,9 +90,35 @@ Page({
           loadError,
           record: state.record,
           canEdit: state.canEdit,
-          showEmpty: state.showEmpty
+          showEmpty: state.showEmpty,
+          todayFeeling: recordViewModel.buildTodayFeeling(null, this.data.copy)
         });
       });
+  },
+  loadWeeklyRecords(dateKey) {
+    const emptyWeek = recordViewModel.buildWeeklyRecordView([], dateKey, this.data.copy);
+    this.setData({ weeklyLoading: true, weeklyError: "" });
+    dailyCheckins.listRange(emptyWeek.from, emptyWeek.to, 7)
+      .then((checkins) => {
+        this.currentWeekCheckins = checkins;
+        this.setData({
+          weeklyLoading: false,
+          weekly: recordViewModel.buildWeeklyRecordView(checkins, dateKey, this.data.copy),
+          sleepTrend: recordViewModel.buildSleepTrend(checkins, dateKey, "week", this.data.copy)
+        });
+      })
+      .catch((error) => {
+        this.currentWeekCheckins = [];
+        this.setData({
+          weeklyLoading: false,
+          weeklyError: error && error.statusCode === 401 ? "" : this.data.copy.weeklyLoadFailed,
+          weekly: emptyWeek,
+          sleepTrend: recordViewModel.buildSleepTrend([], dateKey, "week", this.data.copy)
+        });
+      });
+  },
+  retryWeekly() {
+    this.loadWeeklyRecords(this.data.dateKey);
   },
   retryLoad() {
     this.loadDailyRecord();
@@ -105,8 +146,10 @@ Page({
           editorValue: checkin,
           record: recordViewModel.buildDailyRecordView(checkin, this.data.copy),
           canEdit: true,
-          showEmpty: false
+          showEmpty: false,
+          todayFeeling: recordViewModel.buildTodayFeeling(checkin, this.data.copy)
         });
+        this.loadWeeklyRecords(this.data.dateKey);
         wx.showToast({ title: this.data.copy.saved, icon: "success" });
       })
       .catch((error) => {
@@ -128,7 +171,13 @@ Page({
           .then(() => {
             this.deletedRecord = deletedRecord;
             this.currentCheckin = null;
-            this.setData({ record: emptyRecord(this.data.copy), canEdit: true, showEmpty: true });
+            this.setData({
+              record: emptyRecord(this.data.copy),
+              canEdit: true,
+              showEmpty: true,
+              todayFeeling: recordViewModel.buildTodayFeeling(null, this.data.copy)
+            });
+            this.loadWeeklyRecords(this.data.dateKey);
             this.setUndoStatus("available");
             this.scheduleUndoExpiry();
           })
@@ -151,8 +200,10 @@ Page({
         this.setData({
           record: recordViewModel.buildDailyRecordView(checkin, this.data.copy),
           canEdit: true,
-          showEmpty: false
+          showEmpty: false,
+          todayFeeling: recordViewModel.buildTodayFeeling(checkin, this.data.copy)
         });
+        this.loadWeeklyRecords(this.data.dateKey);
       })
       .catch((error) => {
         this.setUndoStatus("failed");
