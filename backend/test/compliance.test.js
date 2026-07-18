@@ -91,7 +91,7 @@ test("active page route references are registered in app.json", () => {
   }
 });
 
-test("login page keeps a visible first screen", () => {
+test("login page stays within one screen without a duplicate status bar", () => {
   const appStyle = readText("app.wxss");
   const loginPage = readText("pages/login/index.wxml");
   const loginStyle = readText("pages/login/index.wxss");
@@ -102,9 +102,10 @@ test("login page keeps a visible first screen", () => {
   assert.ok(loginPage.includes("class=\"login-bg\""));
   assert.ok(loginPage.includes("class=\"brand-name\""));
   assert.ok(loginPage.includes("copy.wechatLogin"));
+  assert.equal(loginPage.includes("<status-bar>"), false);
   assert.ok(i18nCopy.includes('wechatLogin: "微信登录"'));
-  assert.match(loginStyle, /\.login-page\{[^}]*min-height:100vh/);
-  assert.match(loginStyle, /\.login-page\{[^}]*overflow-y:auto/);
+  assert.match(loginStyle, /\.login-page\{[^}]*height:100vh/);
+  assert.match(loginStyle, /\.login-page\{[^}]*overflow:hidden/);
   assert.match(loginStyle, /\.login-page\{[^}]*background:#000/);
 });
 

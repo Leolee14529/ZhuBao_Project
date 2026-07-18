@@ -1,7 +1,12 @@
 page {
+  width: 100%;
+  height: 100%;
   min-height: 100vh;
-  background: #050505;
-  background-color: #050505;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  background: #000000;
+  background-color: #000000;
   color: #ffffff;
 }
 
@@ -17,7 +22,7 @@ scroll-view,
 swiper,
 swiper-item {
   box-sizing: border-box;
-  font-family: "SimHei", "STHeiti", "Heiti SC", "PingFang SC", "Microsoft YaHei", sans-serif !important;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", "PingFang SC", "Noto Sans SC", "Microsoft YaHei", Arial, sans-serif !important;
 }
 
 image { box-sizing: border-box; }
@@ -25,8 +30,8 @@ button { padding: 0; margin: 0; border: 0; background: transparent; line-height:
 button::after { border: 0; }
 .screen-shell {
   min-height: 100vh;
-  background: #050505;
-  background-color: #050505;
+  background: #000000;
+  background-color: #000000;
   color: #ffffff;
   overflow: hidden;
 }
@@ -38,3 +43,21 @@ button::after { border: 0; }
   backdrop-filter: blur(24rpx);
 }
 .safe-bottom-space { height: 150rpx; }
+
+@keyframes page-enter {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.login-page,
+.home-page,
+.data-page,
+.settings-page,
+.legal-page,
+.sleep-page,
+.customize-page,
+.calendar-page,
+.products-page,
+.product-detail-page {
+  animation: page-enter 200ms ease-out both;
+}

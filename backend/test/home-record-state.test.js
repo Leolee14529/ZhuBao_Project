@@ -31,10 +31,11 @@ test("home record action does not present a failed lookup as an empty day", () =
   });
 });
 
-test("home page binds the record action disabled state", () => {
+test("home record state remains isolated after the middle CTA is removed", () => {
   const logic = fs.readFileSync(path.join(root, "pages/home/index.js"), "utf8");
   const view = fs.readFileSync(path.join(root, "pages/home/index.wxml"), "utf8");
 
   assert.ok(logic.includes("homeRecordState.buildAction"));
-  assert.ok(view.includes('disabled="{{primaryActionDisabled}}"'));
+  assert.ok(!view.includes('disabled="{{primaryActionDisabled}}"'));
+  assert.ok(!view.includes('class="primary-action"'));
 });

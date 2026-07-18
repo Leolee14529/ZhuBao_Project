@@ -9,7 +9,7 @@
     {
       "root": "subpackage/jewelry",
       "name": "jewelry",
-      "pages": ["pages/data/index", "pages/sleep-detail/index", "pages/settings/index", "pages/five-elements/index"]
+      "pages": ["pages/data/index", "pages/sleep-detail/index", "pages/settings/index", "pages/five-elements/index", "pages/products/index", "pages/product-detail/index"]
     },
     {
       "root": "subpackage/periodCalendar",
@@ -19,7 +19,7 @@
   ],
   "window": {
     "navigationStyle": "custom",
-    "backgroundColor": "#050505",
+    "backgroundColor": "#000000",
     "backgroundTextStyle": "light"
   },
   "style": "v2",

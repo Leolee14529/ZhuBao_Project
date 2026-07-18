@@ -6,7 +6,7 @@ function loadAuth(storage) {
     getStorageSync(key) { return storage[key]; },
     setStorageSync(key, value) { storage[key] = value; },
     removeStorageSync(key) { delete storage[key]; },
-    reLaunch(options) {
+    navigateTo(options) {
       if (options && typeof options.complete === "function") options.complete();
     },
     showToast() {}
@@ -83,13 +83,27 @@ test("request logout cleanup removes only the session and preserves personal dat
 
 test("sleep detail remains a safe login restore target", () => {
   const storage = {};
-  const launches = [];
+  const navigations = [];
   const auth = loadAuth(storage);
-  global.wx.reLaunch = (options) => launches.push(options.url);
+  global.wx.navigateTo = (options) => navigations.push(options.url);
 
   auth.redirectToLogin("/subpackage/jewelry/pages/sleep-detail/index");
 
-  assert.deepEqual(launches, [
+  assert.deepEqual(navigations, [
     "/pages/login/index?redirect=%2Fsubpackage%2Fjewelry%2Fpages%2Fsleep-detail%2Findex"
+  ]);
+});
+
+test("guest mode can open login without being treated as an authenticated session", () => {
+  const storage = { guestMode: true };
+  const navigations = [];
+  const auth = loadAuth(storage);
+  global.wx.navigateTo = (options) => navigations.push(options.url);
+
+  assert.equal(auth.isLoggedIn(), false);
+  auth.redirectToLogin("/subpackage/jewelry/pages/data/index");
+
+  assert.deepEqual(navigations, [
+    "/pages/login/index?redirect=%2Fsubpackage%2Fjewelry%2Fpages%2Fdata%2Findex"
   ]);
 });

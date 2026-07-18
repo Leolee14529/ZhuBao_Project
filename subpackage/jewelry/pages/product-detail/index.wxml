@@ -1,0 +1,35 @@
+<view class="product-detail-page">
+  <scroll-view class="detail-scroll" scroll-y="true" enhanced="true" bounces="true" show-scrollbar="false">
+    <view class="detail-body">
+      <view class="page-top-spacer" style="height: {{topSpacer}}px;"></view>
+      <view class="detail-topbar">
+        <button class="icon-button" bindtap="goBack" aria-label="{{copy.back}}"><view class="back-chevron"></view></button>
+        <view class="title-block"><text class="page-title">{{copy.detailTitle}}</text><text class="page-subtitle">{{copy.detailSubtitle}}</text></view>
+      </view>
+
+      <view class="hero-image-wrap" bindtap="previewProductImage" hover-class="hero-image-pressed" hover-stay-time="80" aria-role="button" aria-label="{{copy.previewImage}}">
+        <swiper class="hero-swiper" wx:if="{{product}}" current="{{currentImageIndex}}" circular="{{displayImages.length > 1}}" bindchange="changeHeroImage">
+          <swiper-item wx:for="{{displayImages}}" wx:key="*this"><image class="hero-image" src="{{item}}" mode="aspectFit"></image></swiper-item>
+        </swiper>
+        <view class="hero-placeholder" wx:else></view>
+        <text class="hero-badge" wx:if="{{product && product.tag}}">{{product.tag}}</text>
+        <text class="image-counter" wx:if="{{displayImages.length > 1}}">{{currentImageIndex + 1}} / {{displayImages.length}}</text>
+        <view class="preview-hint" wx:if="{{product}}"><view class="preview-icon"></view><text>{{copy.previewImage}}</text></view>
+      </view>
+
+      <block wx:if="{{product}}">
+        <view class="detail-panel"><text class="detail-kicker">{{product.type}}</text><text class="detail-title">{{product.name}}</text><text class="detail-desc">{{product.desc}}</text><text class="detail-long">{{product.detail}}</text></view>
+        <view class="mood-panel">
+          <text class="section-title">{{copy.moodReference}}</text>
+          <text class="mood-reference-desc">{{copy.moodReferenceDesc}}</text>
+          <view class="mood-chip-list"><text class="mood-chip" wx:for="{{product.moods}}" wx:key="*this">{{item}}</text></view>
+          <view class="mood-palette-strip"><view class="mood-color" wx:for="{{palette}}" wx:key="label" style="background-color: {{item.color}};"></view></view>
+        </view>
+        <view class="color-panel"><text class="section-title">{{copy.colorMaterial}}</text><view class="palette-list"><view class="palette-item" wx:for="{{palette}}" wx:key="label"><view class="palette-swatch" style="background-color: {{item.color}};"></view><text class="palette-label">{{item.label}}</text></view></view></view>
+        <view class="style-panel"><text class="section-title">{{copy.stylingReference}}</text><text class="style-text">{{product.scene}}</text></view>
+        <button class="record-button" bindtap="openDailyRecord"><view class="record-button-copy"><text class="record-button-title">{{copy.recordFeeling}}</text><text class="record-button-hint">{{copy.recordFeelingHint}}</text></view><text class="record-button-arrow">›</text></button>
+      </block>
+      <view class="safe-bottom-space"></view>
+    </view>
+  </scroll-view>
+</view>

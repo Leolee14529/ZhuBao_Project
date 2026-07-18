@@ -6,27 +6,28 @@ const navigation = require("../../utils/navigation");
 const homeInspiration = require("../../utils/home-inspiration");
 const homeRecordState = require("../../utils/home-record-state");
 
-function todayInspiration() {
-  return homeInspiration.getForDateKey(dailyCheckins.toDateKey());
+function todayInspiration(locale) {
+  return homeInspiration.getForDateKey(dailyCheckins.toDateKey(), locale);
 }
 
 Page({
   data: {
     topSpacer: 40,
     copy: i18n.getCopy("home"),
-    inspiration: todayInspiration(),
+    inspiration: todayInspiration(i18n.getLocale()),
     flipped: false,
     hasTodayRecord: false,
     dailyStatus: "idle",
     primaryAction: i18n.t("home.signInToRecord"),
     primaryActionDisabled: false,
     leftProducts: [
-      { image: "/subpackage/jewelry/assets/product-1.jpg", tag: "", cardClass: "product-card-tall" },
-      { image: "/subpackage/jewelry/assets/product-3.jpg", tag: "", cardClass: "product-card-tall" }
+      { previewKey: "jade-circuit-collar-preview", id: "jade-circuit-collar", image: "/subpackage/jewelry/assets/product-1.jpg" },
+      { previewKey: "jade-ring-lab-preview", id: "jade-ring-lab", image: "/subpackage/jewelry/assets/product-3.jpg" }
     ],
     rightProducts: [
-      { image: "/subpackage/jewelry/assets/product-2.jpg", tag: "", cardClass: "product-card-tall" },
-      { image: "/subpackage/jewelry/assets/product-4.jpg", tag: "", cardClass: "product-card-tall" }
+      { previewKey: "hex-collar-preview", id: "hex-collar", image: "/subpackage/jewelry/assets/product-2.jpg" },
+      { previewKey: "dark-jade-chip-brooch-preview", id: "dark-jade-chip", image: "/subpackage/jewelry/assets/product-4-brooch.jpg" },
+      { previewKey: "dark-jade-chip-ring-preview", id: "dark-jade-chip", image: "/subpackage/jewelry/assets/product-4-ring.jpg" }
     ]
   },
   onLoad() {
@@ -45,6 +46,7 @@ Page({
   onShareAppMessage() { return share.getHomeShareAppMessage(); },
   onShareTimeline() { return share.getHomeShareTimeline(); },
   applyLocale() {
+    const locale = i18n.getLocale();
     const copy = i18n.getCopy("home");
     const action = homeRecordState.buildAction({
       loggedIn: auth.isLoggedIn(),
@@ -53,7 +55,7 @@ Page({
     }, copy);
     this.setData({
       copy,
-      inspiration: { ...todayInspiration(), title: copy.inspirationTitle, color: copy.inspirationColor },
+      inspiration: todayInspiration(locale),
       primaryAction: action.label,
       primaryActionDisabled: action.disabled
     });
@@ -96,5 +98,17 @@ Page({
   },
   toggleInspiration() {
     this.setData({ flipped: !this.data.flipped });
+  },
+  openProducts() {
+    wx.navigateTo({
+      url: "/subpackage/jewelry/pages/products/index"
+    });
+  },
+  openProduct(event) {
+    const productId = event.currentTarget.dataset.id;
+    if (!productId) return;
+    wx.navigateTo({
+      url: "/subpackage/jewelry/pages/product-detail/index?id=" + encodeURIComponent(productId)
+    });
   }
 });

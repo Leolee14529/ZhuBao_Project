@@ -3,7 +3,12 @@
     <view class="sleep-body">
       <view style="height: {{topSpacer}}px;"></view>
       <view class="sleep-topbar"><button class="topbar-button" bindtap="goBack">‹</button><text class="topbar-title">{{copy.title}}</text></view>
-      <text class="date-value">{{date}}</text>
+      <view class="sleep-range-tabs">
+        <button class="range-tab {{rangeMode === 'day' ? 'range-tab-active' : ''}}" data-mode="day" bindtap="changeRange">{{copy.rangeDay}}</button>
+        <button class="range-tab {{rangeMode === 'week' ? 'range-tab-active' : ''}}" data-mode="week" bindtap="changeRange">{{copy.rangeWeek}}</button>
+        <button class="range-tab {{rangeMode === 'month' ? 'range-tab-active' : ''}}" data-mode="month" bindtap="changeRange">{{copy.rangeMonth}}</button>
+      </view>
+      <view class="range-switcher"><button data-direction="-1" bindtap="moveRange" aria-label="{{copy.previous}}">‹</button><text class="date-value">{{date}}</text><button class="{{canMoveNext ? '' : 'range-next-disabled'}}" data-direction="1" bindtap="moveRange" aria-label="{{copy.next}}">›</button></view>
 
       <view class="detail-card">
         <view class="detail-card-heading"><text class="detail-card-title">{{copy.overview}}</text><text class="detail-card-caption">{{copy.source}}</text></view>
@@ -14,6 +19,20 @@
         </view>
         <text class="load-error" wx:if="{{loadError}}">{{loadError}}</text>
         <button class="retry-button" wx:if="{{loadError}}" bindtap="retryLoad">{{copy.retry}}</button>
+      </view>
+
+      <view class="detail-card trend-card">
+        <view class="detail-card-heading"><text class="detail-card-title">{{copy.trendTitle}}</text><text class="detail-card-caption">{{copy.source}}</text></view>
+        <view class="trend-empty" wx:if="{{!loading && !trend.hasRecords}}">{{trend.summary}}</view>
+        <scroll-view class="trend-scroll" scroll-x="true" wx:else>
+          <view class="trend-points range-{{rangeMode}}">
+            <view class="trend-point {{item.isEnd ? 'trend-point-current' : ''}}" wx:for="{{trend.points}}" wx:key="dateKey">
+              <view class="trend-track"><view class="trend-bar" style="height: {{item.barHeight}}rpx;"></view></view>
+              <text class="trend-label">{{item.label}}</text>
+            </view>
+          </view>
+        </scroll-view>
+        <view class="trend-stats"><view><text>{{copy.averageSleep}}</text><text class="trend-stat-value">{{trend.averageSleep}}</text></view><view><text>{{copy.recordedNights}}</text><text class="trend-stat-value">{{trend.recordedNights}}</text></view></view>
       </view>
 
       <view class="detail-card honest-empty-card">
