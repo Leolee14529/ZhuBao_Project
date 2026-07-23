@@ -1,0 +1,31 @@
+<view class="login-page">
+  <view class="login-backdrop"><image class="login-bg" src="/assets/auth/bg-login.jpg" mode="aspectFill" fade-in="{{false}}"></image><view class="login-shade"></view></view>
+  <view class="login-content">
+    <view class="brand-block"><view class="brand-mark"><view class="brand-mark-inner"></view></view><text class="brand-name">Ting's</text><text class="brand-description">{{copy.description}}</text></view>
+    <view class="login-form">
+      <view wx:if="{{accountAuthEnabled}}" class="mode-tabs">
+        <view class="mode-tabs-indicator {{loginMode === 'account' ? 'mode-tabs-indicator-account' : ''}}"></view>
+        <view class="mode-tab {{loginMode === 'wechat' ? 'mode-tab-on' : ''}}" data-mode="wechat" bindtap="switchLoginMode">{{copy.wechatLogin}}</view>
+        <view class="mode-tab {{loginMode === 'account' ? 'mode-tab-on' : ''}}" data-mode="account" bindtap="switchLoginMode">{{copy.accountLogin}}</view>
+      </view>
+      <view class="auth-panel-stage {{loginMode === 'account' ? 'auth-panel-stage-account' : ''}} {{serviceError ? 'auth-panel-stage-error' : ''}}">
+        <view class="auth-panel auth-panel-wechat {{loginMode === 'wechat' ? 'auth-panel-active' : 'auth-panel-inactive'}}">
+          <empty-state wx:if="{{serviceError && loginMode === 'wechat'}}" class="login-error" title="{{copy.unavailable}}" desc="{{serviceError}}" buttonText="{{copy.retry}}" type="auth" compact="{{true}}" bind:action="retryLogin"></empty-state>
+          <button class="primary" bindtap="login" loading="{{isLoggingIn}}" disabled="{{isLoggingIn || isModeTransitioning}}" hover-class="primary-hover"><text>{{copy.wechatOneTap}}</text></button>
+        </view>
+        <view class="auth-panel auth-panel-account {{loginMode === 'account' ? 'auth-panel-active' : 'auth-panel-inactive'}}">
+          <empty-state wx:if="{{serviceError && loginMode === 'account'}}" class="login-error" title="{{copy.unavailable}}" desc="{{serviceError}}" buttonText="{{copy.retry}}" type="auth" compact="{{true}}" bind:action="retryLogin"></empty-state>
+          <view class="field"><input class="login-input" value="{{accountName}}" bindinput="onAccountInput" placeholder="{{copy.accountPlaceholder}}" placeholder-class="placeholder" confirm-type="next"></input></view>
+          <view class="field"><input class="login-input" value="{{password}}" bindinput="onPasswordInput" password="{{true}}" placeholder="{{copy.passwordPlaceholder}}" placeholder-class="placeholder" confirm-type="done"></input></view>
+          <button class="primary" bindtap="accountLogin" loading="{{isAccountSubmitting}}" disabled="{{isAccountSubmitting || isCreatingAccount || isModeTransitioning}}" hover-class="primary-hover"><text>{{copy.accountLogin}}</text></button>
+          <button class="secondary" bindtap="accountRegister" loading="{{isCreatingAccount}}" disabled="{{isAccountSubmitting || isCreatingAccount || isModeTransitioning}}" hover-class="secondary-hover"><text>{{copy.createAccount}}</text></button>
+          <text class="account-notice">{{copy.accountNotice}}</text>
+        </view>
+      </view>
+      <view class="agreement-wrap">
+        <button class="agreement-row" bindtap="toggleAgreement" hover-class="agreement-row-hover"><view class="agreement-check {{agreed ? 'agreement-check-on' : ''}}"><text wx:if="{{agreed}}">✓</text></view><view class="agreement-copy"><text class="agreement-normal">{{copy.agreementPrefix}}</text><text class="agreement-link" catchtap="openAgreement">{{copy.agreement}}</text><text class="agreement-normal">{{copy.and}}</text><text class="agreement-link" catchtap="openPrivacy">{{copy.privacy}}</text></view></button>
+      </view>
+      <view class="link-row"><text class="guest-link" bindtap="enterGuest">{{copy.guest}}</text></view>
+    </view>
+  </view>
+</view>

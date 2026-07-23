@@ -1,0 +1,107 @@
+<view class="data-page">
+  <scroll-view class="data-scroll" scroll-y="true">
+    <view class="page-body">
+      <view class="page-top-spacer" style="height: {{topSpacer}}px;"></view>
+      <view class="page-header">
+        <text class="page-title page-title-strong">{{copy.title}}</text>
+        <text class="page-subtitle">{{copy.subtitle}}</text>
+      </view>
+
+      <view class="score-card">
+        <view class="score-copy">
+          <view class="score-label-row"><view class="score-dot"></view><text class="score-label">{{copy.score}}</text></view>
+          <text class="score-value" wx:if="{{!loading}}">{{record.entryCount}} <text class="score-unit">{{copy.entriesUnit}}</text></text>
+          <text class="score-value score-loading" wx:else>{{copy.loading}}</text>
+          <text class="score-text" wx:if="{{loadError}}">{{loadError}}</text>
+          <text class="score-text" wx:elif="{{record.hasRecord}}">{{copy.recorded}}</text>
+          <text class="score-text" wx:else>{{copy.noRecord}}</text>
+        </view>
+        <button class="retry-button" wx:if="{{loadError}}" bindtap="retryLoad">{{copy.retry}}</button>
+        <view class="score-ring" wx:else><view class="score-ring-inner"><text>✓</text></view></view>
+      </view>
+
+      <view class="health-card period-entry-card" hover-class="health-card-hover" bindtap="openPeriodCalendar">
+        <view class="health-card-main">
+          <view class="health-card-heading"><text class="health-title">{{copy.calendar}}</text></view>
+          <text class="period-card-summary" wx:if="{{periodSummaryLoading}}">{{copy.periodLoading}}</text>
+          <text class="period-card-summary" wx:else>{{periodSummaryText}}</text>
+        </view>
+        <view class="health-card-side"><text class="health-arrow">›</text></view>
+      </view>
+
+      <view class="health-card sleep-entry" hover-class="health-card-hover" bindtap="openSleepDetail">
+        <view class="health-card-main">
+          <view class="health-card-heading"><text class="health-title">{{copy.sleep}}</text></view>
+          <text class="health-duration">{{record.sleep}}</text>
+          <text class="panel-subtitle">{{copy.sleepSource}}</text>
+        </view>
+        <view class="health-card-side"><text class="health-arrow">›</text></view>
+      </view>
+
+      <view class="panel">
+        <view class="today-status-header">
+          <text class="panel-title">{{copy.recordDetails}}</text>
+          <view class="feeling-record-entry" bindtap="openEditor">
+            <text class="feeling-record-text">记录</text>
+            <view class="feeling-record-button">
+              <view class="feeling-record-button-core"></view>
+            </view>
+          </view>
+        </view>
+        <block wx:if="{{record.hasRecord}}">
+          <view class="record-grid">
+            <view class="record-item"><text class="record-label">{{copy.moodScore}}</text><text class="record-value">{{record.mood}}</text></view>
+            <view class="record-item"><text class="record-label">{{copy.energyScore}}</text><text class="record-value">{{record.energy}}</text></view>
+            <view class="record-item record-item-wide"><text class="record-label">{{copy.wearing}}</text><text class="record-value">{{record.wearing}}</text></view>
+          </view>
+          <view class="tag-list" wx:if="{{record.tags.length}}"><text class="record-tag" wx:for="{{record.tags}}" wx:key="*this">{{item}}</text></view>
+        </block>
+        <text class="panel-subtitle" wx:else>{{dailyStatusText}}</text>
+      </view>
+
+      <view class="panel feeling-summary-panel">
+        <view class="feeling-summary-head">
+          <text class="panel-title">{{copy.feelings}}</text>
+          <view class="feeling-record-entry" bindtap="openEditor">
+            <text class="feeling-record-text">记录</text>
+            <view class="feeling-record-button">
+              <view class="feeling-record-button-core"></view>
+            </view>
+          </view>
+        </view>
+        <text class="panel-subtitle">{{copy.feelingsSubtitle}}</text>
+        <view class="feeling-list" wx:if="{{weekly.topFeelings.length}}">
+          <view class="feeling-item" wx:for="{{weekly.topFeelings}}" wx:key="label"><view class="feeling-accent"></view><text class="feeling-name">{{item.label}}</text><text class="feeling-count">{{item.countText}}</text></view>
+        </view>
+        <view class="feeling-empty" wx:else>{{copy.noFeelings}}</view>
+      </view>
+      <view class="panel weekly-rhythm-panel">
+        <view class="panel-heading-row">
+          <view><text class="panel-title">{{copy.weekRhythm}}</text><text class="panel-subtitle">{{copy.weekRhythmSubtitle}}</text></view>
+          <text class="panel-range">{{weeklyRangeText}}</text>
+        </view>
+        <view class="weekly-loading" wx:if="{{weeklyLoading}}">{{copy.loading}}</view>
+        <view class="weekly-error" wx:elif="{{weeklyError}}"><text>{{weeklyError}}</text><button class="weekly-retry-button" bindtap="retryWeekly">{{copy.retry}}</button></view>
+        <block wx:else>
+          <view class="rhythm-chart" wx:if="{{weekly.hasRecords}}" aria-label="{{copy.weekRhythm}}">
+            <view class="{{item.dayClass}}" wx:for="{{weekly.days}}" wx:key="dateKey">
+              <view class="rhythm-track"><view class="{{item.barClass}}" style="height: {{item.barHeight}}rpx;"></view></view>
+              <text class="rhythm-value">{{item.valueText}}</text>
+              <text class="rhythm-label">{{item.dayLabel}}</text>
+            </view>
+          </view>
+          <view class="weekly-empty" wx:else>{{weekly.summary}}</view>
+          <view class="weekly-stats">
+            <view class="weekly-stat"><text class="weekly-stat-label">{{copy.weekRecorded}}</text><text class="weekly-stat-value">{{weekly.recordedDays}}</text></view>
+            <view class="weekly-stat"><text class="weekly-stat-label">{{copy.averageMood}}</text><text class="weekly-stat-value">{{weekly.averageMood}}</text></view>
+            <view class="weekly-stat"><text class="weekly-stat-label">{{copy.jewelryDays}}</text><text class="weekly-stat-value">{{weekly.jewelryDays}}</text></view>
+          </view>
+        </block>
+      </view>
+      <view class="bottom-space"></view>
+    </view>
+  </scroll-view>
+  <view class="undo-bar" wx:if="{{undoView.visible}}"><text>{{copy.deleted}}</text><button loading="{{undoView.restoring}}" disabled="{{!undoView.canRetry}}" bindtap="undoDelete">{{copy.undo}}</button></view>
+  <daily-record-editor visible="{{editorVisible}}" value="{{editorValue}}" date-key="{{dateKey}}" copy="{{copy}}" saving="{{saving}}" bind:close="closeEditor" bind:save="saveRecord" bind:invalid="handleEditorInvalid"></daily-record-editor>
+  <bottom-nav active="data"></bottom-nav>
+</view>

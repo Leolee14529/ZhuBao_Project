@@ -1,0 +1,12 @@
+<view class="dark-input">
+  <text wx:if="{{icon}}" class="dark-input__icon">{{icon}}</text>
+  <input
+    class="dark-input__field"
+    value="{{value}}"
+    password="{{password}}"
+    placeholder="{{placeholder}}"
+    placeholder-class="dark-input__placeholder"
+    bindinput="onInput"
+  />
+  <text wx:if="{{toggleable}}" class="dark-input__toggle" bindtap="onToggle">{{visible ? '隐藏' : '显示'}}</text>
+</view>

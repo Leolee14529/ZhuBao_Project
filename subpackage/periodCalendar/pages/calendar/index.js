@@ -1,0 +1,313 @@
+const cycleEngine = require("../../../../utils/cycle-engine");
+const cycleProfileService = require("../../utils/cycle-profile");
+const auth = require("../../../../utils/auth");
+const privacy = require("../../../../utils/privacy");
+const i18n = require("../../../../utils/i18n");
+const calendarI18n = require("../../utils/calendar-i18n");
+Page({
+  cycleStorageKey: auth.CYCLE_KEY,
+  data: {
+    statusBarHeight: 47,
+    topbarHeight: 52,
+    backButtonTop: 26,
+    monthLabel: "",
+    viewYear: 0,
+    viewMonth: 0,
+    hasCycleData: false,
+    showCycleSetup: false,
+    todayDateKey: "",
+    selectedDateKey: "",
+    selectedDetail: null,
+    summaryDays: "--",
+    summaryNextStart: i18n.t("cycle.noPrediction"),
+    copy: i18n.getCopy("calendar"),
+    commonCancel: i18n.t("common.cancel"),
+    commonSaving: i18n.t("common.saving"),
+    cyclePrivacyConfirmed: false,
+    isSavingCycle: false,
+    cycleProfile: { lastPeriodDate: "", cycleLength: "28", periodLength: "5", todayPeriodStartEnabled: false, adjustments: {} },
+    weeks: [],
+    legendItems: calendarI18n.buildLegend()
+  },
+  onLoad() {
+    const loadStartedAt = Date.now();
+    console.log("[perf:period-page:onLoad:start]", { startedAt: loadStartedAt });
+    const authStartedAt = Date.now();
+    if (!auth.requireLogin({ source: "/subpackage/periodCalendar/pages/calendar/index" })) return;
+    console.log("[perf:period-page:auth]", { durationMs: Date.now() - authStartedAt });
+    const setupStartedAt = Date.now();
+    this.updateSafeArea();
+    const todayDate = cycleEngine.getTodayDate();
+    const todayDateKey = cycleEngine.formatDateKey(todayDate);
+    const normalizedProfile = cycleEngine.normalizeProfile({ lastPeriodDate: todayDateKey, cycleLength: "28", periodLength: "5", todayPeriodStartEnabled: false, adjustments: {} });
+    this.setData({ todayDateKey, selectedDateKey: todayDateKey, cycleProfile: normalizedProfile });
+    console.log("[perf:period-page:setup]", { durationMs: Date.now() - setupStartedAt });
+    this.loadCycleProfile();
+    this.unsubscribeLocale = i18n.subscribe(() => { this.applyLocale(); this.refreshCalendar(this.data.viewYear, this.data.viewMonth); });
+    this.applyLocale();
+    this.initializeViewMonth();
+    console.log("[perf:period-page:onLoad:end]", { durationMs: Date.now() - loadStartedAt });
+  },
+  onShow() {
+    const startedAt = Date.now();
+    auth.requireLogin({ source: "/subpackage/periodCalendar/pages/calendar/index" });
+    console.log("[perf:period-page:onShow]", { durationMs: Date.now() - startedAt, reused: true });
+  },
+  onUnload() { if (this.unsubscribeLocale) this.unsubscribeLocale(); },
+  applyLocale() { this.setData({ copy: i18n.getCopy("calendar"), commonCancel: i18n.t("common.cancel"), commonSaving: i18n.t("common.saving"), legendItems: calendarI18n.buildLegend() }); },
+  initializeViewMonth() {
+    const startedAt = Date.now();
+    const today = cycleEngine.getTodayDate();
+    const year = today.getFullYear();
+    const month = today.getMonth() + 1;
+    this.setData({ viewYear: year, viewMonth: month });
+    this.refreshCalendar(year, month);
+    console.log("[perf:period-page:initialize-month]", { durationMs: Date.now() - startedAt });
+  },
+  updateSafeArea() {
+    const info = wx.getWindowInfo ? wx.getWindowInfo() : { statusBarHeight: 20, windowWidth: 375 };
+    const menuButton = wx.getMenuButtonBoundingClientRect ? wx.getMenuButtonBoundingClientRect() : null;
+    const windowWidth = info.windowWidth || 375;
+    const rpxToPx = windowWidth / 750;
+    const backButtonHeight = 56 * rpxToPx;
+    const statusBarHeight = info.statusBarHeight || 47;
+    let topbarHeight = statusBarHeight + 44;
+    let backButtonTop = statusBarHeight + 8;
+    if (menuButton && menuButton.top) {
+      topbarHeight = Math.max(menuButton.bottom + 8, statusBarHeight + 44);
+      backButtonTop = menuButton.top + (menuButton.height - backButtonHeight) / 2 + 2;
+    }
+    this.setData({ statusBarHeight: statusBarHeight, topbarHeight: Math.round(topbarHeight), backButtonTop: Math.round(backButtonTop) });
+  },
+  loadCycleProfile() {
+    const profile = auth.getPersonalData(this.cycleStorageKey);
+    if (!profile) return;
+    this.setData({ hasCycleData: true, cycleProfile: cycleEngine.normalizeProfile(profile) });
+  },
+  refreshCalendar(year, month) {
+    const startedAt = Date.now();
+    const monthLabel = i18n.formatMonth(year, month);
+    if (!this.data.hasCycleData) {
+      this.setData({ monthLabel, weeks: [], selectedDetail: null, summaryDays: "--", summaryNextStart: i18n.t("cycle.noPrediction") });
+      console.log("[perf:period-page:refresh]", { durationMs: Date.now() - startedAt, hasCycleData: false });
+      return;
+    }
+    const built = cycleEngine.buildWeeks(this.data.cycleProfile, year, month, this.data.selectedDateKey);
+    const todayDate = cycleEngine.getTodayDate();
+    const summary = cycleEngine.buildSummary(built.cycleStarts, todayDate);
+    const selectedDetail = calendarI18n.localizeDetail(cycleEngine.buildSelectedDetail(built.weeks, this.data.selectedDateKey, todayDate));
+    const summaryNextStart = summary.nextStartDateKey ? i18n.t("cycle.estimatedStart", { date: i18n.formatDateKey(summary.nextStartDateKey) }) : i18n.t("cycle.noPrediction");
+    this.setData({ monthLabel, weeks: built.weeks, selectedDetail, summaryDays: summary.daysUntil, summaryNextStart }, () => {
+      console.log("[perf:period-page:refresh]", { durationMs: Date.now() - startedAt, hasCycleData: true, weekCount: built.weeks.length });
+    });
+  },
+  onBackTap() {
+    const pages = getCurrentPages();
+    if (pages.length > 1) {
+      wx.navigateBack();
+      return;
+    }
+    wx.redirectTo({ url: "/subpackage/jewelry/pages/data/index" });
+  },
+  onPrevMonth() {
+    let { viewYear, viewMonth } = this.data;
+    viewMonth -= 1;
+    if (viewMonth < 1) {
+      viewMonth = 12;
+      viewYear -= 1;
+    }
+    this.setData({ viewYear, viewMonth });
+    this.refreshCalendar(viewYear, viewMonth);
+  },
+  onNextMonth() {
+    let { viewYear, viewMonth } = this.data;
+    viewMonth += 1;
+    if (viewMonth > 12) {
+      viewMonth = 1;
+      viewYear += 1;
+    }
+    this.setData({ viewYear, viewMonth });
+    this.refreshCalendar(viewYear, viewMonth);
+  },
+  onGoToday() {
+    const today = cycleEngine.getTodayDate();
+    const year = today.getFullYear();
+    const month = today.getMonth() + 1;
+    this.setData({ viewYear: year, viewMonth: month, selectedDateKey: this.data.todayDateKey });
+    this.refreshCalendar(year, month);
+  },
+  onSetupCycle() { this.setData({ showCycleSetup: true, cyclePrivacyConfirmed: !!auth.getPersonalData(auth.PERIOD_PRIVACY_KEY) }); },
+  noop() {},
+  onCloseCycleSetup() { this.setData({ showCycleSetup: false }); },
+  onCycleDateChange(event) { this.setData({ "cycleProfile.lastPeriodDate": event.detail.value }); },
+  onCycleLengthInput(event) {
+    const value = (event.detail.value || "").replace(/[^\d]/g, "").slice(0, 2);
+    this.setData({ "cycleProfile.cycleLength": value });
+  },
+  onPeriodLengthInput(event) {
+    const value = (event.detail.value || "").replace(/[^\d]/g, "").slice(0, 2);
+    this.setData({ "cycleProfile.periodLength": value });
+  },
+  onToggleCyclePrivacy() { this.setData({ cyclePrivacyConfirmed: !this.data.cyclePrivacyConfirmed }); },
+  onSaveCycleSetup() {
+    if (!auth.requireLogin({ source: "/subpackage/periodCalendar/pages/calendar/index" })) return;
+    if (this.data.isSavingCycle) return;
+    const todayDate = cycleEngine.getTodayDate();
+    const todayDateKey = this.data.todayDateKey;
+    const prepared = cycleProfileService.prepareSavedProfile(
+      this.data.cycleProfile,
+      todayDate
+    );
+    if (prepared.error) {
+      wx.showToast({ title: i18n.t("errors.validation"), icon: "none" });
+      return;
+    }
+    const profile = prepared.profile;
+    this.setData({ isSavingCycle: true });
+    this.confirmCyclePrivacy()
+      .then(() => privacy.checkWechatPrivacyReady({ action: "periodCalendar" }))
+      .then(() => {
+        auth.setPersonalData(this.cycleStorageKey, profile);
+        auth.setPersonalData(auth.PERIOD_PRIVACY_KEY, true);
+    this.setData({
+      hasCycleData: true,
+      showCycleSetup: false,
+      selectedDateKey: todayDateKey,
+      cycleProfile: profile
+    });
+    this.refreshCalendar(this.data.viewYear, this.data.viewMonth);
+    wx.showToast({
+      title: i18n.t("calendar.saved"),
+      icon: "success"
+        });
+      })
+      .then(() => {
+        this.setData({ isSavingCycle: false });
+      })
+      .catch((error) => {
+        wx.showToast({
+          title: error && error.message ? error.message : i18n.t("calendar.privacyRequired"),
+          icon: "none"
+        });
+        this.setData({ isSavingCycle: false });
+      });
+  },
+  confirmCyclePrivacy() {
+    if (this.data.showCycleSetup) {
+      return this.data.cyclePrivacyConfirmed ?
+        Promise.resolve(true) :
+        Promise.reject(new Error(i18n.t("calendar.privacyRequired")));
+    }
+    if (this.data.cyclePrivacyConfirmed || auth.getPersonalData(auth.PERIOD_PRIVACY_KEY)) {
+      return Promise.resolve(true);
+    }
+    if (!this.data.showCycleSetup) {
+      this.setData({
+        showCycleSetup: true,
+        cyclePrivacyConfirmed: false
+      });
+    }
+    return Promise.reject(new Error(i18n.t("calendar.privacyRequired")));
+  },
+  ensureCyclePrivacyReady() {
+    return this.confirmCyclePrivacy()
+      .then(() => privacy.checkWechatPrivacyReady({ action: "periodCalendar" }))
+      .then(() => {
+        auth.setPersonalData(auth.PERIOD_PRIVACY_KEY, true);
+        this.setData({ cyclePrivacyConfirmed: true });
+      });
+  },
+  onToggleTodayPeriod(event) {
+    const enabled = !!event.detail.enabled;
+    const todayDateKey = this.data.todayDateKey;
+    this.ensureCyclePrivacyReady().then(() => {
+      const nextProfile = cycleEngine.normalizeProfile({
+        lastPeriodDate: this.data.cycleProfile.lastPeriodDate || todayDateKey,
+        cycleLength: this.data.cycleProfile.cycleLength,
+        periodLength: this.data.cycleProfile.periodLength,
+        todayPeriodStartEnabled: enabled,
+        adjustments: enabled ? {} : this.data.cycleProfile.adjustments
+      });
+      auth.setPersonalData(this.cycleStorageKey, nextProfile);
+      this.setData({
+        hasCycleData: true,
+        selectedDateKey: todayDateKey,
+        cycleProfile: nextProfile
+      });
+      this.refreshCalendar(this.data.viewYear, this.data.viewMonth);
+    }).catch((error) => {
+      wx.showToast({
+        title: error && error.message ? error.message : i18n.t("calendar.privacyRequired"),
+        icon: "none"
+      });
+    });
+  },
+  onSelectDay(event) {
+    const { dateKey } = event.detail;
+    if (!dateKey) return;
+    this.setData({
+      selectedDateKey: dateKey
+    });
+    this.refreshCalendar(this.data.viewYear, this.data.viewMonth);
+  },
+  onAdjustPrediction() {
+    const nextProfile = cycleProfileService.adjustPrediction(
+      this.data.cycleProfile,
+      this.data.selectedDetail,
+      this.data.viewYear,
+      this.data.viewMonth
+    );
+    if (!nextProfile) {
+      wx.showToast({
+        title: i18n.t("calendar.cannotAdjust"),
+        icon: "none"
+      });
+      return;
+    }
+    this.ensureCyclePrivacyReady().then(() => {
+      auth.setPersonalData(this.cycleStorageKey, nextProfile);
+      this.setData({
+        cycleProfile: nextProfile
+      });
+      this.refreshCalendar(this.data.viewYear, this.data.viewMonth);
+      wx.showToast({
+        title: i18n.t("calendar.adjusted"),
+        icon: "success"
+      });
+    }).catch((error) => {
+      wx.showToast({
+        title: error && error.message ? error.message : i18n.t("calendar.privacyRequired"),
+        icon: "none"
+      });
+    });
+  },
+  onClearCycleData() {
+    wx.showModal({
+      title: i18n.t("settings.clearCycleTitle"),
+      content: i18n.t("settings.clearCycleContent"),
+      confirmText: i18n.t("common.delete"),
+      success: (res) => {
+        if (!res.confirm) return;
+        const todayDate = cycleEngine.getTodayDate();
+        const todayDateKey = cycleEngine.formatDateKey(todayDate);
+        const profile = cycleEngine.normalizeProfile({
+          lastPeriodDate: todayDateKey,
+          cycleLength: "28",
+          periodLength: "5",
+          todayPeriodStartEnabled: false,
+          adjustments: {}
+        });
+        auth.clearCycleData();
+        this.setData({
+          hasCycleData: false,
+          todayDateKey,
+          selectedDateKey: todayDateKey,
+          cyclePrivacyConfirmed: false,
+          cycleProfile: profile
+        });
+        this.refreshCalendar(this.data.viewYear, this.data.viewMonth);
+        wx.showToast({ title: i18n.t("settings.clearCycleDone"), icon: "success" });
+      }
+    });
+  }
+});

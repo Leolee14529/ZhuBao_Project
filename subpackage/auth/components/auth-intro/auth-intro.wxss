@@ -1,0 +1,19 @@
+.auth-intro {
+  margin-bottom: 44rpx;
+}
+
+.auth-intro__title {
+  display: block;
+  color: #ffffff;
+  font-size: 56rpx;
+  font-weight: 600;
+  line-height: 1.16;
+}
+
+.auth-intro__subtitle {
+  display: block;
+  margin-top: 18rpx;
+  color: rgba(255, 255, 255, 0.56);
+  font-size: 26rpx;
+  line-height: 1.7;
+}

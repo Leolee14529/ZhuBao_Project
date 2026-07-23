@@ -1,0 +1,689 @@
+const auth = require("../../../../utils/auth");
+const dailyCheckins = require("../../../../utils/daily-checkins");
+const i18n = require("../../../../utils/i18n");
+const navigation = require("../../../../utils/navigation");
+const sleepRecords = require("../../../../utils/sleep-records");
+const cycleEngine = require("../../../periodCalendar/utils/cycle-engine");
+const recordEditorController = require("../../utils/record-editor-controller");
+const recordViewModel = require("../../utils/daily-record-view-model");
+
+function emptyRecord(copy) {
+  return recordViewModel.buildDailyRecordView(null, copy);
+}
+
+function buildRecordState(checkin, loading, loadError, copy) {
+  if (checkin) {
+    return {
+      record: recordViewModel.buildDailyRecordView(checkin, copy),
+      canEdit: true,
+      showEmpty: false
+    };
+  }
+
+  if (loading) {
+    return {
+      record: emptyRecord(copy),
+      canEdit: false,
+      showEmpty: false
+    };
+  }
+
+  if (loadError) {
+    return {
+      record: emptyRecord(copy),
+      canEdit: false,
+      showEmpty: false
+    };
+  }
+
+  return {
+    record: emptyRecord(copy),
+    canEdit: true,
+    showEmpty: true
+  };
+}
+
+function applySleepOverride(record, sleepMinutes, copy) {
+  if (!record || !Number.isInteger(sleepMinutes) || sleepMinutes < 0) return record;
+  return Object.assign({}, record, {
+    sleep: recordViewModel.formatSleep(sleepMinutes, copy)
+  });
+}
+
+function buildDailyStatusText(record, loadError, copy) {
+  if (loadError) return loadError;
+  if (record && record.hasRecord) return copy.recorded;
+  return copy.noRecord;
+}
+
+function buildSafeWeeklyState(weeklyView, copy) {
+  const weekly = weeklyView || {};
+  const days = Array.isArray(weekly.days) ? weekly.days : [];
+  const normalizedDays = days.map((item) => {
+    const hasValue = item && item.value !== null && item.value !== undefined && item.value !== "";
+    return Object.assign({}, item, {
+      dateLabel: item && item.dateLabel ? item.dateLabel : "",
+      dayLabel: item && item.dayLabel ? item.dayLabel : "",
+      barHeight: Number.isFinite(Number(item && item.barHeight)) ? Number(item.barHeight) : 16,
+      dayClass: item && item.isToday ? "rhythm-day rhythm-day-today" : "rhythm-day",
+      barClass: hasValue ? "rhythm-bar rhythm-bar-filled" : "rhythm-bar",
+      valueText: hasValue ? String(item.value) : "·"
+    });
+  });
+  const firstDay = normalizedDays.length ? normalizedDays[0] : null;
+  const lastDay = normalizedDays.length ? normalizedDays[normalizedDays.length - 1] : null;
+
+  return {
+    weekly: Object.assign({}, weekly, {
+      days: normalizedDays,
+      topFeelings: Array.isArray(weekly.topFeelings) ? weekly.topFeelings : [],
+      recordedDays: weekly.recordedDays || "--",
+      averageMood: weekly.averageMood || "--",
+      jewelryDays: weekly.jewelryDays || "--",
+      summary: weekly.summary || copy.noWeeklyRecords
+    }),
+    weeklyRangeText: firstDay && lastDay && firstDay.dateLabel && lastDay.dateLabel
+      ? firstDay.dateLabel + "—" + lastDay.dateLabel
+      : ""
+  };
+}
+
+function buildPeriodSummary(profile, copy) {
+  if (!profile) {
+    return {
+      hasPeriodRecord: false,
+      periodSummaryText: copy.periodEmpty
+    };
+  }
+
+  const normalizedProfile = cycleEngine.normalizeProfile(profile);
+  const todayDate = cycleEngine.getTodayDate();
+  const todayDateKey = cycleEngine.formatDateKey(todayDate);
+  const cycleStarts = cycleEngine.buildWeeks(normalizedProfile, todayDate.getFullYear(), todayDate.getMonth() + 1, todayDateKey).cycleStarts;
+  const summary = cycleEngine.buildSummary(cycleStarts, todayDate);
+  const daysUntil = Number(summary.daysUntil);
+
+  if (!Number.isFinite(daysUntil)) {
+    return {
+      hasPeriodRecord: true,
+      periodSummaryText: copy.periodEmpty
+    };
+  }
+
+  if (daysUntil < 0) {
+    return {
+      hasPeriodRecord: true,
+      periodSummaryText: copy.periodDuePassed
+    };
+  }
+
+  if (daysUntil === 0) {
+    return {
+      hasPeriodRecord: true,
+      periodSummaryText: copy.periodDueToday
+    };
+  }
+
+  return {
+    hasPeriodRecord: true,
+    periodSummaryText: i18n.t("data.periodCountdown", { days: daysUntil })
+  };
+}
+
+Page({
+  data: {
+    topSpacer: 40,
+    copy: i18n.getCopy("data"),
+    loading: true,
+    loadError: "",
+    record: emptyRecord(i18n.getCopy("data")),
+    dateKey: dailyCheckins.toDateKey(),
+    editorVisible: false,
+    editorValue: null,
+    saving: false,
+    canEdit: false,
+    showEmpty: false,
+    dailyStatusText: i18n.getCopy("data").noRecord,
+    periodSummaryLoading: true,
+    periodSummaryError: "",
+    hasPeriodRecord: false,
+    periodSummaryText: i18n.getCopy("data").periodEmpty,
+    dailyInitialized: false,
+    sleepLoading: false,
+    sleepError: "",
+    weeklyLoading: true,
+    weeklyError: "",
+    weeklyInitialized: false,
+    weekly: buildSafeWeeklyState(
+      recordViewModel.buildWeeklyRecordView([], dailyCheckins.toDateKey(), i18n.getCopy("data")),
+      i18n.getCopy("data")
+    ).weekly,
+    weeklyRangeText: "",
+    undoView: recordViewModel.buildUndoView("idle")
+  },
+  onLoad() {
+    if (!auth.requireLogin({ source: "/subpackage/jewelry/pages/data/index" })) return;
+    const app = getApp();
+    const navLayout = app.getNavLayout ? app.getNavLayout() : app.globalData.navLayout;
+    if (navLayout && navLayout.contentOffset) this.setData({ topSpacer: navLayout.contentOffset });
+    this.unsubscribeLocale = i18n.subscribe(() => this.applyLocale());
+    this.applyLocale();
+  },
+  onShow() {
+    if (!auth.requireLogin({ source: "/subpackage/jewelry/pages/data/index" })) return;
+    try {
+      this.loadDailyRecord({ source: "onShow" });
+    } catch (error) {
+      console.error("[data:onShow:daily:error]", error);
+    }
+    try {
+      this.loadPeriodSummary({ source: "onShow" });
+    } catch (error) {
+      console.error("[data:onShow:period:error]", error);
+    }
+  },
+  onUnload() {
+    if (this.unsubscribeLocale) this.unsubscribeLocale();
+    if (this.undoTimer) clearTimeout(this.undoTimer);
+  },
+  nextRequestId(prefix) {
+    this._requestSeq = (this._requestSeq || 0) + 1;
+    return prefix + "-" + Date.now() + "-" + this._requestSeq;
+  },
+  syncRecordView(options, callback) {
+    const nextOptions = options || {};
+    const copy = nextOptions.copy || this.data.copy;
+    const loading = Object.prototype.hasOwnProperty.call(nextOptions, "loading")
+      ? nextOptions.loading
+      : this.data.loading;
+    const loadError = Object.prototype.hasOwnProperty.call(nextOptions, "loadError")
+      ? nextOptions.loadError
+      : this.data.loadError;
+    const state = buildRecordState(this.currentCheckin || null, loading, loadError, copy);
+    const sleepMinutes = this.currentSleepRecord && Number.isInteger(this.currentSleepRecord.sleepDurationMinutes)
+      ? this.currentSleepRecord.sleepDurationMinutes
+      : null;
+    const nextData = Object.assign({
+      copy,
+      loading,
+      loadError,
+      record: applySleepOverride(state.record, sleepMinutes, copy),
+      dailyStatusText: buildDailyStatusText(state.record, loadError, copy),
+      canEdit: state.canEdit,
+      showEmpty: state.showEmpty
+    }, nextOptions.extra || {});
+
+    this.setData(nextData, callback);
+  },
+  applyLocale() {
+    const copy = i18n.getCopy("data");
+    const periodSummary = buildPeriodSummary(this.currentCycleProfile || null, copy);
+    const safeWeeklyState = buildSafeWeeklyState(
+      recordViewModel.buildWeeklyRecordView(this.currentWeekCheckins || [], this.data.dateKey, copy),
+      copy
+    );
+    this.syncRecordView({
+      copy,
+      extra: {
+        hasPeriodRecord: periodSummary.hasPeriodRecord,
+        periodSummaryText: periodSummary.periodSummaryText,
+        weekly: safeWeeklyState.weekly,
+        weeklyRangeText: safeWeeklyState.weeklyRangeText
+      }
+    });
+  },
+  loadPeriodSummary(options) {
+    const loadOptions = options || {};
+    const source = loadOptions.source || "unknown";
+    const requestId = this.nextRequestId("period");
+    const isInitialLoad = !this.data.periodSummaryText || this.data.periodSummaryText === this.data.copy.periodEmpty;
+
+    this._periodRequestId = requestId;
+    console.log("[data:period:start]", {
+      source,
+      requestId
+    });
+    this.setData({
+      periodSummaryLoading: isInitialLoad,
+      periodSummaryError: ""
+    });
+
+    return Promise.resolve()
+      .then(() => auth.getPersonalData(auth.CYCLE_KEY))
+      .then((profile) => {
+        if (this._periodRequestId !== requestId) {
+          console.log("[data-load:stale]", {
+            functionName: "loadPeriodSummary",
+            requestId,
+            source
+          });
+          return null;
+        }
+        this.currentCycleProfile = profile || null;
+        const summary = buildPeriodSummary(this.currentCycleProfile, this.data.copy);
+        this.setData({
+          periodSummaryLoading: false,
+          periodSummaryError: "",
+          hasPeriodRecord: summary.hasPeriodRecord,
+          periodSummaryText: summary.periodSummaryText
+        });
+        return summary;
+      })
+      .catch((error) => {
+        if (this._periodRequestId !== requestId) {
+          console.log("[data-load:stale]", {
+            functionName: "loadPeriodSummary",
+            requestId,
+            source,
+            status: "error"
+          });
+          return null;
+        }
+        console.error("[data:period:error]", error);
+        this.setData({
+          periodSummaryLoading: false,
+          periodSummaryError: error && error.message ? error.message : "",
+          hasPeriodRecord: Boolean(this.currentCycleProfile),
+          periodSummaryText: this.data.periodSummaryText || this.data.copy.periodEmpty
+        });
+        return null;
+      });
+  },
+  loadDailyRecord(options) {
+    const startedAt = Date.now();
+    const loadOptions = options || {};
+    const source = loadOptions.source || "unknown";
+    const dateKey = dailyCheckins.toDateKey();
+    const requestId = this.nextRequestId("daily");
+    const isInitialLoad = !this.data.dailyInitialized && !this.currentCheckin;
+
+    this._dailyRequestId = requestId;
+    console.log("[perf:data-load]", {
+      source,
+      step: "start",
+      requestId,
+      dateKey
+    });
+    this.setData({
+      dateKey,
+      loading: isInitialLoad,
+      loadError: ""
+    });
+    this.loadWeeklyRecords(dateKey, { source, parentRequestId: requestId });
+    this.loadTodaySleepRecord(dateKey, { source, parentRequestId: requestId });
+    return dailyCheckins.listByDate(dateKey)
+      .then((checkins) => {
+        if (this._dailyRequestId !== requestId) {
+          console.log("[data-load:stale]", {
+            functionName: "loadDailyRecord",
+            requestId,
+            source
+          });
+          return this.currentCheckin || null;
+        }
+        this.currentCheckin = checkins[0] || null;
+        this.syncRecordView({
+          loading: false,
+          loadError: "",
+          extra: {
+            dailyInitialized: true
+          }
+        }, () => {
+          console.log("[perf:data-load]", {
+            source,
+            step: "daily-record-setData",
+            requestId,
+            durationMs: Date.now() - startedAt
+          });
+        });
+        return this.currentCheckin;
+      })
+      .catch((error) => {
+        if (this._dailyRequestId !== requestId) {
+          console.log("[data-load:stale]", {
+            functionName: "loadDailyRecord",
+            requestId,
+            source,
+            status: "error"
+          });
+          return null;
+        }
+        if (error && error.statusCode === 401) {
+          this.setData({ loading: false });
+          return null;
+        }
+        if (!this.data.dailyInitialized && !this.currentCheckin) {
+          this.currentCheckin = null;
+        }
+        const loadError = this.data.copy.loadFailed;
+        this.syncRecordView({
+          loading: false,
+          loadError,
+          extra: {
+            dailyInitialized: this.data.dailyInitialized || Boolean(this.currentCheckin)
+          }
+        }, () => {
+          console.log("[perf:data-load]", {
+            source,
+            step: "daily-record-error-setData",
+            requestId,
+            durationMs: Date.now() - startedAt
+          });
+        });
+        return null;
+      });
+  },
+  loadTodaySleepRecord(dateKey, options) {
+    const startedAt = Date.now();
+    const loadOptions = options || {};
+    const targetDateKey = dateKey || dailyCheckins.toDateKey();
+    const requestId = this.nextRequestId("sleep");
+
+    this._sleepRequestId = requestId;
+    console.log("[data:sleep:load:start]", {
+      dateKey: targetDateKey,
+      source: loadOptions.source || "unknown",
+      requestId,
+      parentRequestId: loadOptions.parentRequestId || ""
+    });
+    console.log("[perf:data-sleep-load]", {
+      source: loadOptions.source || "unknown",
+      step: "start",
+      requestId,
+      dateKey: targetDateKey
+    });
+    this.setData({ sleepLoading: true, sleepError: "" });
+    return sleepRecords.listByDate(targetDateKey, {
+      source: "data-page:" + (loadOptions.source || "unknown"),
+      requestId
+    })
+      .then((records) => {
+        if (this._sleepRequestId !== requestId) {
+          console.log("[data-load:stale]", {
+            functionName: "loadTodaySleepRecord",
+            requestId,
+            source: loadOptions.source || "unknown"
+          });
+          return this.currentSleepRecord || null;
+        }
+        this.currentSleepRecord = Array.isArray(records) && records.length ? records[0] : null;
+        console.log("[data:sleep:load:result]", {
+          sleepRecord: this.currentSleepRecord,
+          durationMinutes: this.currentSleepRecord ? this.currentSleepRecord.sleepDurationMinutes : null
+        });
+        this.syncSleepCard({
+          sleepLoading: false,
+          sleepError: ""
+        });
+        console.log("[perf:data-sleep-load]", {
+          source: loadOptions.source || "unknown",
+          step: "success",
+          requestId,
+          durationMs: Date.now() - startedAt
+        });
+        return this.currentSleepRecord;
+      })
+      .catch((error) => {
+        if (this._sleepRequestId !== requestId) {
+          console.log("[data-load:stale]", {
+            functionName: "loadTodaySleepRecord",
+            requestId,
+            source: loadOptions.source || "unknown",
+            status: "error"
+          });
+          return null;
+        }
+        console.error("[data:loadTodaySleepRecord:error]", error);
+        this.syncSleepCard({
+          sleepLoading: false,
+          sleepError: error && error.message ? error.message : this.data.copy.sleepSource
+        });
+        console.log("[perf:data-sleep-load]", {
+          source: loadOptions.source || "unknown",
+          step: "error",
+          requestId,
+          durationMs: Date.now() - startedAt
+        });
+        return null;
+      });
+  },
+  syncSleepCard(options) {
+    const nextOptions = options || {};
+    const sleepMinutes = this.currentSleepRecord && Number.isInteger(this.currentSleepRecord.sleepDurationMinutes)
+      ? this.currentSleepRecord.sleepDurationMinutes
+      : null;
+    const currentRecordState = buildRecordState(
+      this.currentCheckin || null,
+      this.data.loading,
+      this.data.loadError,
+      this.data.copy
+    );
+    const originalSleep = currentRecordState.record && currentRecordState.record.sleep
+      ? currentRecordState.record.sleep
+      : "";
+    const overriddenRecord = applySleepOverride(currentRecordState.record, sleepMinutes, this.data.copy);
+    console.log("[data:sleep:sync]", {
+      originalSleep,
+      overriddenSleep: overriddenRecord && overriddenRecord.sleep ? overriddenRecord.sleep : originalSleep
+    });
+    this.setData({
+      record: overriddenRecord,
+      canEdit: currentRecordState.canEdit,
+      showEmpty: currentRecordState.showEmpty,
+      sleepLoading: Object.prototype.hasOwnProperty.call(nextOptions, "sleepLoading")
+        ? nextOptions.sleepLoading
+        : this.data.sleepLoading,
+      sleepError: Object.prototype.hasOwnProperty.call(nextOptions, "sleepError")
+        ? nextOptions.sleepError
+        : this.data.sleepError
+    });
+  },
+  loadWeeklyRecords(dateKey, options) {
+    const startedAt = Date.now();
+    const loadOptions = options || {};
+    const emptyWeekState = buildSafeWeeklyState(
+      recordViewModel.buildWeeklyRecordView([], dateKey, this.data.copy),
+      this.data.copy
+    );
+    const requestId = this.nextRequestId("weekly");
+    const isInitialLoad = !this.data.weeklyInitialized && !(this.currentWeekCheckins && this.currentWeekCheckins.length);
+
+    this._weeklyRequestId = requestId;
+    this.setData({
+      weeklyLoading: isInitialLoad,
+      weeklyError: ""
+    });
+    dailyCheckins.listRange(emptyWeekState.weekly.from, emptyWeekState.weekly.to, 7)
+      .then((checkins) => {
+        if (this._weeklyRequestId !== requestId) {
+          console.log("[data-load:stale]", {
+            functionName: "loadWeeklyRecords",
+            requestId,
+            source: loadOptions.source || "unknown"
+          });
+          return;
+        }
+        this.currentWeekCheckins = checkins;
+        const safeWeeklyState = buildSafeWeeklyState(
+          recordViewModel.buildWeeklyRecordView(checkins, dateKey, this.data.copy),
+          this.data.copy
+        );
+        this.setData({
+          weeklyLoading: false,
+          weeklyInitialized: true,
+          weekly: safeWeeklyState.weekly,
+          weeklyRangeText: safeWeeklyState.weeklyRangeText
+        }, () => {
+          console.log("[perf:data-weekly-load]", {
+            source: loadOptions.source || "unknown",
+            step: "success",
+            requestId,
+            durationMs: Date.now() - startedAt
+          });
+        });
+      })
+      .catch((error) => {
+        if (this._weeklyRequestId !== requestId) {
+          console.log("[data-load:stale]", {
+            functionName: "loadWeeklyRecords",
+            requestId,
+            source: loadOptions.source || "unknown",
+            status: "error"
+          });
+          return;
+        }
+        if (!this.data.weeklyInitialized) {
+          this.currentWeekCheckins = [];
+        }
+        this.setData({
+          weeklyLoading: false,
+          weeklyError: error && error.statusCode === 401 ? "" : this.data.copy.weeklyLoadFailed,
+          weekly: this.data.weeklyInitialized ? this.data.weekly : emptyWeekState.weekly,
+          weeklyRangeText: this.data.weeklyInitialized ? this.data.weeklyRangeText : emptyWeekState.weeklyRangeText
+        }, () => {
+          console.log("[perf:data-weekly-load]", {
+            source: loadOptions.source || "unknown",
+            step: "error",
+            requestId,
+            durationMs: Date.now() - startedAt
+          });
+        });
+      });
+  },
+  retryWeekly() {
+    this.loadWeeklyRecords(this.data.dateKey);
+  },
+  retryLoad() {
+    this.loadDailyRecord({ source: "retryLoad" });
+  },
+  openEditor() {
+    if (!this.data.canEdit) return;
+    recordEditorController.open(this, {
+      canOpen: true,
+      value: this.currentCheckin || null
+    });
+  },
+  closeEditor() {
+    recordEditorController.close(this);
+  },
+  handleEditorInvalid() {
+    recordEditorController.handleInvalid(this, this.data.copy);
+  },
+  saveRecord(event) {
+    return recordEditorController.save(this, event, {
+      copy: this.data.copy,
+      onSaved: (checkin) => {
+        this.currentCheckin = checkin;
+        this.clearUndoState();
+        const nextRecord = applySleepOverride(
+          recordViewModel.buildDailyRecordView(checkin, this.data.copy),
+          this.currentSleepRecord && Number.isInteger(this.currentSleepRecord.sleepDurationMinutes)
+            ? this.currentSleepRecord.sleepDurationMinutes
+            : null,
+          this.data.copy
+        );
+        this.setData({
+          saving: false,
+          editorVisible: false,
+          editorValue: checkin,
+          record: nextRecord,
+          canEdit: true,
+          showEmpty: false
+        });
+        this.loadWeeklyRecords(this.data.dateKey);
+      }
+    });
+  },
+  deleteRecord() {
+    if (!this.currentCheckin) return;
+    wx.showModal({
+      title: this.data.copy.deleteTitle,
+      content: this.data.copy.deleteContent,
+      confirmText: this.data.copy.deleteConfirm,
+      success: (result) => {
+        if (!result.confirm) return;
+        const deletedRecord = this.currentCheckin;
+        dailyCheckins.remove(this.data.dateKey)
+          .then(() => {
+            this.deletedRecord = deletedRecord;
+            this.currentCheckin = null;
+            const nextRecord = applySleepOverride(
+              emptyRecord(this.data.copy),
+              this.currentSleepRecord && Number.isInteger(this.currentSleepRecord.sleepDurationMinutes)
+                ? this.currentSleepRecord.sleepDurationMinutes
+                : null,
+              this.data.copy
+            );
+            this.setData({
+              record: nextRecord,
+              canEdit: true,
+              showEmpty: true
+            });
+            this.loadWeeklyRecords(this.data.dateKey);
+            this.setUndoStatus("available");
+            this.scheduleUndoExpiry();
+          })
+          .catch((error) => {
+            if (error && error.statusCode === 401) return;
+            wx.showToast({ title: this.data.copy.deleteFailed, icon: "none" });
+          });
+      }
+    });
+  },
+  undoDelete() {
+    if (!this.deletedRecord || !this.data.undoView.canRetry) return;
+    const record = this.deletedRecord;
+    if (this.undoTimer) clearTimeout(this.undoTimer);
+    this.setUndoStatus("restoring");
+    dailyCheckins.save(record)
+      .then((checkin) => {
+        this.currentCheckin = checkin;
+        this.clearUndoState();
+        const nextRecord = applySleepOverride(
+          recordViewModel.buildDailyRecordView(checkin, this.data.copy),
+          this.currentSleepRecord && Number.isInteger(this.currentSleepRecord.sleepDurationMinutes)
+            ? this.currentSleepRecord.sleepDurationMinutes
+            : null,
+          this.data.copy
+        );
+        this.setData({
+          record: nextRecord,
+          canEdit: true,
+          showEmpty: false
+        });
+        this.loadWeeklyRecords(this.data.dateKey);
+      })
+      .catch((error) => {
+        this.setUndoStatus("failed");
+        this.scheduleUndoExpiry();
+        if (error && error.statusCode === 401) return;
+        wx.showToast({ title: this.data.copy.undoFailed, icon: "none" });
+      });
+  },
+  setUndoStatus(status) {
+    this.setData({ undoView: recordViewModel.buildUndoView(status) });
+  },
+  clearUndoState() {
+    if (this.undoTimer) clearTimeout(this.undoTimer);
+    this.undoTimer = null;
+    this.deletedRecord = null;
+    this.setUndoStatus("idle");
+  },
+  scheduleUndoExpiry() {
+    if (this.undoTimer) clearTimeout(this.undoTimer);
+    this.undoTimer = setTimeout(() => this.clearUndoState(), 5000);
+  },
+  goHome() {
+    navigation.navigateToPage("/pages/home/index");
+  },
+  goSettings() {
+    navigation.navigateToPage("/subpackage/jewelry/pages/settings/index");
+  },
+  openPeriodCalendar() {
+    if (!auth.requireLogin({ source: "/subpackage/periodCalendar/pages/calendar/index" })) return;
+    wx.navigateTo({ url: "/subpackage/periodCalendar/pages/calendar/index" });
+  },
+  openSleepDetail() {
+    wx.navigateTo({ url: "/subpackage/jewelry/pages/sleep-detail/index" });
+  }
+});

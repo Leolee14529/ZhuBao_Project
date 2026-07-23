@@ -1,0 +1,36 @@
+<view class="device-detail-page" style="padding-top: {{statusBarHeight}}px;">
+  <device-topbar bind:back="onBackTap" bind:capsule="onCapsuleTap" />
+
+  <view class="page-content">
+    <text class="page-title">设备连接</text>
+
+    <device-hero
+      image-src="/subpackage/device17/assets/ring-status.png"
+      ring-name="暂无设备"
+      status-text="未连接"
+      helper-text="请先连接设备"
+    />
+
+    <device-section-card
+      title="设备信息"
+      rows="{{infoRows}}"
+      bind:select="onInfoSelect"
+    />
+
+    <device-section-card
+      class="connection-card"
+      title="连接管理"
+      rows="{{connectionRows}}"
+      bind:select="onConnectionSelect"
+    />
+
+    <view class="search-button-row">
+      <primary-button
+        class="search-button-component"
+        style="display: block; width: 100%;"
+        text="搜索设备"
+        bind:action="onSearchDevice"
+      />
+    </view>
+  </view>
+</view>

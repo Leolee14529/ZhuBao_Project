@@ -1,0 +1,8 @@
+﻿<view class="bottom-nav">
+  <block wx:for="{{tabs}}" wx:key="id">
+    <view class="tab-item {{active === item.id ? 'is-active' : ''}}" data-tab="{{item.id}}" bindtap="onTabTap">
+      <text class="tab-icon">{{item.icon}}</text>
+      <text class="tab-label">{{item.label}}</text>
+    </view>
+  </block>
+</view>

@@ -1,0 +1,21 @@
+<view class="calendar-grid">
+  <view class="week-header">
+    <block wx:for="{{weekLabels}}" wx:key="*this">
+      <text class="week-label">{{item}}</text>
+    </block>
+  </view>
+
+  <block wx:for="{{weeks}}" wx:key="index">
+    <view class="week-row">
+      <block wx:for="{{item}}" wx:key="dateKey">
+        <view class="day-cell {{item.isSelected ? 'day-cell-selected' : ''}}" data-date-key="{{item.dateKey}}" bindtap="onDayTap">
+          <view class="day-ring {{'status-' + item.status}} {{item.isToday ? 'day-ring-today' : ''}}">
+            <text class="day-text {{item.muted ? 'day-muted' : ''}}">{{item.day}}</text>
+            <view wx:if="{{item.status === 'safe'}}" class="day-safe-dot"></view>
+          </view>
+          <view wx:if="{{item.isSelected}}" class="day-marker"></view>
+        </view>
+      </block>
+    </view>
+  </block>
+</view>

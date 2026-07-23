@@ -1,0 +1,67 @@
+.hero {
+  margin-top: 18rpx;
+  text-align: center;
+}
+
+.hero-image {
+  width: 520rpx;
+  margin: 0 auto;
+  display: block;
+}
+
+.hero-name {
+  display: block;
+  margin-top: -2rpx;
+  font-size: 68rpx;
+  font-weight: 500;
+  color: #ffffff;
+}
+
+.hero-status {
+  display: block;
+  margin-top: 16rpx;
+  font-size: 52rpx;
+  font-weight: 600;
+  color: #14d365;
+}
+
+.battery-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 26rpx;
+}
+
+.battery-text {
+  font-size: 34rpx;
+  color: rgba(255, 255, 255, 0.76);
+}
+
+.battery-icon {
+  position: relative;
+  width: 56rpx;
+  height: 28rpx;
+  margin-left: 18rpx;
+  border: 4rpx solid #ffffff;
+  border-radius: 7rpx;
+}
+
+.battery-level {
+  position: absolute;
+  left: 5rpx;
+  top: 4rpx;
+  width: 34rpx;
+  height: 12rpx;
+  border-radius: 3rpx;
+  background: linear-gradient(90deg, #16df6b 0%, #0ec65a 100%);
+}
+
+.battery-cap {
+  position: absolute;
+  right: -10rpx;
+  top: 7rpx;
+  width: 6rpx;
+  height: 12rpx;
+  border-radius: 0 4rpx 4rpx 0;
+  background: rgba(255, 255, 255, 0.72);
+}

@@ -1,0 +1,89 @@
+page {
+  background: #040706;
+}
+
+.showcase-page {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top, rgba(17, 58, 43, 0.18), transparent 42%),
+    linear-gradient(180deg, #040706 0%, #07100d 100%);
+  color: #f5f7f4;
+}
+
+.showcase-scroll {
+  height: 100vh;
+}
+
+.page-body {
+  padding: 0 24rpx 180rpx;
+}
+
+.page-top-spacer {
+  width: 100%;
+}
+
+.hero-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24rpx;
+  margin-bottom: 26rpx;
+}
+
+.hero-copy {
+  display: flex;
+  flex-direction: column;
+  padding-top: 8rpx;
+}
+
+.hero-title {
+  font-size: 56rpx;
+  line-height: 1.1;
+  font-weight: 700;
+}
+
+.hero-subtitle {
+  margin-top: 10rpx;
+  font-size: 24rpx;
+  color: rgba(223, 231, 226, 0.54);
+}
+
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20rpx;
+  margin: 22rpx 0 24rpx;
+}
+
+.section-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 28rpx 0 22rpx;
+}
+
+.section-title {
+  font-size: 44rpx;
+  font-weight: 700;
+  letter-spacing: 2rpx;
+}
+
+.section-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 6rpx;
+  padding: 10rpx 18rpx;
+  border-radius: 999rpx;
+  background: rgba(17, 133, 82, 0.48);
+  color: #3cde8e;
+  font-size: 24rpx;
+}
+
+.section-arrow {
+  font-size: 28rpx;
+  line-height: 1;
+}
+
+.bottom-space {
+  height: 16rpx;
+}

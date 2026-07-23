@@ -1,0 +1,342 @@
+const auth = require("./auth");
+const config = require("./config");
+
+const DEFAULT_SLEEP_API_BASE_URLS = {
+  development: "http://192.168.3.60:3000",
+  trial: "",
+  production: ""
+};
+const inflightGetRequests = Object.create(null);
+let sleepRequestSeq = 0;
+
+function getRuntimePlatform() {
+  try {
+    if (typeof wx !== "undefined" && typeof wx.getSystemInfoSync === "function") {
+      const info = wx.getSystemInfoSync();
+      if (info && info.platform) return String(info.platform);
+    }
+  } catch (error) {
+    console.error("[sleep-records:getRuntimePlatform:error]", error);
+  }
+  return "";
+}
+
+function isDevtoolsPlatform() {
+  return getRuntimePlatform() === "devtools";
+}
+
+function dedupeUrls(urls) {
+  const result = [];
+  (Array.isArray(urls) ? urls : []).forEach((url) => {
+    const normalized = String(url || "").replace(/\/+$/, "");
+    if (!normalized || result.indexOf(normalized) >= 0) return;
+    result.push(normalized);
+  });
+  return result;
+}
+
+function getSleepApiBaseUrl() {
+  const extConfig = config.getExternalConfig ? config.getExternalConfig() : {};
+  const env = config.getEnvironment ? config.getEnvironment() : "development";
+  const externalUrl = extConfig && extConfig.sleepApiBaseUrl ? String(extConfig.sleepApiBaseUrl) : "";
+  const fallbackUrl = DEFAULT_SLEEP_API_BASE_URLS[env] || config.getApiBaseUrl();
+  return String(externalUrl || fallbackUrl || "").replace(/\/+$/, "");
+}
+
+function getSleepApiBaseUrls() {
+  const primaryUrl = getSleepApiBaseUrl();
+  if (!isDevtoolsPlatform()) return dedupeUrls([primaryUrl]);
+  const loopbackUrl = getLoopbackFallbackUrl(primaryUrl);
+  if (!loopbackUrl) return dedupeUrls([primaryUrl]);
+  return dedupeUrls([loopbackUrl, primaryUrl]);
+}
+
+function getCurrentUserId() {
+  try {
+    const userInfo = wx.getStorageSync(auth.USER_KEY);
+    if (userInfo && typeof userInfo === "object" && userInfo.id) return String(userInfo.id);
+  } catch (error) {
+    console.error("[sleep-records:getCurrentUserId:error]", error);
+  }
+  return "";
+}
+
+function getSleepRequestHeader() {
+  const userId = getCurrentUserId();
+  const token = typeof auth.getToken === "function" ? auth.getToken() : "";
+  const header = {
+    "content-type": "application/json"
+  };
+  if (token) {
+    header.Authorization = "Bearer " + token;
+  }
+  if (userId) {
+    header["x-app-user-id"] = userId;
+  }
+  return header;
+}
+
+function buildSleepRequestError(message, code, statusCode, data) {
+  const error = new Error(message || "睡眠记录请求失败");
+  error.code = code || "SLEEP_REQUEST_FAILED";
+  error.statusCode = statusCode || 0;
+  error.data = data || null;
+  return error;
+}
+
+function requestSleepApi(url, method, data, header, timeout, meta) {
+  const requestStartedAt = Date.now();
+  console.log("[sleep-api:request]", {
+    requestId: meta.requestId,
+    source: meta.source,
+    method,
+    url,
+    data,
+    hasAuthorization: Boolean(header && header.Authorization),
+    authorizationPrefix: header && header.Authorization ? String(header.Authorization).slice(0, 10) : "",
+    appUserId: header && header["x-app-user-id"] ? header["x-app-user-id"] : "",
+    timeout
+  });
+
+  return new Promise((resolve, reject) => {
+    wx.request({
+      url,
+      method,
+      data,
+      header,
+      timeout,
+      success(response) {
+        const statusCode = response.statusCode || 0;
+        const body = response.data || {};
+        console.log("[sleep-api:response]", {
+          requestId: meta.requestId,
+          source: meta.source,
+          method,
+          url,
+          statusCode,
+          body,
+          durationMs: Date.now() - requestStartedAt
+        });
+        if (statusCode >= 200 && statusCode < 300 && body.success === true) {
+          resolve(body.data || {});
+          return;
+        }
+        reject(buildSleepRequestError(
+          body.message || body.error || "睡眠记录请求失败",
+          body.code || "SLEEP_REQUEST_FAILED",
+          statusCode,
+          body
+        ));
+      },
+      fail(error) {
+        console.error("[sleep-api:fail]", {
+          requestId: meta.requestId,
+          source: meta.source,
+          method,
+          url,
+          errMsg: error && error.errMsg ? error.errMsg : "",
+          error,
+          durationMs: Date.now() - requestStartedAt
+        });
+        reject(buildSleepRequestError(
+          error && error.errMsg ? error.errMsg : "睡眠记录网络异常",
+          "SLEEP_REQUEST_NETWORK_ERROR",
+          0,
+          error
+        ));
+      },
+      complete() {
+        console.log("[sleep-api:complete]", {
+          requestId: meta.requestId,
+          source: meta.source,
+          method,
+          url
+        });
+      }
+    });
+  });
+}
+
+function getLoopbackFallbackUrl(url) {
+  const normalizedUrl = String(url || "");
+  if (!/^http:\/\/192\.168\.\d{1,3}\.\d{1,3}:\d+/i.test(normalizedUrl)) return "";
+  return normalizedUrl.replace(/^http:\/\/192\.168\.\d{1,3}\.\d{1,3}/i, "http://127.0.0.1");
+}
+
+function shouldRetryWithLoopback(error, url) {
+  const message = error && error.message ? String(error.message) : "";
+  return (
+    isDevtoolsPlatform() &&
+    error &&
+    error.code === "SLEEP_REQUEST_NETWORK_ERROR" &&
+    /timeout/i.test(message) &&
+    /^http:\/\/192\.168\.\d{1,3}\.\d{1,3}:\d+/i.test(String(url || ""))
+  );
+}
+
+function sleepRequest(options) {
+  const requestStartedAt = Date.now();
+  const requestOptions = options || {};
+  const path = requestOptions.url || requestOptions.path || "";
+  const normalizedPath = String(path).charAt(0) === "/" ? String(path) : "/" + String(path);
+  const method = requestOptions.method || "GET";
+  const data = requestOptions.data || {};
+  const authPreparedAt = Date.now();
+  const baseHeader = getSleepRequestHeader();
+  const header = Object.assign({}, baseHeader, requestOptions.header || {});
+  const timeout = requestOptions.timeout || 12000;
+  const baseUrls = getSleepApiBaseUrls();
+  const urls = baseUrls.map((baseUrl) => baseUrl + normalizedPath);
+  const meta = {
+    requestId: requestOptions.requestId || ("sleep-" + (++sleepRequestSeq)),
+    source: requestOptions.source || "unknown"
+  };
+  const perfContext = {
+    method,
+    path: normalizedPath,
+    prepMs: Date.now() - authPreparedAt,
+    totalUrls: urls.length
+  };
+  const getRequestKey = method === "GET"
+    ? JSON.stringify({
+      method,
+      urls,
+      data,
+      source: meta.source,
+      appUserId: header["x-app-user-id"] || "",
+      hasAuthorization: Boolean(header.Authorization)
+    })
+    : "";
+
+  if (method === "GET" && inflightGetRequests[getRequestKey]) {
+    console.log("[sleep-api:dedupe-hit]", {
+      requestId: meta.requestId,
+      source: meta.source,
+      method,
+      path: normalizedPath,
+      durationMs: Date.now() - requestStartedAt
+    });
+    return inflightGetRequests[getRequestKey];
+  }
+
+  const requestPromise = (async () => {
+    let lastError = null;
+    for (let index = 0; index < urls.length; index += 1) {
+      const url = urls[index];
+      try {
+        const result = await requestSleepApi(url, method, data, header, timeout, meta);
+        console.log("[perf:sleep-request]", {
+          requestId: meta.requestId,
+          source: meta.source,
+          step: "request-complete",
+          method,
+          url,
+          durationMs: Date.now() - requestStartedAt,
+          prepMs: perfContext.prepMs
+        });
+        return result;
+      } catch (error) {
+        lastError = error;
+        const shouldTryNext = index < urls.length - 1 &&
+          shouldRetryWithLoopback(error, url);
+        console.error("[sleep-api:error]", {
+          requestId: meta.requestId,
+          source: meta.source,
+          method,
+          url,
+          message: error && error.message,
+          code: error && error.code,
+          statusCode: error && error.statusCode,
+          data: error && error.data,
+          fullError: error,
+          totalDurationMs: Date.now() - requestStartedAt
+        });
+        if (shouldTryNext) {
+          console.warn("[sleep-api:retry-loopback]", {
+            requestId: meta.requestId,
+            source: meta.source,
+            originalUrl: url,
+            retryUrl: urls[index + 1],
+            reason: error && error.message ? error.message : ""
+          });
+          continue;
+        }
+        throw error;
+      }
+    }
+    throw lastError || buildSleepRequestError("睡眠记录请求失败", "SLEEP_REQUEST_FAILED", 0, null);
+  })();
+
+  if (method === "GET") {
+    inflightGetRequests[getRequestKey] = requestPromise.finally(() => {
+      delete inflightGetRequests[getRequestKey];
+      console.log("[perf:sleep-request]", {
+        requestId: meta.requestId,
+        source: meta.source,
+        step: "get-request-finished",
+        method,
+        path: normalizedPath,
+        durationMs: Date.now() - requestStartedAt
+      });
+    });
+    return inflightGetRequests[getRequestKey];
+  }
+
+  return requestPromise;
+}
+
+function listByDate(recordDate, options) {
+  return sleepRequest({
+    url: "/api/sleep-records",
+    method: "GET",
+    source: options && options.source ? options.source : "listByDate",
+    requestId: options && options.requestId ? options.requestId : "",
+    data: {
+      from: recordDate,
+      to: recordDate,
+      limit: 1
+    }
+  }).then((result) => Array.isArray(result.records) ? result.records : []);
+}
+
+function listRange(from, to, limit, options) {
+  return sleepRequest({
+    url: "/api/sleep-records",
+    method: "GET",
+    source: options && options.source ? options.source : "listRange",
+    requestId: options && options.requestId ? options.requestId : "",
+    data: {
+      from,
+      to,
+      limit: limit || 7
+    }
+  }).then((result) => Array.isArray(result.records) ? result.records : []);
+}
+
+function create(record, options) {
+  return sleepRequest({
+    url: "/api/sleep-records",
+    method: "POST",
+    source: options && options.source ? options.source : "create",
+    requestId: options && options.requestId ? options.requestId : "",
+    data: record
+  }).then((result) => result.record || null);
+}
+
+function update(recordId, record, options) {
+  return sleepRequest({
+    url: "/api/sleep-records/" + encodeURIComponent(recordId),
+    method: "PUT",
+    source: options && options.source ? options.source : "update",
+    requestId: options && options.requestId ? options.requestId : "",
+    data: record
+  }).then((result) => result.record || null);
+}
+
+module.exports = {
+  getSleepApiBaseUrl,
+  listByDate,
+  listRange,
+  create,
+  update
+};

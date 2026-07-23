@@ -1,0 +1,33 @@
+<view class="home-page">
+  <scroll-view class="home-scroll" scroll-y="true" enhanced="true" bounces="true" show-scrollbar="false">
+    <view class="page-body">
+      <view class="page-top-spacer" style="height: {{topSpacer}}px;"></view>
+      <view class="page-header">
+        <text class="hello-line">{{copy.hello}}</text>
+        <text class="destiny-line">{{copy.homeIntro}}</text>
+      </view>
+
+      <view class="inspiration-card {{flipped ? 'inspiration-card-flipped' : ''}}" bindtap="toggleInspiration">
+        <view class="inspiration-front"><text class="inspiration-back-title">{{copy.dailyInspiration}}</text><text class="inspiration-back-tip">{{copy.flipHint}}</text></view>
+        <view class="inspiration-back">
+          <view class="inspiration-grid"></view>
+          <view class="inspiration-head"><text class="inspiration-label">{{copy.dailyInspiration}}</text><text class="inspiration-no">{{inspiration.no}}</text></view>
+          <view class="inspiration-center"><view class="inspiration-ring"><text>{{inspiration.symbol}}</text></view><text class="inspiration-title">{{inspiration.title}}</text><text class="inspiration-subtitle">{{copy.todayColor}} / {{inspiration.color}}</text></view>
+          <text class="inspiration-text">{{inspiration.tip}}</text>
+        </view>
+      </view>
+
+      <view class="stats-row">
+        <view class="stat-card mood-card"><view class="card-caption"><view class="caption-dot"></view><text>{{copy.mood}}</text></view><text class="mood-name">{{inspiration.moodName}}</text><text class="card-desc">{{inspiration.moodDesc}}</text></view>
+        <view class="stat-card color-card"><view class="card-caption"><view class="caption-dot"></view><text>{{copy.todayColor}}</text></view><view class="color-value"><text>{{inspiration.color}}</text><view class="color-swatch" style="background-color: {{inspiration.swatch}};"></view></view><text class="card-desc">{{inspiration.colorDesc}}</text></view>
+      </view>
+
+      <view class="device-card device-card-disabled"><image class="device-icon" src="/subpackage/jewelry/assets/device-bluetooth.png" mode="aspectFill"></image><view class="device-main"><text class="device-title">{{copy.device}}</text><text class="device-name">{{copy.noDevice}}</text></view><view class="device-side"><text class="device-status">{{copy.disconnected}}</text></view></view>
+
+      <view class="section-head"><text class="section-title">{{copy.styleReference}}</text><button class="section-link" catchtap="openProducts" hover-class="section-link-pressed" aria-label="{{copy.moreReferences}}"><text>{{copy.moreReferences}}</text><text class="section-link-chevron">›</text></button></view>
+      <view class="gallery"><view class="gallery-col"><block wx:for="{{leftProducts}}" wx:key="previewKey"><view class="product-card" data-id="{{item.id}}" bindtap="openProduct" hover-class="product-card-pressed"><image class="product-image" src="{{item.image}}" mode="widthFix"></image></view></block></view><view class="gallery-col"><block wx:for="{{rightProducts}}" wx:key="previewKey"><view class="product-card" data-id="{{item.id}}" bindtap="openProduct" hover-class="product-card-pressed"><image class="product-image" src="{{item.image}}" mode="widthFix"></image></view></block></view></view>
+      <view class="bottom-space"></view>
+    </view>
+  </scroll-view>
+  <bottom-nav active="home"></bottom-nav>
+</view>

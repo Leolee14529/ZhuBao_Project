@@ -1,0 +1,13 @@
+{
+  "users": [
+    {
+      "id": "usr_example",
+      "openid": "openid_example",
+      "unionid": null,
+      "nickname": null,
+      "avatarUrl": null,
+      "createdAt": "2026-06-23T00:00:00.000Z",
+      "updatedAt": "2026-06-23T00:00:00.000Z"
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+.form-error-text {
+  display: block;
+  min-height: 40rpx;
+  margin: 8rpx 0 6rpx;
+  color: #ff7a98;
+  font-size: 22rpx;
+  line-height: 1.7;
+}

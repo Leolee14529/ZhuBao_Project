@@ -1,0 +1,45 @@
+<view class="products-page">
+  <scroll-view class="products-scroll" scroll-y="true" enhanced="true" bounces="true" show-scrollbar="false">
+    <view class="products-body">
+      <view class="page-top-spacer" style="height: {{topSpacer}}px;"></view>
+      <view class="topbar">
+        <button class="icon-button back-button" bindtap="goBack" aria-label="{{copy.back}}"><view class="back-chevron"></view></button>
+        <view class="title-block"><text class="page-title">{{copy.title}}</text><text class="page-subtitle">{{copy.subtitle}}</text></view>
+        <button class="icon-button search-button" bindtap="toggleSearch" aria-label="{{copy.search}}"><view class="search-ring"></view><view class="search-line"></view></button>
+      </view>
+
+      <view class="search-panel" wx:if="{{searchExpanded}}">
+        <input class="search-input" value="{{query}}" placeholder="{{copy.searchPlaceholder}}" placeholder-class="search-placeholder" confirm-type="search" bindinput="handleSearchInput" />
+        <button class="search-clear" wx:if="{{query}}" bindtap="clearSearch">{{copy.clearSearch}}</button>
+      </view>
+
+      <view class="feature-band"><text class="feature-kicker">{{copy.kicker}}</text><text class="feature-title">{{copy.featureTitle}}</text></view>
+
+      <scroll-view class="filter-scroll" scroll-x="true" enhanced="true" show-scrollbar="false">
+        <view class="filter-row"><button class="filter-pill {{item.itemClass}}" wx:for="{{filters}}" wx:key="id" data-filter="{{item.id}}" bindtap="changeFilter">{{item.label}}</button></view>
+      </scroll-view>
+
+      <view class="mood-filter-head"><text class="mood-filter-title">{{copy.moodFilterTitle}}</text><text class="mood-filter-hint">{{copy.moodFilterHint}}</text></view>
+      <scroll-view class="mood-scroll" scroll-x="true" enhanced="true" show-scrollbar="false">
+        <view class="mood-row"><button class="mood-pill {{item.itemClass}}" wx:for="{{moods}}" wx:key="id" data-mood="{{item.id}}" bindtap="selectMood">{{item.label}}</button></view>
+      </scroll-view>
+
+      <view class="product-waterfall" wx:if="{{products.length}}">
+        <view class="waterfall-col">
+          <view class="product-tile {{item.cardClass}}" wx:for="{{leftProducts}}" wx:key="id" data-id="{{item.id}}" bindtap="previewProduct" hover-class="product-tile-pressed">
+            <view class="product-image-wrap"><image class="product-image" src="{{item.image}}" mode="aspectFill"></image><view class="image-shade"></view><text class="product-badge" wx:if="{{item.tag}}">{{item.tag}}</text></view>
+            <view class="product-info"><text class="product-name">{{item.name}}</text><text class="product-type">{{item.type}}</text><text class="product-desc">{{item.desc}}</text><text class="product-more">{{copy.styleNotes}}</text></view>
+          </view>
+        </view>
+        <view class="waterfall-col waterfall-right">
+          <view class="product-tile {{item.cardClass}}" wx:for="{{rightProducts}}" wx:key="id" data-id="{{item.id}}" bindtap="previewProduct" hover-class="product-tile-pressed">
+            <view class="product-image-wrap"><image class="product-image" src="{{item.image}}" mode="aspectFill"></image><view class="image-shade"></view><text class="product-badge" wx:if="{{item.tag}}">{{item.tag}}</text></view>
+            <view class="product-info"><text class="product-name">{{item.name}}</text><text class="product-type">{{item.type}}</text><text class="product-desc">{{item.desc}}</text><text class="product-more">{{copy.styleNotes}}</text></view>
+          </view>
+        </view>
+      </view>
+      <view class="empty-panel" wx:else>{{copy.noResults}}</view>
+      <view class="safe-bottom-space"></view>
+    </view>
+  </scroll-view>
+</view>

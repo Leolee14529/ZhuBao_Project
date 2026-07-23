@@ -1,0 +1,5 @@
+<view class="insight-card">
+  <text class="insight-title" style="color: {{accent}};">· {{title}}</text>
+  <text class="insight-value">{{value}}</text>
+  <text class="insight-desc">{{desc}}</text>
+</view>

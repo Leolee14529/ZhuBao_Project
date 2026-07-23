@@ -1,0 +1,5 @@
+<view class="stat-card {{tone}}">
+  <view class="ghost"></view>
+  <view class="stat-label"><view class="dot"></view><text>{{label}}</text></view>
+  <view><text class="stat-value">{{value}}</text><text class="stat-desc">{{desc}}</text></view>
+</view>

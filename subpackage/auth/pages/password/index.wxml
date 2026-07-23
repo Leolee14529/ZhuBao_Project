@@ -1,0 +1,47 @@
+<view class="auth-page">
+  <view class="auth-page__inner" style="padding-top: {{statusBarHeight}}px;">
+    <view class="auth-page__topbar">
+      <view class="auth-page__back" bindtap="onBackTap">
+        <view class="auth-page__back-arrow"></view>
+      </view>
+    </view>
+
+    <view class="auth-page__content">
+      <auth-intro title="创建密码" subtitle="请输入 8-16 个字符的密码，包含字母、数字和符号。"></auth-intro>
+      <empty-state
+        wx:if="{{serviceError}}"
+        class="auth-page__error-state"
+        title="暂时无法继续"
+        desc="{{serviceError}}"
+        buttonText="重试"
+        type="auth"
+        compact="{{true}}"
+        bind:action="retryNext"
+      ></empty-state>
+      <dark-input-field
+        value="{{password}}"
+        password="{{!showPassword}}"
+        visible="{{showPassword}}"
+        placeholder="请输入密码"
+        toggleable="{{true}}"
+        bind:input="onPasswordInput"
+        bind:toggle="onTogglePassword"
+      ></dark-input-field>
+      <dark-input-field
+        value="{{confirmPassword}}"
+        password="{{!showConfirm}}"
+        visible="{{showConfirm}}"
+        placeholder="再次确认密码"
+        toggleable="{{true}}"
+        bind:input="onConfirmInput"
+        bind:toggle="onToggleConfirm"
+      ></dark-input-field>
+      <form-error-text message="{{errorText}}"></form-error-text>
+      <view class="auth-page__primary auth-page__primary--spaced" bindtap="onNext">下一步</view>
+    </view>
+
+    <view class="auth-page__agreement">
+      <agreement-row checked="{{agreed}}" bind:toggle="onAgreementToggle"></agreement-row>
+    </view>
+  </view>
+</view>

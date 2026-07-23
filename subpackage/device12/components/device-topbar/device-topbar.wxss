@@ -1,0 +1,84 @@
+.topbar {
+  position: relative;
+  height: 130rpx;
+  padding: 0 34rpx;
+  overflow: hidden;
+}
+
+.back-button {
+  position: absolute;
+  left: 34rpx;
+  top: 42rpx;
+  width: 70rpx;
+  height: 70rpx;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding-left: 6rpx;
+  padding-top: 14rpx;
+  background: transparent;
+}
+
+.back-button::after,
+.capsule-button::after {
+  border: 0;
+}
+
+.back-arrow {
+  width: 26rpx;
+  height: 26rpx;
+  border-left: 5rpx solid #ffffff;
+  border-bottom: 5rpx solid #ffffff;
+  transform: rotate(45deg);
+}
+
+.capsule-button {
+  position: absolute;
+  right: 34rpx;
+  top: 42rpx;
+  width: 206rpx;
+  height: 70rpx;
+  border-radius: 35rpx;
+  border: 1rpx solid rgba(255, 255, 255, 0.2);
+  background: rgba(9, 15, 24, 0.82);
+  overflow: hidden;
+}
+
+.capsule-dots {
+  float: left;
+  margin: 24rpx 0 0 22rpx;
+}
+
+.dot {
+  float: left;
+  width: 10rpx;
+  height: 10rpx;
+  margin-right: 10rpx;
+  border-radius: 5rpx;
+  background: #ffffff;
+}
+
+.capsule-divider {
+  float: left;
+  width: 1rpx;
+  height: 32rpx;
+  margin: 18rpx 22rpx 0 18rpx;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.capsule-ring {
+  float: left;
+  width: 34rpx;
+  height: 34rpx;
+  margin-top: 17rpx;
+  border: 3rpx solid #ffffff;
+  border-radius: 50%;
+}
+
+.capsule-ring-inner {
+  width: 12rpx;
+  height: 12rpx;
+  margin: 8rpx auto 0;
+  border: 3rpx solid #ffffff;
+  border-radius: 50%;
+}

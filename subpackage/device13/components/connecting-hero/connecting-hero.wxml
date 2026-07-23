@@ -1,0 +1,16 @@
+<view class="hero">
+  <image class="hero-image" src="{{imageSrc}}" mode="widthFix"></image>
+  <text class="hero-name">{{ringName}}</text>
+  <text class="hero-status">{{statusText}}</text>
+  <text class="hero-helper">{{helperText}}</text>
+  <view class="hero-spinner">
+    <view class="hero-spinner-segment segment-1"></view>
+    <view class="hero-spinner-segment segment-2"></view>
+    <view class="hero-spinner-segment segment-3"></view>
+    <view class="hero-spinner-segment segment-4"></view>
+    <view class="hero-spinner-segment segment-5"></view>
+    <view class="hero-spinner-segment segment-6"></view>
+    <view class="hero-spinner-segment segment-7"></view>
+    <view class="hero-spinner-segment segment-8"></view>
+  </view>
+</view>

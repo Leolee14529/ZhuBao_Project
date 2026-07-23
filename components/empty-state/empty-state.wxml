@@ -1,0 +1,10 @@
+<view class="empty-state {{compact ? 'empty-state--compact' : ''}}">
+  <view class="empty-state__icon empty-state__icon--{{type}}">
+    <view class="empty-state__ring"></view>
+    <view class="empty-state__core"></view>
+    <view class="empty-state__pulse"></view>
+  </view>
+  <text class="empty-state__title">{{title}}</text>
+  <text class="empty-state__desc">{{desc}}</text>
+  <view wx:if="{{buttonText}}" class="empty-state__button" bindtap="onAction">{{buttonText}}</view>
+</view>

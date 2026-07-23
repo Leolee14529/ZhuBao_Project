@@ -1,0 +1,10 @@
+{
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "device-topbar": "/subpackage/device17/components/device-topbar/device-topbar",
+    "device-hero": "/subpackage/device17/components/device-hero/device-hero",
+    "device-section-card": "/subpackage/device17/components/device-section-card/device-section-card",
+    "primary-button": "/subpackage/device17/components/primary-button/primary-button",
+    "subparagraph": "/subpackage/device17/components/subparagraph/subparagraph"
+  }
+}

@@ -1,0 +1,18 @@
+<view class="element-radar-card">
+  <view class="radar-aura"></view>
+  <view class="radar-header">
+    <text class="radar-title">{{title || labels.radarTitle}}</text>
+    <text class="radar-subtitle">{{subtitle || labels.radarSubtitle}}</text>
+  </view>
+
+  <view class="radar-stage">
+    <canvas canvas-id="elementRadarCanvas" class="radar-canvas"></canvas>
+    <cover-view class="radar-label label-wood">{{labels.wood}}</cover-view>
+    <cover-view class="radar-label label-fire">{{labels.fire}}</cover-view>
+    <cover-view class="radar-label label-earth">{{labels.earth}}</cover-view>
+    <cover-view class="radar-label label-metal">{{labels.metal}}</cover-view>
+    <cover-view class="radar-label label-water">{{labels.water}}</cover-view>
+  </view>
+
+  <text class="radar-status">{{note}}</text>
+</view>

@@ -1,0 +1,55 @@
+.home-page { min-height: 100vh; background: #080b0b; color: #f4f7f5; }
+.home-scroll { height: 100vh; }
+.page-body { padding: 0 32rpx; box-sizing: border-box; }
+.page-header { padding: 28rpx 0 32rpx; }
+.hello-line, .destiny-line { display: block; }
+.hello-line { font-size: 42rpx; font-weight: 700; letter-spacing: 1rpx; }
+.destiny-line { margin-top: 12rpx; color: #3bd39b; font-size: 28rpx; }
+
+.inspiration-card { position: relative; height: 440rpx; perspective: 1000px; transform-style: preserve-3d; }
+.inspiration-front, .inspiration-back { position: absolute; inset: 0; overflow: hidden; padding: 30rpx; border: 1rpx solid rgba(55, 212, 154, .38); border-radius: 28rpx; background: linear-gradient(145deg, #113e32, #0a1915); box-sizing: border-box; backface-visibility: hidden; transition: transform .38s ease; }
+.inspiration-front { display: flex; flex-direction: column; align-items: center; justify-content: center; background: radial-gradient(circle, #1f7055, #09120f 68%); }
+.inspiration-back { transform: rotateY(180deg); }
+.inspiration-card-flipped .inspiration-front { transform: rotateY(180deg); }
+.inspiration-card-flipped .inspiration-back { transform: rotateY(360deg); }
+.inspiration-grid { position: absolute; inset: 0; opacity: .18; background-image: linear-gradient(rgba(68, 225, 164, .32) 1rpx, transparent 1rpx), linear-gradient(90deg, rgba(68, 225, 164, .32) 1rpx, transparent 1rpx); background-size: 28rpx 28rpx; }
+.inspiration-head, .color-value, .section-head, .device-card, .stats-row, .card-caption { display: flex; align-items: center; }
+.inspiration-head { position: relative; justify-content: space-between; color: #70e5b3; font-size: 24rpx; }
+.inspiration-no { color: rgba(255, 255, 255, .55); font-size: 22rpx; }
+.inspiration-center { position: relative; display: flex; flex-direction: column; align-items: center; margin-top: 24rpx; }
+.inspiration-ring { display: flex; width: 120rpx; height: 120rpx; align-items: center; justify-content: center; border: 8rpx solid #20bf87; border-radius: 50%; box-shadow: 0 0 0 12rpx rgba(32, 191, 135, .12); color: #e7fff5; font-size: 54rpx; }
+.inspiration-title { margin-top: 22rpx; font-size: 36rpx; font-weight: 600; }
+.inspiration-subtitle, .inspiration-text, .card-desc { color: rgba(230, 243, 237, .62); font-size: 23rpx; line-height: 1.55; }
+.inspiration-text { position: relative; display: block; margin-top: 20rpx; text-align: center; }
+.inspiration-back-title { font-size: 32rpx; font-weight: 600; letter-spacing: 2rpx; }
+.inspiration-back-tip { margin-top: 22rpx; color: #6be1af; font-size: 24rpx; }
+
+.stats-row { gap: 20rpx; margin-top: 22rpx; }
+.stat-card { flex: 1; min-width: 0; min-height: 210rpx; padding: 26rpx; border: 1rpx solid rgba(255, 255, 255, .1); border-radius: 24rpx; background: #111614; box-sizing: border-box; }
+.card-caption { gap: 10rpx; color: #a9d9c5; font-size: 22rpx; }
+.caption-dot { width: 12rpx; height: 12rpx; border-radius: 50%; background: #25c88d; }
+.mood-name { display: block; margin: 30rpx 0 12rpx; font-size: 30rpx; font-weight: 600; }
+.color-value { justify-content: space-between; margin: 30rpx 0 12rpx; font-size: 28rpx; font-weight: 600; }
+.color-swatch { width: 36rpx; height: 36rpx; border-radius: 50%; background: #4caa8c; box-shadow: 0 0 0 8rpx rgba(76, 170, 140, .12); }
+.device-card { gap: 18rpx; margin-top: 22rpx; padding: 24rpx; border: 1rpx solid rgba(255, 255, 255, .1); border-radius: 24rpx; background: #111614; }
+.device-icon { width: 62rpx; height: 62rpx; border-radius: 16rpx; }
+.device-main { flex: 1; min-width: 0; }
+.device-title, .device-name, .device-status, .device-battery { display: block; }
+.device-title { color: #9edcc2; font-size: 21rpx; }
+.device-name { margin-top: 7rpx; font-size: 28rpx; }
+.device-side { text-align: right; }
+.device-status { color: #66dba5; font-size: 20rpx; }
+.device-battery { margin-top: 9rpx; color: rgba(255, 255, 255, .55); font-size: 20rpx; }
+
+.section-head { width: 100%; min-height: 88rpx; margin: 30rpx 0 10rpx; justify-content: space-between; box-sizing: border-box; }
+.section-title { flex: 1; min-width: 0; font-size: 34rpx; font-weight: 600; line-height: 1.35; letter-spacing: .5rpx; }
+.section-link { display: flex; flex-shrink: 0; min-width: 180rpx; min-height: 88rpx; margin: 0; padding: 0 0 0 28rpx; align-items: center; justify-content: flex-end; gap: 8rpx; border: 0; border-radius: 16rpx; background: transparent; color: #52dba4; font-size: 28rpx; font-weight: 500; line-height: 1.3; }
+.section-link::after { border: 0; }
+.section-link-chevron { font-size: 32rpx; line-height: 1; transform: translateY(-1rpx); }
+.section-link-pressed { background: rgba(82, 219, 164, .1); opacity: .82; }
+.gallery { display: flex; gap: 18rpx; }
+.gallery-col { flex: 1; min-width: 0; }
+.product-card { overflow: hidden; margin-bottom: 18rpx; border-radius: 22rpx; background: #0d1110; }
+.product-card-pressed { opacity: .82; transform: scale(.985); }
+.product-image { display: block; width: 100%; }
+.bottom-space { height: 176rpx; }

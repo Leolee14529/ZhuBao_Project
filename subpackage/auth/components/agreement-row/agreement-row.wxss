@@ -1,0 +1,35 @@
+.agreement-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.agreement-row__check {
+  width: 30rpx;
+  height: 30rpx;
+  margin-top: 4rpx;
+  margin-right: 16rpx;
+  border: 1rpx solid rgba(255, 255, 255, 0.22);
+  border-radius: 50%;
+  box-sizing: border-box;
+}
+
+.agreement-row__check--on {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  border-color: #ffffff;
+}
+
+.agreement-row__tick {
+  color: #000000;
+  font-size: 18rpx;
+  line-height: 1;
+}
+
+.agreement-row__text {
+  color: rgba(255, 255, 255, 0.52);
+  font-size: 22rpx;
+  line-height: 1.7;
+}

@@ -1,0 +1,41 @@
+<view class="pairing-page" style="padding-top: {{statusBarHeight}}px;">
+  <device-topbar bind:back="onBackTap" bind:capsule="onCapsuleTap" />
+
+  <view class="page-content">
+    <text class="page-title">设备连接</text>
+
+    <empty-state
+      wx:if="{{deviceStatus === 'failed'}}"
+      class="device-empty-state"
+      title="设备连接失败"
+      desc="请检查蓝牙状态后，重新将指环靠近手机"
+      buttonText="重新连接"
+      type="device"
+      bind:action="onRetryConnect"
+    ></empty-state>
+
+    <block wx:else>
+    <connecting-hero
+      image-src="/subpackage/device13/assets/ring-connecting.png"
+      ring-name="暂无设备"
+      status-text="正在连接..."
+      helper-text="请将设备靠近手机"
+    />
+
+    <device-section-card
+      title="设备信息"
+      rows="{{infoRows}}"
+      bind:select="onInfoSelect"
+    />
+
+    <device-section-card
+      class="connection-card"
+      title="连接管理"
+      rows="{{connectionRows}}"
+      bind:select="onConnectionSelect"
+    />
+
+    <outline-button text="取消连接" bind:action="onCancelConnect" />
+    </block>
+  </view>
+</view>

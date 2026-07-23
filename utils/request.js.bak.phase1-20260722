@@ -1,0 +1,216 @@
+const config = require("./config");
+const auth = require("./auth");
+const i18n = require("./i18n");
+
+function createRequestError(message, code, statusCode, data) {
+  const error = new Error(message || i18n.t("errors.requestFailed"));
+  error.code = code || "REQUEST_FAILED";
+  error.statusCode = statusCode || 0;
+  error.data = data || null;
+  return error;
+}
+
+function normalizePath(path) {
+  if (!path || typeof path !== "string") {
+    throw createRequestError(i18n.t("errors.requestFailed"), "REQUEST_PATH_REQUIRED", 0);
+  }
+
+  if (/^https?:\/\//i.test(path)) {
+    throw createRequestError(i18n.t("errors.requestFailed"), "REQUEST_PATH_INVALID", 0);
+  }
+
+  return path.charAt(0) === "/" ? path : "/" + path;
+}
+
+function getToken() {
+  return auth.getToken();
+}
+
+function buildHeader(header) {
+  const nextHeader = Object.assign({}, header || {});
+  const token = getToken();
+
+  if (!nextHeader["content-type"] && !nextHeader["Content-Type"]) {
+    nextHeader["content-type"] = "application/json";
+  }
+
+  if (token && !nextHeader.Authorization && !nextHeader.authorization) {
+    nextHeader.Authorization = "Bearer " + token;
+  }
+
+  return nextHeader;
+}
+
+function clearAuthState() {
+  auth.clearAuthState();
+}
+
+function getCurrentPageUrl() {
+  try {
+    const pages = typeof getCurrentPages === "function" ? getCurrentPages() : [];
+    const currentPage = pages && pages.length ? pages[pages.length - 1] : null;
+    return currentPage && currentPage.route ? "/" + currentPage.route : "";
+  } catch (error) {
+    return "";
+  }
+}
+
+function redirectToLogin(source) {
+  auth.redirectToLogin(source);
+}
+
+function isAuthEntryPath(path) {
+  return path === "/api/auth/wechat-login" ||
+    path === "/api/auth/account-login" ||
+    path === "/api/auth/account-register";
+}
+
+function request(options) {
+  const requestOptions = options || {};
+
+  return new Promise((resolve, reject) => {
+    let path = "";
+    let baseUrl = "";
+    let fullUrl = "";
+
+    try {
+      path = normalizePath(requestOptions.url || requestOptions.path);
+      baseUrl = requestOptions.baseUrl ? String(requestOptions.baseUrl).replace(/\/+$/, "") : config.getApiBaseUrl();
+      if (!baseUrl) {
+        throw createRequestError(
+          i18n.t("errors.apiMissing"),
+          "API_BASE_URL_MISSING",
+          0
+        );
+      }
+      fullUrl = baseUrl + path;
+    } catch (error) {
+      reject(error);
+      return;
+    }
+
+    const requestHeader = buildHeader(requestOptions.header);
+    const debugHeader = Object.assign({}, requestHeader);
+    if (debugHeader.Authorization) {
+      debugHeader.Authorization = "Bearer " + String(debugHeader.Authorization).replace(/^Bearer\s+/i, "").slice(0, 10);
+    }
+    if (debugHeader.authorization) {
+      debugHeader.authorization = "Bearer " + String(debugHeader.authorization).replace(/^Bearer\s+/i, "").slice(0, 10);
+    }
+    console.log("[request:start]", {
+      method: requestOptions.method || "GET",
+      url: fullUrl,
+      data: requestOptions.data || {},
+      header: debugHeader
+    });
+
+    wx.request({
+      url: fullUrl,
+      method: requestOptions.method || "GET",
+      data: requestOptions.data || {},
+      header: requestHeader,
+      timeout: requestOptions.timeout || 12000,
+      success(response) {
+        const statusCode = response.statusCode || 0;
+        const body = response.data || {};
+
+        console.log("[request:success]", {
+          method: requestOptions.method || "GET",
+          url: fullUrl,
+          statusCode,
+          data: body,
+          header: response.header || {}
+        });
+
+        if (statusCode >= 200 && statusCode < 300 && body.success === true) {
+          resolve(body.data || {});
+          return;
+        }
+
+        const requestError = createRequestError(
+          i18n.t(body.code === "VALIDATION_ERROR" ? "errors.validation" : "errors.requestFailed"),
+          body.code || "REQUEST_FAILED",
+          statusCode,
+          body
+        );
+        if (statusCode === 401 && !isAuthEntryPath(path)) {
+          redirectToLogin(getCurrentPageUrl());
+        }
+        console.error("[request:reject]", {
+          method: requestOptions.method || "GET",
+          url: fullUrl,
+          statusCode,
+          body,
+          error: requestError
+        });
+        reject(requestError);
+      },
+      fail(error) {
+        console.error("[request:fail]", {
+          method: requestOptions.method || "GET",
+          url: fullUrl,
+          errMsg: error && error.errMsg ? error.errMsg : "",
+          error
+        });
+        reject(createRequestError(
+          error && error.errMsg ? error.errMsg : i18n.t("errors.network"),
+          "REQUEST_NETWORK_ERROR",
+          0,
+          error
+        ));
+      },
+      complete() {
+        console.log("[request:complete]", {
+          method: requestOptions.method || "GET",
+          url: fullUrl
+        });
+      }
+    });
+  });
+}
+
+function get(path, data, header) {
+  return request({
+    url: path,
+    method: "GET",
+    data,
+    header
+  });
+}
+
+function post(path, data, header) {
+  return request({
+    url: path,
+    method: "POST",
+    data,
+    header
+  });
+}
+
+function put(path, data, header) {
+  return request({
+    url: path,
+    method: "PUT",
+    data,
+    header
+  });
+}
+
+function del(path, data, header) {
+  return request({
+    url: path,
+    method: "DELETE",
+    data,
+    header
+  });
+}
+
+module.exports = {
+  request,
+  get,
+  post,
+  put,
+  delete: del,
+  clearAuthState,
+  redirectToLogin
+};

@@ -1,0 +1,17 @@
+<view class="editor-mask" wx:if="{{visible}}" bindtap="close">
+  <view class="editor-sheet" catchtap="stopPropagation">
+    <view class="editor-head"><text class="editor-title" wx:if="{{value}}">{{copy.editRecord}}</text><text class="editor-title" wx:else>{{copy.createRecord}}</text><view class="editor-close" bindtap="close"><text class="editor-close-icon">×</text></view></view>
+
+    <view class="form-group"><text class="form-label">{{copy.moodScore}}</text><view class="score-options"><button wx:for="{{moodOptions}}" wx:key="value" class="{{item.className}}" data-field="mood" data-value="{{item.value}}" bindtap="selectScore">{{item.value}}</button></view></view>
+    <view class="form-group"><text class="form-label">{{copy.energyScore}}</text><view class="score-options"><button wx:for="{{energyOptions}}" wx:key="value" class="{{item.className}}" data-field="energy" data-value="{{item.value}}" bindtap="selectScore">{{item.value}}</button></view></view>
+
+    <view class="form-group"><text class="form-label">{{copy.sleepDuration}}</text><view class="sleep-inputs"><input class="sleep-input" type="number" maxlength="2" value="{{form.sleepHours}}" data-field="sleepHours" bindinput="updateInput"/><text class="sleep-unit">{{copy.hoursUnit}}</text><input class="sleep-input" type="number" maxlength="2" value="{{form.sleepMinutes}}" data-field="sleepMinutes" bindinput="updateInput"/><text class="sleep-unit">{{copy.minutesUnit}}</text></view></view>
+    <view class="form-row"><text class="form-label">{{copy.wearing}}</text><switch color="#39d87a" checked="{{form.isWearingJewelry}}" bindchange="updateWearing"/></view>
+
+    <view class="form-group"><text class="form-label">{{copy.feelingTags}}</text><view class="tag-options"><button wx:for="{{tagOptions}}" wx:key="value" class="tag-option {{item.activeClass}}" data-tag="{{item.value}}" bindtap="toggleTag">{{item.label}}</button></view></view>
+    <view class="form-group"><text class="form-label">{{copy.note}}</text><textarea class="editor-textarea" maxlength="200" value="{{form.note}}" data-field="note" bindinput="updateInput" placeholder="{{copy.notePlaceholder}}"></textarea></view>
+
+    <button class="save-button" loading="{{saving}}" disabled="{{saving}}" bindtap="submit" wx:if="{{saving}}">{{copy.saving}}</button>
+    <button class="save-button" loading="{{saving}}" disabled="{{saving}}" bindtap="submit" wx:else>{{copy.saveRecord}}</button>
+  </view>
+</view>

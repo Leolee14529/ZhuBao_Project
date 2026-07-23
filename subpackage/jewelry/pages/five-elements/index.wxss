@@ -1,0 +1,194 @@
+.customize-page {
+  min-height: 100vh;
+  background-color: #050806;
+  color: #ffffff;
+}
+
+.customize-scroll {
+  height: 100vh;
+  background-color: #050806;
+}
+
+.page-body {
+  padding: 40rpx 32rpx 96rpx;
+}
+
+.page-top-spacer {
+  width: 100%;
+}
+
+.topbar {
+  position: relative;
+  height: 72rpx;
+  margin-bottom: 26rpx;
+}
+
+.back-button {
+  position: absolute;
+  left: 0;
+  top: 16rpx;
+  width: 60rpx;
+  height: 60rpx;
+  border-radius: 30rpx;
+  background-color: rgba(255, 255, 255, 0.06);
+}
+
+.back-arrow {
+  display: block;
+  text-align: center;
+  line-height: 56rpx;
+  font-size: 42rpx;
+  color: #ffffff;
+}
+
+.topbar-title {
+  display: block;
+  text-align: center;
+  line-height: 72rpx;
+  font-size: 32rpx;
+  font-weight: 700;
+}
+
+.intro-card,
+.form-card,
+.preview-card {
+  border-radius: 30rpx;
+  border: 1rpx solid rgba(255, 255, 255, 0.08);
+  background-color: #14171d;
+}
+
+.intro-card {
+  margin-bottom: 24rpx;
+  padding: 30rpx 28rpx;
+}
+
+.intro-title {
+  display: block;
+  font-size: 30rpx;
+  font-weight: 700;
+}
+
+.intro-desc {
+  display: block;
+  margin-top: 12rpx;
+  font-size: 22rpx;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.form-card {
+  overflow: hidden;
+  margin-bottom: 24rpx;
+}
+
+.field-row {
+  overflow: hidden;
+  min-height: 112rpx;
+  padding: 28rpx 26rpx;
+  border-bottom: 1rpx solid rgba(255, 255, 255, 0.06);
+}
+
+.field-row-last {
+  border-bottom: 0;
+}
+
+.field-copy {
+  float: left;
+}
+
+.field-label {
+  display: block;
+  font-size: 22rpx;
+  color: rgba(255, 255, 255, 0.44);
+}
+
+.field-value {
+  display: block;
+  margin-top: 12rpx;
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.field-arrow {
+  float: right;
+  margin-top: 14rpx;
+  font-size: 40rpx;
+  color: rgba(255, 255, 255, 0.34);
+}
+
+.preview-card {
+  margin-bottom: 32rpx;
+  padding: 30rpx 28rpx 26rpx;
+}
+
+.preview-title {
+  display: block;
+  font-size: 24rpx;
+  color: rgba(255, 255, 255, 0.54);
+}
+
+.preview-focus {
+  display: block;
+  margin-top: 18rpx;
+  font-size: 42rpx;
+  font-weight: 700;
+  color: #39d87a;
+}
+
+.preview-desc {
+  display: block;
+  margin-top: 10rpx;
+  font-size: 22rpx;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.tags {
+  overflow: hidden;
+  margin-top: 24rpx;
+}
+
+.tag-item {
+  float: left;
+  margin: 0 14rpx 14rpx 0;
+  padding: 10rpx 16rpx;
+  border: 1rpx solid rgba(255, 255, 255, 0.16);
+  border-radius: 999rpx;
+  font-size: 20rpx;
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+.save-button-row {
+  display: flex;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.save-button {
+  display: flex;
+  flex: 1;
+  width: auto;
+  min-width: 0;
+  height: 104rpx;
+  margin: 0;
+  padding: 0;
+  border-radius: 999rpx;
+  background-color: #0d8f68;
+  color: #ffffff;
+  font-size: 30rpx;
+  font-weight: 700;
+  line-height: 104rpx;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.save-button::after {
+  border: 0;
+}
+
+.bottom-space {
+  height: 40rpx;
+}

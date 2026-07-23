@@ -1,0 +1,6 @@
+<view class="hero">
+  <image class="hero-image" src="{{imageSrc}}" mode="widthFix"></image>
+  <text class="hero-name">{{ringName}}</text>
+  <text class="hero-status">{{statusText}}</text>
+  <text class="hero-helper">{{helperText}}</text>
+</view>

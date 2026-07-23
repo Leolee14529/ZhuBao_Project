@@ -1,0 +1,10 @@
+{
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "device-topbar": "/subpackage/device12/components/device-topbar/device-topbar",
+    "device-section-card": "/subpackage/device12/components/device-section-card/device-section-card",
+    "connected-hero": "/subpackage/device12/components/connected-hero/connected-hero",
+    "disconnect-button": "/subpackage/device12/components/disconnect-button/disconnect-button",
+    "empty-state": "/components/empty-state/empty-state"
+  }
+}

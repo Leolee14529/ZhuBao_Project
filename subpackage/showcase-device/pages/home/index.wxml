@@ -1,0 +1,36 @@
+<view class="showcase-page">
+  <scroll-view class="showcase-scroll" scroll-y="true" enhanced="true" show-scrollbar="false">
+    <view class="page-body">
+      <view class="page-top-spacer" style="height: {{topSpacer}}px;"></view>
+
+      <view class="hero-row">
+        <view class="hero-copy">
+          <text class="hero-title">你好</text>
+          <text class="hero-subtitle">暂无真实五行数据</text>
+        </view>
+        <capsule-actions></capsule-actions>
+      </view>
+
+      <view class="stats-row">
+        <block wx:for="{{stats}}" wx:key="title">
+          <insight-card accent="{{item.accent}}" title="{{item.title}}" value="{{item.value}}" desc="{{item.desc}}"></insight-card>
+        </block>
+      </view>
+
+      <device-module device="{{device}}" bind:tapmodule="handleDeviceTap"></device-module>
+
+      <view class="section-row">
+        <text class="section-title">系列产品</text>
+        <view class="section-action" bindtap="handleViewAll">
+          <text>查看全部</text>
+          <text class="section-arrow">›</text>
+        </view>
+      </view>
+
+      <product-grid products="{{products}}"></product-grid>
+      <view class="bottom-space"></view>
+    </view>
+  </scroll-view>
+
+  <bottom-nav active="{{activeTab}}" bind:change="handleTabChange"></bottom-nav>
+</view>

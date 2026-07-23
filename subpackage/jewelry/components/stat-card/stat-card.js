@@ -1,0 +1,1 @@
+Component({properties:{label:String,value:String,desc:String,tone:{type:String,value:"emerald"}}});

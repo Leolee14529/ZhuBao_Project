@@ -1,0 +1,23 @@
+.primary-button-wrap {
+  display: block;
+  width: 678rpx;
+  margin: 56rpx auto 0;
+}
+
+.primary-button {
+  display: block;
+  width: 100%;
+  height: 112rpx;
+  border-radius: 56rpx;
+  padding: 0;
+  line-height: 112rpx;
+  text-align: center;
+  background: linear-gradient(90deg, #12cf69 0%, #08c65b 100%);
+  color: #ffffff;
+  font-size: 19px;
+  font-weight: 500;
+}
+
+.primary-button::after {
+  border: 0;
+}

@@ -1,0 +1,33 @@
+{
+  "pages": [
+    "pages/home/index",
+    "pages/login/index",
+    "pages/legal/agreement/index",
+    "pages/legal/privacy/index"
+  ],
+  "subPackages": [
+    {
+      "root": "subpackage/jewelry",
+      "name": "jewelry",
+      "pages": ["pages/data/index", "pages/sleep-detail/index", "pages/settings/index", "pages/five-elements/index", "pages/products/index", "pages/product-detail/index"]
+    },
+    {
+      "root": "subpackage/periodCalendar",
+      "name": "periodCalendar",
+      "pages": ["pages/calendar/index"]
+    }
+  ],
+  "preloadRule": {
+    "subpackage/jewelry/pages/data/index": {
+      "network": "all",
+      "packages": ["periodCalendar"]
+    }
+  },
+  "window": {
+    "navigationStyle": "custom",
+    "backgroundColor": "#000000",
+    "backgroundTextStyle": "light"
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

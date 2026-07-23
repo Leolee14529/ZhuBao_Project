@@ -1,0 +1,104 @@
+.empty-state {
+  padding: 54rpx 34rpx 48rpx;
+  border-radius: 32rpx;
+  border: 1rpx solid rgba(255, 255, 255, 0.06);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.045) 0%, rgba(255, 255, 255, 0.028) 100%);
+  text-align: center;
+}
+
+.empty-state--compact {
+  padding: 44rpx 28rpx 40rpx;
+}
+
+.empty-state__icon {
+  position: relative;
+  width: 116rpx;
+  height: 116rpx;
+  margin: 0 auto 30rpx;
+  border-radius: 58rpx;
+}
+
+.empty-state__icon--health {
+  background: rgba(16, 185, 129, 0.08);
+}
+
+.empty-state__icon--cycle {
+  background: rgba(236, 72, 153, 0.08);
+}
+
+.empty-state__icon--device {
+  background: rgba(59, 130, 246, 0.08);
+}
+
+.empty-state__icon--product {
+  background: rgba(245, 158, 11, 0.08);
+}
+
+.empty-state__icon--auth {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.empty-state__icon--language {
+  background: rgba(168, 85, 247, 0.08);
+}
+
+.empty-state__ring,
+.empty-state__core,
+.empty-state__pulse {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 999rpx;
+}
+
+.empty-state__ring {
+  width: 74rpx;
+  height: 74rpx;
+  border: 3rpx solid rgba(255, 255, 255, 0.26);
+}
+
+.empty-state__core {
+  width: 26rpx;
+  height: 26rpx;
+  background: #ffffff;
+}
+
+.empty-state__pulse {
+  width: 92rpx;
+  height: 92rpx;
+  border: 1rpx dashed rgba(255, 255, 255, 0.14);
+}
+
+.empty-state__title {
+  display: block;
+  color: #ffffff;
+  font-size: 32rpx;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.empty-state__desc {
+  display: block;
+  margin-top: 14rpx;
+  color: rgba(255, 255, 255, 0.52);
+  font-size: 24rpx;
+  line-height: 1.7;
+}
+
+.empty-state__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 220rpx;
+  height: 74rpx;
+  margin-top: 28rpx;
+  padding: 0 28rpx;
+  border-radius: 999rpx;
+  background: rgba(16, 185, 129, 0.18);
+  border: 1rpx solid rgba(52, 211, 153, 0.26);
+  color: #9ff6d7;
+  font-size: 24rpx;
+  font-weight: 600;
+  box-sizing: border-box;
+}

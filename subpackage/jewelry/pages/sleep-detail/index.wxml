@@ -1,0 +1,94 @@
+<view class="sleep-page">
+  <scroll-view class="sleep-scroll" scroll-y="true">
+    <view class="sleep-body">
+      <view style="height: {{topSpacer}}px;"></view>
+      <view class="sleep-topbar"><button class="topbar-button" bindtap="goBack">‹</button><text class="topbar-title">{{copy.title}}</text></view>
+      <view class="sleep-range-tabs">
+        <button class="range-tab {{rangeMode === 'day' ? 'range-tab-active' : ''}}" data-mode="day" bindtap="changeRange">{{copy.rangeDay}}</button>
+        <button class="range-tab {{rangeMode === 'week' ? 'range-tab-active' : ''}}" data-mode="week" bindtap="changeRange">{{copy.rangeWeek}}</button>
+        <button class="range-tab {{rangeMode === 'month' ? 'range-tab-active' : ''}}" data-mode="month" bindtap="changeRange">{{copy.rangeMonth}}</button>
+      </view>
+      <view class="range-switcher-wrap">
+        <view class="range-switcher">
+          <button class="range-switcher-arrow" data-direction="-1" bindtap="moveRange" aria-label="{{copy.previous}}">
+            <text class="range-switcher-arrow-text">‹</text>
+          </button>
+          <view class="sleep-date-center">
+            <text class="sleep-date-text {{rangeMode === 'day' ? 'sleep-date-text-day' : 'sleep-date-text-range'}}">{{date}}</text>
+          </view>
+          <button class="range-switcher-arrow {{canMoveNext ? '' : 'range-switcher-arrow-disabled'}}" data-direction="1" bindtap="moveRange" aria-label="{{copy.next}}">
+            <text class="range-switcher-arrow-text {{canMoveNext ? '' : 'range-switcher-arrow-text-disabled'}}">›</text>
+          </button>
+        </view>
+      </view>
+
+      <view class="detail-card">
+        <view class="detail-card-heading"><text class="detail-card-title">{{copy.overview}}</text><text class="detail-card-caption">{{copy.source}}</text></view>
+        <view class="sleep-total">
+          <text class="sleep-total-label">{{copy.total}}</text>
+          <text class="sleep-total-value" wx:if="{{!loading}}">{{sleep}}</text>
+          <text class="sleep-total-value" wx:else>{{copy.loading}}</text>
+        </view>
+        <text class="load-error" wx:if="{{loadError}}">{{loadError}}</text>
+        <button class="retry-button" wx:if="{{loadError}}" bindtap="retryLoad">{{copy.retry}}</button>
+      </view>
+
+      <view class="detail-card trend-card">
+        <view class="detail-card-heading"><text class="detail-card-title">{{copy.trendTitle}}</text><text class="detail-card-caption">{{copy.source}}</text></view>
+        <view class="trend-empty" wx:if="{{!loading && !trend.hasRecords}}">{{trend.summary}}</view>
+        <scroll-view class="trend-scroll" scroll-x="true" wx:else>
+          <view class="trend-points range-{{rangeMode}}">
+            <view class="trend-point {{item.isEnd ? 'trend-point-current' : ''}}" wx:for="{{trend.points}}" wx:key="dateKey">
+              <view class="trend-track"><view class="trend-bar" style="height: {{item.barHeight}}rpx;"></view></view>
+              <text class="trend-label">{{item.durationText}}</text>
+            </view>
+          </view>
+        </scroll-view>
+        <view class="trend-stats"><view><text>{{copy.averageSleep}}</text><text class="trend-stat-value">{{trend.averageSleep}}</text></view><view><text>{{copy.recordedNights}}</text><text class="trend-stat-value">{{trend.recordedNights}}</text></view></view>
+      </view>
+
+      <view class="detail-card honest-empty-card">
+        <text class="detail-card-title">{{copy.stageTitle}}</text>
+        <text class="empty-title">{{copy.stageUnavailable}}</text>
+        <text class="empty-description">{{copy.recordOnly}}</text>
+      </view>
+
+      <view class="sleep-record-footer">
+        <view class="sleep-record-button" bindtap="openSleepModal">
+          <text class="sleep-record-button__text">记录</text>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+  <view wx:if="{{showSleepModal}}" class="sleep-modal-mask" catchtouchmove="preventTouchMove" bindtap="closeSleepModal">
+    <view class="sleep-modal-panel" catchtap="stopPropagation">
+      <view class="sleep-modal-header">
+        <text class="sleep-modal-title">{{copy.modalTitle}}</text>
+        <view class="sleep-modal-close" bindtap="closeSleepModal">×</view>
+      </view>
+      <view class="sleep-modal-body">
+        <view class="sleep-form-section">
+          <text class="sleep-form-label">{{copy.modalDate}}</text>
+          <picker mode="date" value="{{sleepRecordDate}}" bindchange="handleSleepDateChange">
+            <view class="sleep-form-value-card">
+              <text class="sleep-form-value">{{sleepRecordDateText}}</text>
+            </view>
+          </picker>
+          <text class="load-error" wx:if="{{sleepRecordLoadError}}">{{sleepRecordLoadError}}</text>
+        </view>
+        <view class="sleep-form-section">
+          <text class="sleep-form-label">{{copy.modalDuration}}</text>
+          <view class="sleep-duration-row">
+            <input class="sleep-duration-input" type="number" value="{{sleepHours}}" bindinput="handleSleepHoursInput" bindblur="normalizeSleepHours" />
+            <text class="sleep-duration-unit">{{copy.hoursUnit}}</text>
+            <input class="sleep-duration-input" type="number" value="{{sleepMinutes}}" bindinput="handleSleepMinutesInput" bindblur="normalizeSleepMinutes" />
+            <text class="sleep-duration-unit">{{copy.minutesUnit}}</text>
+          </view>
+        </view>
+        <view class="sleep-modal-footer">
+          <button class="sleep-save-button" loading="{{isSavingSleepRecord}}" disabled="{{isSavingSleepRecord}}" bindtap="saveSleepRecord">{{copy.modalSave}}</button>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

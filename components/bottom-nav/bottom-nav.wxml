@@ -1,0 +1,7 @@
+<view class="bottom-nav">
+  <block wx:for="{{tabs}}" wx:key="id">
+    <button class="{{item.className}}" data-tab="{{item.id}}" bindtap="switchTab">
+      <view class="nav-top"></view><text class="nav-label">{{item.label}}</text>
+    </button>
+  </block>
+</view>

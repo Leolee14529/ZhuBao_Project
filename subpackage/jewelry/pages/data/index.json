@@ -1,0 +1,10 @@
+{
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "bottom-nav": "/components/bottom-nav/bottom-nav",
+    "daily-record-editor": "/subpackage/jewelry/components/daily-record-editor/daily-record-editor",
+    "element-radar-card": "/subpackage/jewelry/components/element-radar-card/element-radar-card"
+  }
+}
+
+

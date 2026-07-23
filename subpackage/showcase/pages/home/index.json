@@ -1,0 +1,10 @@
+{
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "capsule-actions": "/subpackage/showcase/components/capsule-actions/capsule-actions",
+    "insight-card": "/subpackage/showcase/components/insight-card/insight-card",
+    "device-module": "/subpackage/showcase/components/device-module/device-module",
+    "product-grid": "/subpackage/showcase/components/product-grid/product-grid",
+    "bottom-nav": "/subpackage/showcase/components/bottom-nav/bottom-nav"
+  }
+}

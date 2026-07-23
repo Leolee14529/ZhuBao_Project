@@ -1,0 +1,103 @@
+.hero {
+  margin-top: 18rpx;
+  text-align: center;
+}
+
+.hero-image {
+  width: 520rpx;
+  margin: 0 auto;
+  display: block;
+}
+
+.hero-name {
+  display: block;
+  margin-top: -4rpx;
+  font-size: 68rpx;
+  font-weight: 500;
+  color: #ffffff;
+}
+
+.hero-status {
+  display: block;
+  margin-top: 16rpx;
+  font-size: 52rpx;
+  font-weight: 600;
+  color: #258dff;
+}
+
+.hero-helper {
+  display: block;
+  margin-top: 24rpx;
+  font-size: 30rpx;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.56);
+}
+
+.hero-spinner {
+  position: relative;
+  width: 74rpx;
+  height: 74rpx;
+  margin: 38rpx auto 0;
+  animation: hero-spinner-rotate 1s linear infinite;
+}
+
+.hero-spinner-segment {
+  position: absolute;
+  left: 34rpx;
+  top: 4rpx;
+  width: 6rpx;
+  height: 18rpx;
+  border-radius: 3rpx;
+  background: #ffffff;
+  transform-origin: 3rpx 33rpx;
+}
+
+.segment-1 {
+  opacity: 1;
+  transform: rotate(0deg);
+}
+
+.segment-2 {
+  opacity: 0.92;
+  transform: rotate(45deg);
+}
+
+.segment-3 {
+  opacity: 0.8;
+  transform: rotate(90deg);
+}
+
+.segment-4 {
+  opacity: 0.68;
+  transform: rotate(135deg);
+}
+
+.segment-5 {
+  opacity: 0.56;
+  transform: rotate(180deg);
+}
+
+.segment-6 {
+  opacity: 0.44;
+  transform: rotate(225deg);
+}
+
+.segment-7 {
+  opacity: 0.32;
+  transform: rotate(270deg);
+}
+
+.segment-8 {
+  opacity: 0.2;
+  transform: rotate(315deg);
+}
+
+@keyframes hero-spinner-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}

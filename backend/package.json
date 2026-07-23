@@ -1,0 +1,33 @@
+{
+  "name": "wuxing-backend",
+  "version": "1.0.0",
+  "description": "WeChat mini program backend for Bazi and Wuxing calculation",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "db:migrate": "node db/migrate.js",
+    "test": "node --test test/**/*.test.js",
+    "check:syntax": "node scripts/check-syntax.js",
+    "check:lines": "node scripts/check-max-lines.js",
+    "smoke:production-auth": "node scripts/smoke-production-auth.js"
+  },
+  "keywords": [
+    "express",
+    "bazi",
+    "wuxing"
+  ],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.33.2",
+  "engines": {
+    "node": ">=24 <25"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "express-rate-limit": "^8.5.2",
+    "helmet": "^8.2.0",
+    "pg": "^8.22.0"
+  }
+}

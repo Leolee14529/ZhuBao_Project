@@ -1,0 +1,30 @@
+<view class="auth-page">
+  <view class="auth-page__inner" style="padding-top: {{statusBarHeight}}px;">
+    <view class="auth-page__topbar">
+      <view class="auth-page__back" bindtap="onBackTap">
+        <view class="auth-page__back-arrow"></view>
+      </view>
+    </view>
+
+    <view class="auth-page__content">
+      <auth-intro title="创建账号" subtitle="输入你要发送验证码的电子邮箱地址"></auth-intro>
+      <empty-state
+        wx:if="{{serviceError}}"
+        class="auth-page__error-state"
+        title="暂时无法继续"
+        desc="{{serviceError}}"
+        buttonText="重试"
+        type="auth"
+        compact="{{true}}"
+        bind:action="retryNext"
+      ></empty-state>
+      <dark-input-field icon="✉" value="{{email}}" placeholder="请输入邮箱" bind:input="onEmailInput"></dark-input-field>
+      <form-error-text message="{{errorText}}"></form-error-text>
+      <view class="auth-page__primary" bindtap="onNext">下一步</view>
+    </view>
+
+    <view class="auth-page__agreement">
+      <agreement-row checked="{{agreed}}" bind:toggle="onAgreementToggle"></agreement-row>
+    </view>
+  </view>
+</view>
